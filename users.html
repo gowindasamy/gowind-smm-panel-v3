@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Architectures - GOWIND SMM PANEL V3</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="dashboard-wrapper">
+    <div class="sidebar">
+      <div class="brand">GOWIND ADMIN V3</div>
+      <ul class="sidebar-menu">
+        <li><a href="admin.html">Terminal Overview</a></li>
+        <li><a href="users.html" class="active">User Management Matrix</a></li>
+        <li><a href="services.html">Services Management Suite</a></li>
+        <li><a href="providers.html">API Provider Channels</a></li>
+        <li><a href="settings.html">System Settings Core</a></li>
+        <li><a href="#" onclick="logout()">Secure Logout</a></li>
+      </ul>
+    </div>
+    <div class="main-content">
+      <div class="top-bar">
+        <h2>User Management Directory Matrix</h2>
+        <button class="btn" style="max-width:200px;" onclick="openUserModal(false)">Provision New User Account</button>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Internal Index Profile ID</th>
+              <th>Username Profile Identity</th>
+              <th>Assigned Available Vault Balance</th>
+              <th>Administrative Control Interface</th>
+            </tr>
+          </thead>
+          <tbody id="userRowsContainer"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Creation/Modification Modal -->
+  <div id="modalUser" class="modal">
+    <div class="modal-content">
+      <h3 id="modalUserTitle">Construct New Client Profile Matrix</h3>
+      <form id="formUserManagement" onsubmit="saveUserProfile(event)" style="margin-top:20px;">
+        <input type="hidden" id="manageUserId">
+        <div class="form-group" id="usernameInputWrapper">
+          <label>Profile Absolute Username String Identity</label>
+          <input type="text" id="manageUsername" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Encryption Passphrase Profile String</label>
+          <input type="password" id="managePassword" class="form-control" placeholder="Leave blank to maintain legacy identity sequence">
+        </div>
+        <div class="form-group">
+          <label>Assign Account Balance Metric Credits ($)</label>
+          <input type="number" step="0.0001" id="manageBalance" class="form-control" required value="0.0000">
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn">Commit Parameter Schema Updates</button>
+          <button type="button" class="btn btn-secondary" onclick="closeUserModal()">Abort Context Routing</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      if(!localStorage.getItem('smm_admin')) return window.location.href = "index.html";
+      loadUserManagementDirectory();
+    });
+
+    async function loadUserManagementDirectory() {
+      const users = await handleRequest(`${API_BASE}/admin/users`);
+      const tbody = document.getElementById('userRowsContainer');
+      tbody.innerHTML = "";
+      users.forEach(u => {
+        tbody.innerHTML += `
+          <tr>
+            <td>#UID-${u.id}</td>
+            <td><strong>${u.username}</strong></td>
+            <td>$${parseFloat(u.balance).toFixed(4)}</td>
+            <td class="row-actions">
+              <button class="btn" style="padding:6px 12px; font-size:12px;" onclick="openUserModal(true, ${u.id}, '${u.username}', ${u.balance})">Modify Parameters</button>
+              <button class="btn btn-danger" style="padding:6px 12px; font-size:12px;" onclick="destroyUserProfile(${u.id})">Purge Profile Account</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function openUserModal(isEdit, id = '', username = '', balance = 0) {
+      document.getElementById('modalUser').style.display = 'flex';
+      document.getElementById('manageUserId').value = id;
+      document.getElementById('manageBalance').value = balance;
+      if(isEdit) {
+        document.getElementById('modalUserTitle').innerText = `Modify Parameters for Account Profile: ${username}`;
+        document.getElementById('usernameInputWrapper').style.display = 'none';
+        document.getElementById('manageUsername').removeAttribute('required');
+      } else {
+        document.getElementById('modalUserTitle').innerText = "Construct New Client Profile Matrix";
+        document.getElementById('usernameInputWrapper').style.display = 'block';
+        document.getElementById('manageUsername').setAttribute('required', 'required');
+        document.getElementById('manageUsername').value = '';
+        document.getElementById('managePassword').setAttribute('required', 'required');
+      }
+    }
+
+    function closeUserModal() { document.getElementById('modalUser').style.display = 'none'; }
+
+    async function saveUserProfile(e) {
+      e.preventDefault();
+      const id = document.getElementById('manageUserId').value;
+      const username = document.getElementById('manageUsername').value;
+      const password = document.getElementById('managePassword').value;
+      const balance = document.getElementById('manageBalance').value;
+
+      let targetUrl = id ? `${API_BASE}/admin/users/edit` : `${API_BASE}/admin/users/add`;
+      let payload = id ? { id, password, balance } : { username, password, balance };
+
+      const data = await handleRequest(targetUrl, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+      if(data) { closeUserModal(); loadUserManagementDirectory(); }
+    }
+
+    async function destroyUserProfile(id) {
+      if(confirm("Confirm destructive erasure routing? This choice deletes this identity element context permanently.")) {
+        const res = await handleRequest(`${API_BASE}/admin/users/${id}`, { method: 'DELETE' });
+        if(res) loadUserManagementDirectory();
+      }
+    }
+  </script>
+</body>
+</html>
