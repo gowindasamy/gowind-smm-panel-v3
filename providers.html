@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Gateways Secure Engine - GOWIND SMM PANEL V3</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="dashboard-wrapper">
+    <div class="sidebar">
+      <div class="brand">GOWIND ADMIN V3</div>
+      <ul class="sidebar-menu">
+        <li><a href="admin.html">Terminal Overview</a></li>
+        <li><a href="users.html">User Management Matrix</a></li>
+        <li><a href="services.html">Services Management Suite</a></li>
+        <li><a href="providers.html" class="active">API Provider Channels</a></li>
+        <li><a href="settings.html">System Settings Core</a></li>
+        <li><a href="#" onclick="logout()">Secure Logout</a></li>
+      </ul>
+    </div>
+    <div class="main-content">
+      <div class="top-bar">
+        <h2>Upstream Secured Provider API Relays Framework Core</h2>
+        <button class="btn" style="max-width:240px;" onclick="openProviderModal(false)">Link New Upstream Provider Pipeline</button>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Internal Registry ID</th>
+              <th>Provider Label Group Brand Name</th>
+              <th>Target Endpoints API Handshake URL Link</th>
+              <th>Encryption Handshake Token Key</th>
+              <th>Status Channel Gate</th>
+              <th>Administrative Control Interface Operations</th>
+            </tr>
+          </thead>
+          <tbody id="providerRowsRoot"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Provider Gateway Integration Architecture Modal -->
+  <div id="modalProvider" class="modal">
+    <div class="modal-content" style="max-width:550px;">
+      <h3 id="modalProviderTitle">Initialize Upstream Provider Access Protocol Entry Point</h3>
+      <form id="formProviderManagement" onsubmit="commitProviderPipelineAllocation(event)" style="margin-top:20px;">
+        <input type="hidden" id="provInternalId">
+        
+        <div class="form-group">
+          <label>Unique Upstream Provider Structural Reference Name Signature</label>
+          <input type="text" id="provName" class="form-control" required placeholder="PerfectPanel Global Vendor Group V1">
+        </div>
+
+        <div class="form-group">
+          <label>Absolute Target Server REST Endpoint Handshake Routing Location URL Base Address</label>
+          <input type="url" id="provUrl" class="form-control" required placeholder="https://api-vendor-domain.com/v2/api">
+        </div>
+
+        <div class="form-group">
+          <label>Secured Encryption Access Token System Passphrase API Key String</label>
+          <input type="text" id="provKey" class="form-control" required placeholder="Encrypted authorization hex security string payload tracking tokens">
+        </div>
+
+        <div class="form-group">
+          <label>Dynamic Routing Availability State Strategy</label>
+          <select id="provStatus" class="form-control">
+            <option value="enabled">Allow Data Handshake Transfers [ENABLED]</option>
+            <option value="disabled">Blackhole External Requests [DISABLED]</option>
+          </select>
+        </div>
+
+        <div class="modal-actions">
+          <button type="submit" class="btn">Establish Gateway Allocation Channels</button>
+          <button type="button" class="btn btn-secondary" onclick="closeProviderModal()">Drop Context Matrix Routing</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      if(!localStorage.getItem('smm_admin')) return window.location.href = "index.html";
+      loadUpstreamProviderEcosystem();
+    });
+
+    async function loadUpstreamProviderEcosystem() {
+      const providers = await handleRequest(`${API_BASE}/admin/providers`);
+      const tbody = document.getElementById('providerRowsRoot');
+      tbody.innerHTML = "";
+      providers.forEach(p => {
+        tbody.innerHTML += `
+          <tr>
+            <td>#PRV-${p.id}</td>
+            <td><strong>${p.provider_name}</strong></td>
+            <td><code style="font-size:12px; color:var(--text-muted);">${p.api_url}</code></td>
+            <td><code style="color:var(--status-processing);">••••••••••••••••</code></td>
+            <td><span class="badge ${p.status === 'enabled' ? 'badge-completed' : 'badge-canceled'}">${p.status}</span></td>
+            <td class="row-actions">
+              <button class="btn" style="padding:6px 12px; font-size:12px;" onclick="openProviderModal(true, ${p.id}, '${p.provider_name.replace(/'/g, "\\'")}', '${p.api_url}', '${p.api_key}', '${p.status}')">Modify System Route</button>
+              <button class="btn btn-danger" style="padding:6px 12px; font-size:12px;" onclick="purgeProviderChannelLink(${p.id})">Purge Channel</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function openProviderModal(isEdit, id='', name='', url='', key='', status='enabled') {
+      document.getElementById('modalProvider').style.display = 'flex';
+      document.getElementById('provInternalId').value = id;
+      document.getElementById('provName').value = name;
+      document.getElementById('provUrl').value = url;
+      document.getElementById('provKey').value = key;
+      document.getElementById('provStatus').value = status;
+      document.getElementById('modalProviderTitle').innerText = isEdit ? "Modify Secured Upstream Provider Endpoint Interface Protocol Map" : "Initialize Upstream Provider Access Protocol Entry Point";
+    }
+
+    function closeProviderModal() { document.getElementById('modalProvider').style.display = 'none'; }
+
+    async function commitProviderPipelineAllocation(e) {
+      e.preventDefault();
+      const id = document.getElementById('provInternalId').value;
+      const payload = {
+        provider_name: document.getElementById('provName').value,
+        api_url: document.getElementById('provUrl').value,
+        api_key: document.getElementById('provKey').value,
+        status: document.getElementById('provStatus').value
+      };
+      if(id) payload.id = id;
+      let targetUrl = id ? `${API_BASE}/admin/providers/edit` : `${API_BASE}/admin/providers/add`;
+      const data = await handleRequest(targetUrl, { method: 'POST', body: JSON.stringify(payload) });
+      if(data) { closeProviderModal(); loadUpstreamProviderEcosystem(); }
+    }
+
+    async function purgeProviderChannelLink(id) {
+      if(confirm("DANGER: Executing channel termination? Removing this pipeline item clears all dependent mapped services configurations automatically!")) {
+        const res = await handleRequest(`${API_BASE}/admin/providers/${id}`, { method: 'DELETE' });
+        if(res) loadUpstreamProviderEcosystem();
+      }
+    }
+  </script>
+</body>
+</html>
