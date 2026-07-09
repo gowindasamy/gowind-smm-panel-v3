@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GOWIND SMM PANEL V3 - Administrator Workspace</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Administrator Identity Assertion Container -->
+  <div id="admin-auth-view" class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1>ADMIN CONTROL PORTAL</h1>
+        <p>GOWIND SMM V3 Core Access System</p>
+      </div>
+      <form id="admin-login-form">
+        <div class="form-group">
+          <label for="admin-password">System Master Credentials Key</label>
+          <input type="password" id="admin-password" class="form-control" placeholder="Enter secure admin keys" required>
+        </div>
+        <button type="submit" id="btn-admin-login" class="btn btn-primary" style="width: 100%;">Authenticate Session</button>
+        <button type="button" id="btn-goto-client" class="btn btn-secondary" style="width: 100%; margin-top: 12px;">Client Interface</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Core Control Console Node -->
+  <div id="admin-app-view" class="app-wrapper d-none">
+    <aside class="sidebar">
+      <div class="sidebar-brand" style="color: var(--warning);">ADMIN V3 CONSOLE</div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item"><a class="sidebar-link active" data-target="admin-section-dash">Metrics Dashboard</a></li>
+        <li class="sidebar-item"><a class="sidebar-link" data-target="admin-section-users">Manage Client Base</a></li>
+        <li class="sidebar-item"><a class="sidebar-link" data-target="admin-section-services">Service Clusters</a></li>
+        <li class="sidebar-item"><a class="sidebar-link" data-target="admin-section-providers">External Providers</a></li>
+        <li class="sidebar-item"><a class="sidebar-link" data-target="admin-section-settings">Global Infrastructure</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button id="btn-admin-logout" class="btn btn-danger btn-sm" style="width: 100%;">Term Session</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="top-header" style="border-left: 4px solid var(--warning);">
+        <div><h2>Infrastructure Administration Core Panel</h2></div>
+        <div class="user-meta">
+          <span class="badge badge-inprogress" style="padding: 8px 16px;">SECURE RUNTIME CONSOLE</span>
+        </div>
+      </header>
+
+      <!-- Control Dashboard -->
+      <div id="admin-section-dash" class="panel-view">
+        <div class="grid-metrics">
+          <div class="card-metric"><h3>Total Registered Clients</h3><div class="value" id="m-users">0</div></div>
+          <div class="card-metric"><h3>Total Aggregated Orders</h3><div class="value" id="m-orders">0</div></div>
+          <div class="card-metric"><h3>Total Active Deposited Capital</h3><div class="value" id="m-balance">$0.00</div></div>
+          <div class="card-metric"><h3>Configured Services</h3><div class="value" id="m-services">0</div></div>
+          <div class="card-metric"><h3>Configured APIs</h3><div class="value" id="m-providers">0</div></div>
+        </div>
+      </div>
+
+      <!-- Clients Base View Container -->
+      <div id="admin-section-users" class="panel-view d-none">
+        <div class="panel-section">
+          <div class="section-title">
+            <span>Clients Directory Grid Matrix</span>
+            <button class="btn btn-primary btn-sm" onclick="openUserModal('add')">Register Client Node</button>
+          </div>
+          <div class="search-box-wrapper">
+            <input type="text" id="search-users-input" class="form-control" placeholder="Search by username key...">
+          </div>
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Internal GUID</th>
+                  <th>Access Username Tag</th>
+                  <th>Liquid Valuation Balance</th>
+                  <th>Management Actions Operations Matrix</th>
+                </tr>
+              </thead>
+              <tbody id="admin-users-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Service Architecture Cluster -->
+      <div id="admin-section-services" class="panel-view d-none">
+        <div class="panel-section">
+          <div class="section-title">
+            <span>Global SMM Offers Mapping Architecture</span>
+            <button class="btn btn-primary btn-sm" onclick="openServiceModal('add')">Deploy Catalog Service</button>
+          </div>
+          <div class="search-box-wrapper">
+            <input type="text" id="search-services-input" class="form-control" placeholder="Search service definitions...">
+          </div>
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Offer ID</th>
+                  <th>Assigned API Source</th>
+                  <th>Remote ID Reference</th>
+                  <th>Service Metric Name Descriptor</th>
+                  <th>Rate /1000</th>
+                  <th>Limits Min/Max</th>
+                  <th>Operational Flag Status</th>
+                  <th>Control Action Matrix</th>
+                </tr>
+              </thead>
+              <tbody id="admin-services-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- External Provider Connectors Module -->
+      <div id="admin-section-providers" class="panel-view d-none">
+        <div class="panel-section">
+          <div class="section-title">
+            <span>Upstream API Engine Connections Map</span>
+            <button class="btn btn-primary btn-sm" onclick="openProviderModal('add')">Add Remote SMM Gateway</button>
+          </div>
+          <div class="search-box-wrapper">
+            <input type="text" id="search-providers-input" class="form-control" placeholder="Search operational providers...">
+          </div>
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Gate ID</th>
+                  <th>Upstream Provider Identity</th>
+                  <th>Endpoint Server Target URL</th>
+                  <th>Hidden Remote Auth Key Token</th>
+                  <th>Operational Core State</th>
+                  <th>Control Action Matrix</th>
+                </tr>
+              </thead>
+              <tbody id="admin-providers-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Infrastructure System Configuration Panel -->
+      <div id="admin-section-settings" class="panel-view d-none">
+        <div class="panel-section" style="max-width: 650px;">
+          <div class="section-title">Update Master Password Credentials</div>
+          <form id="admin-settings-form">
+            <div class="form-group">
+              <label for="set-current-pass">Required Current Validation Security Token Pin</label>
+              <input type="password" id="set-current-pass" class="form-control" placeholder="Confirm active root key" required>
+            </div>
+            <div class="form-group">
+              <label for="set-new-admin-pass">New Admin Control Portal Key</label>
+              <input type="password" id="set-new-admin-pass" class="form-control" placeholder="Leave empty to maintain default active authentication mapping state">
+            </div>
+            <button type="submit" id="btn-save-settings" class="btn btn-primary">Commit Security Operations Configuration Change</button>
+          </form>
+        </div>
+
+        <div class="panel-section" style="max-width: 650px;">
+          <div class="section-title">Real Connection Status Platform Engine Matrix Health Diagnostics</div>
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="status-indicator">Frontend Asset Server: <span class="dot dot-green"></span> <span style="color: var(--success);">Green Connected</span></div>
+            <div class="status-indicator">Backend Engine Core API: <span class="dot dot-green"></span> <span style="color: var(--success);">Green Connected</span></div>
+            <div class="status-indicator">PostgreSQL Cluster Node Instance: <span id="db-status-dot" class="dot dot-red"></span> <span id="db-status-text" style="color: var(--danger);">Checking Internal Pulse Status...</span></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- USER MANAGEMENT POPUP MODAL CONTROL CONTAINER -->
+  <div id="user-modal" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header"><span id="user-modal-title">Operational Workspace Client Card</span><button class="modal-close" onclick="closeModal('user-modal')">&times;</button></div>
+      <form id="user-modal-form">
+        <input type="hidden" id="user-modal-id">
+        <div class="form-group">
+          <label for="user-modal-username">Client Account Access Tag Username</label>
+          <input type="text" id="user-modal-username" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="user-modal-password">Account Security Entry Token Password</label>
+          <input type="password" id="user-modal-password" class="form-control" placeholder="Required for new entries; fill in order to perform hard encryption resets">
+        </div>
+        <div class="form-group">
+          <label for="user-modal-balance">Pre-allocated Liquid Capital Account Valuation Balance ($)</label>
+          <input type="number" step="0.01" id="user-modal-balance" class="form-control" value="0.00" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="closeModal('user-modal')">Discard Change</button>
+          <button type="submit" id="user-modal-submit-btn" class="btn btn-primary btn-sm">Commit Transaction Records</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- SERVICE MANAGEMENT POPUP MODAL CONTROL CONTAINER -->
+  <div id="service-modal" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header"><span id="service-modal-title">Operational Catalog Mapping Card</span><button class="modal-close" onclick="closeModal('service-modal')">&times;</button></div>
+      <form id="service-modal-form">
+        <input type="hidden" id="service-modal-id">
+        <div class="form-group">
+          <label for="service-modal-provider">Target Mapping Upstream Core API Source Gate</label>
+          <select id="service-modal-provider" class="form-control" required></select>
+        </div>
+        <div class="form-group">
+          <label for="service-modal-remoteid">Remote Target SMM Gateway ID Reference Link</label>
+          <input type="number" id="service-modal-remoteid" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="service-modal-name">Service Catalog Operational Interface Metric Name Descriptor</label>
+          <input type="text" id="service-modal-name" class="form-control" required placeholder="e.g. Instagram Live View Metrics High Retention Rate Tier 1">
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label for="service-modal-price">Pricing Rate /1000 ($)</label><input type="number" step="0.0001" id="service-modal-price" class="form-control" required></div>
+          <div class="form-group">
+            <label for="service-modal-enabled">Operational Active Processing State</label>
+            <select id="service-modal-enabled" class="form-control"><option value="true">Enable Cluster Node</option><option value="false">Disable Cluster Node</option></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label for="service-modal-min">Minimum Allocation Bound</label><input type="number" id="service-modal-min" class="form-control" required></div>
+          <div class="form-group"><label for="service-modal-max">Maximum Allocation Bound</label><input type="number" id="service-modal-max" class="form-control" required></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="closeModal('service-modal')">Discard Change</button>
+          <button type="submit" id="service-modal-submit-btn" class="btn btn-primary btn-sm">Save Node Entry Mapping</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- GATEWAY PROVIDER POPUP MODAL CONTROL CONTAINER -->
+  <div id="provider-modal" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header"><span id="provider-modal-title">Upstream Gateway Link Node Specification Card</span><button class="modal-close" onclick="closeModal('provider-modal')">&times;</button></div>
+      <form id="provider-modal-form">
+        <input type="hidden" id="provider-modal-id">
+        <div class="form-group">
+          <label for="provider-modal-name">Upstream Provider Target Identity Reference Label Tag</label>
+          <input type="text" id="provider-modal-name" class="form-control" required placeholder="e.g. SMMMAINAPIENGINE">
+        </div>
+        <div class="form-group">
+          <label for="provider-modal-url">Endpoint Server REST URL Base Target Gateway Connection Address</label>
+          <input type="url" id="provider-modal-url" class="form-control" required placeholder="https://externalproviderdomain.com/api/v2">
+        </div>
+        <div class="form-group">
+          <label for="provider-modal-key">Secure Authentication Handshake Secure Token Secret API Key String</label>
+          <input type="password" id="provider-modal-key" class="form-control" required placeholder="Enter remote auth hash string keys">
+        </div>
+        <div class="form-group">
+          <label for="provider-modal-enabled">Channel System State Link Parameter</label>
+          <select id="provider-modal-enabled" class="form-control"><option value="true">Enable Active Handshake Interceptor Channels</option><option value="false">Disable Communications Channel Interceptor Links</option></select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="closeModal('provider-modal')">Discard Configuration Change</button>
+          <button type="submit" id="provider-modal-submit-btn" class="btn btn-primary btn-sm">Authorize Upstream Configuration Mapping</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+  </html>
