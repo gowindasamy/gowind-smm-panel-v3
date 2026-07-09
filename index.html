@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GOWIND SMM PANEL V3 - Login Gate</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1>GOWIND SMM PANEL V3</h1>
+        <p>Access Portal Gateway Environment</p>
+      </div>
+      
+      <div style="display:flex; gap:10px; margin-bottom:24px;">
+        <button id="tabUser" class="btn" onclick="switchTab('user')">User Panel</button>
+        <button id="tabAdmin" class="btn btn-secondary" onclick="switchTab('admin')">Admin Panel</button>
+      </div>
+
+      <!-- User Interface Authentication Section -->
+      <form id="formUserAuth" onsubmit="executeUserAuth(event)">
+        <div class="form-group">
+          <label>Account Identity Username</label>
+          <input type="text" id="userUID" class="form-control" required placeholder="Enter username">
+        </div>
+        <div class="form-group">
+          <label>Password Encryption String</label>
+          <input type="password" id="userPass" class="form-control" required placeholder="••••••••">
+          <span class="password-toggle" onclick="togglePasswordVisibility('userPass')">👁️</span>
+        </div>
+        <button type="submit" class="btn">Authenticate Secure Access</button>
+      </form>
+
+      <!-- Admin Panel Authentication Section -->
+      <form id="formAdminAuth" onsubmit="executeAdminAuth(event)" style="display:none;">
+        <div class="form-group">
+          <label>System Administrator Access Key</label>
+          <input type="password" id="adminPass" class="form-control" required placeholder="••••••••">
+          <span class="password-toggle" onclick="togglePasswordVisibility('adminPass')">👁️</span>
+        </div>
+        <button type="submit" class="btn">Initialize Dashboard Control</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    let activeScope = 'user';
+    function switchTab(target) {
+      activeScope = target;
+      if(target === 'user') {
+        document.getElementById('tabUser').classList.remove('btn-secondary');
+        document.getElementById('tabAdmin').classList.add('btn-secondary');
+        document.getElementById('formUserAuth').style.display = 'block';
+        document.getElementById('formAdminAuth').style.display = 'none';
+      } else {
+        document.getElementById('tabAdmin').classList.remove('btn-secondary');
+        document.getElementById('tabUser').classList.add('btn-secondary');
+        document.getElementById('formAdminAuth').style.display = 'block';
+        document.getElementById('formUserAuth').style.display = 'none';
+      }
+    }
+
+    async function executeUserAuth(e) {
+      e.preventDefault();
+      const username = document.getElementById('userUID').value;
+      const password = document.getElementById('userPass').value;
+      const data = await handleRequest(`${API_BASE}/auth/login`, {
+        method: 'POST',
+        body: JSON.stringify({ username, password })
+      });
+      if(data) {
+        setSessionUser(data);
+        window.location.href = 'user.html';
+      }
+    }
+
+    async function executeAdminAuth(e) {
+      e.preventDefault();
+      const password = document.getElementById('adminPass').value;
+      const data = await handleRequest(`${API_BASE}/auth/admin`, {
+        method: 'POST',
+        body: JSON.stringify({ password })
+      });
+      if(data && data.isAdmin) {
+        localStorage.setItem('smm_admin', 'true');
+        window.location.href = 'admin.html';
+      }
+    }
+  </script>
+</body>
+</html>
