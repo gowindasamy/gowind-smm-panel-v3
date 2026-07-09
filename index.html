@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GOWIND SMM PANEL V3 - Client Panel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Auth View Container -->
+  <div id="auth-view" class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1>GOWIND SMM PANEL</h1>
+        <p>Version 3.0.0 Stable</p>
+      </div>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="login-username">Username</label>
+          <input type="text" id="login-username" class="form-control" placeholder="Enter username" required>
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" class="form-control" placeholder="Enter password" required>
+        </div>
+        <button type="submit" id="btn-login" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Login</button>
+        <button type="button" id="btn-goto-admin" class="btn btn-secondary" style="width: 100%; margin-top: 12px;">Admin Portal</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Application Workspace Container -->
+  <div id="app-view" class="app-wrapper d-none">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">GOWIND SMM V3</div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item">
+          <a class="sidebar-link active" data-target="section-dashboard">Dashboard</a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" data-target="section-new-order">New Order</a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" data-target="section-history">Order History</a>
+        </li>
+      </ul>
+      <div class="sidebar-footer">
+        <button id="btn-logout" class="btn btn-danger btn-sm" style="width: 100%;">Logout</button>
+      </div>
+    </aside>
+
+    <!-- Main View Workspace -->
+    <main class="main-content">
+      <header class="top-header">
+        <div>
+          <h2>Welcome Back, <span id="display-username">User</span>!</h2>
+        </div>
+        <div class="user-meta">
+          <div class="balance-pill">Balance: <span id="display-balance">$0.00</span></div>
+        </div>
+      </header>
+
+      <!-- Dashboard Grid Component -->
+      <div id="section-dashboard" class="panel-view">
+        <div class="grid-metrics">
+          <div class="card-metric">
+            <h3>Current Funds Available</h3>
+            <div class="value" id="dash-balance">$0.00</div>
+          </div>
+          <div class="card-metric">
+            <h3>Total Orders Submitted</h3>
+            <div class="value" id="dash-total-orders">0</div>
+          </div>
+        </div>
+        <div class="panel-section">
+          <div class="section-title">Platform Notice</div>
+          <p style="color: var(--text-muted); line-height: 1.6;">Welcome to the high-performance GOWIND SMM Platform interface. Deploy immediate social signals natively through multiple configured backend APIs concurrently. Check active histories via the secondary tab navigation menus.</p>
+        </div>
+      </div>
+
+      <!-- New Order Execution Component -->
+      <div id="section-new-order" class="panel-view d-none">
+        <div class="panel-section" style="max-width: 700px;">
+          <div class="section-title">Place a New Order</div>
+          <form id="order-form">
+            <div class="form-group">
+              <label for="order-service-select">Select Target Service Cluster</label>
+              <select id="order-service-select" class="form-control" required></select>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label>Target Core Provider</label>
+                <input type="text" id="order-provider-readonly" class="form-control" readonly placeholder="N/A">
+              </div>
+              <div class="form-group">
+                <label>Rate Per 1000 Units</label>
+                <input type="text" id="order-price-readonly" class="form-control" readonly placeholder="$0.00">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Minimum Permissible Quantity</label>
+                <input type="text" id="order-min-readonly" class="form-control" readonly placeholder="0">
+              </div>
+              <div class="form-group">
+                <label>Maximum Permissible Quantity</label>
+                <input type="text" id="order-max-readonly" class="form-control" readonly placeholder="0">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="order-link">Target Resource Link (Instagram/Universal)</label>
+              <input type="url" id="order-link" class="form-control" placeholder="https://instagram.com/..." required>
+            </div>
+
+            <div class="form-group">
+              <label for="order-quantity">Desired Operational Quantity</label>
+              <input type="number" id="order-quantity" class="form-control" placeholder="Enter numeric units quantity" required>
+            </div>
+
+            <div class="form-group">
+              <label>Calculated Dynamic Pricing Total</label>
+              <input type="text" id="order-total-price" class="form-control" readonly value="$0.00" style="font-weight: 700; color: var(--success);">
+            </div>
+
+            <button type="submit" id="btn-submit-order" class="btn btn-primary" style="width: 100%;">Authorize and Dispatch Order</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Historical Record Track Component -->
+      <div id="section-history" class="panel-view d-none">
+        <div class="panel-section">
+          <div class="section-title">Transactional Pipeline Audit Logs</div>
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Native ID</th>
+                  <th>Remote Tracker</th>
+                  <th>Execution Timestamp</th>
+                  <th>Selected Target Service</th>
+                  <th>Resource Target Link</th>
+                  <th>Quantity Metrics</th>
+                  <th>Charged Rate</th>
+                  <th>Deployment Status</th>
+                </tr>
+              </thead>
+              <tbody id="user-history-table-body">
+                <!-- Executed dynamically dynamically injection -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
