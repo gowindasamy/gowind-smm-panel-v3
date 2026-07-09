@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Repository Log - GOWIND SMM PANEL V3</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="dashboard-wrapper">
+    <div class="sidebar">
+      <div class="brand">GOWIND V3</div>
+      <ul class="sidebar-menu">
+        <li><a href="user.html">Main Operations Desk</a></li>
+        <li><a href="order.html">New Order Execution</a></li>
+        <li><a href="history.html" class="active">Order History Repository</a></li>
+        <li><a href="#" onclick="logout()">Secure Logout</a></li>
+      </ul>
+    </div>
+    <div class="main-content">
+      <div class="top-bar">
+        <h2>System Transaction Invoices Logs</h2>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID (API Source Reference)</th>
+              <th>Date & Time Timestamp</th>
+              <th>Status Module</th>
+              <th>Requested Service</th>
+              <th>Destination Link Reference</th>
+              <th>Target Quantity</th>
+              <th>Realized Price Charge</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableContainer"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const u = getSessionUser();
+      if(!u) return window.location.href = "index.html";
+
+      const orders = await handleRequest(`${API_BASE}/orders/user/${u.id}`);
+      const tbody = document.getElementById('historyTableContainer');
+      tbody.innerHTML = "";
+
+      orders.forEach(o => {
+        let normalizedStatus = o.status.toLowerCase().replace(/\s+/g, '');
+        tbody.innerHTML += `
+          <tr>
+            <td><strong>${o.order_id || 'Pending Connection'}</strong></td>
+            <td>${new Date(o.created_at).toLocaleString()}</td>
+            <td><span class="badge badge-${normalizedStatus}">${o.status}</span></td>
+            <td>${o.service_name}</td>
+            <td><a href="${o.link}" target="_blank" style="color:var(--accent); text-decoration:none;">${o.link}</a></td>
+            <td>${o.quantity}</td>
+            <td>$${parseFloat(o.price).toFixed(4)}</td>
+          </tr>
+        `;
+      });
+    });
+  </script>
+</body>
+</html>
