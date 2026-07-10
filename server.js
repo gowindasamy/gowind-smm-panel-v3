@@ -77,21 +77,6 @@ CREATE TABLE IF NOT EXISTS providers (
 `);
 
 await db.query(`
-CREATE TABLE IF NOT EXISTS services (
-    id SERIAL PRIMARY KEY,
-    provider_id INT,
-    service_id INT,
-    name VARCHAR(255),
-    category VARCHAR(100),
-    rate DECIMAL(10,2),
-    min INT,
-    max INT,
-    status BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-`);
-
-await db.query(`
 CREATE TABLE IF NOT EXISTS orders (
     id SERIAL PRIMARY KEY,
     user_id INT,
