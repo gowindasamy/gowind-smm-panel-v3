@@ -83,14 +83,6 @@
             box-shadow: 0 8px 24px rgba(0,0,0,0.5);
         }
 
-        .auth-box h2 {
-            margin-bottom: 20px;
-            text-align: center;
-            color: var(--primary-red);
-            text-transform: uppercase;
-        }
-
-        /* Tabs to switch between User and Admin login panels */
         .auth-tabs {
             display: flex;
             margin-bottom: 20px;
@@ -100,17 +92,19 @@
         .tab {
             flex: 1;
             text-align: center;
-            padding: 10px;
+            padding: 12px;
             cursor: pointer;
             color: var(--text-muted);
             text-transform: uppercase;
             font-size: 0.85rem;
             font-weight: bold;
+            transition: all 0.3s ease;
         }
 
         .tab.active {
             color: var(--primary-red);
             border-bottom: 2px solid var(--primary-red);
+            background-color: rgba(229, 9, 20, 0.05);
         }
 
         .form-group {
@@ -160,10 +154,8 @@
             background-color: #b80710;
         }
 
-        button:active {
-            transform: scale(0.98);
-        }
-
+        .hidden { display: none !important; }
+        
         /* ========================================== */
         /* DASHBOARD METRICS CARDS DESIGN */
         /* ========================================== */
@@ -296,8 +288,7 @@
             font-size: 0.9rem;
             font-weight: bold;
         }
-
-        .hidden { display: none !important; }
+        
         .logout-btn { background-color: #333; width: auto; padding: 8px 16px; font-size: 0.85rem;}
         .logout-btn:hover { background-color: #444; }
     </style>
@@ -305,7 +296,7 @@
 <body>
 
     <div class="container">
-        <!-- HEADER ELEMENT PANEL -->
+        <!-- HEADER MODULE -->
         <header>
             <div>
                 <h1>GOWIND <span>SMM PANEL</span></h1>
@@ -317,7 +308,7 @@
         </header>
 
         <!-- ========================================== -->
-        <!-- SYSTEM ACCESS SECURITY GATEWAYS -->
+        <!-- SYSTEM SECURITY GATEWAYS (LOGIN / AUTH) -->
         <!-- ========================================== -->
         <div id="authContainer" class="auth-wrapper">
             <div class="auth-box">
@@ -339,8 +330,8 @@
                     <button onclick="handleAccountLogin()">Authenticate Identity</button>
                 </div>
 
-                <!-- ADMIN LOGWAY FORM BLOCK (PASSWORD ONLY) -->
-                <div id="adminFormGroup" class="hidden">
+                <!-- ADMIN FORM BLOCK (PASSWORD ONLY) -->
+                <div id="adminFormGroup" style="display: none;">
                     <div class="form-group">
                         <label>Secure Admin Key Password</label>
                         <input type="password" id="adminSecretKey" placeholder="••••••••••••••••">
@@ -351,11 +342,10 @@
         </div>
 
         <!-- ========================================== -->
-        <!-- MAIN PRODUCTION SECURITY WORKSPACE -->
+        <!-- MAIN PRODUCTION DASHBOARD PIPELINE -->
         <!-- ========================================== -->
         <div id="dashboardContainer" class="hidden">
-            
-            <!-- METRICS SUMMARY GRIDS -->
+            <!-- STATUS TOP METRICS -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <h3>Account Entity Identity</h3>
@@ -371,10 +361,9 @@
                 </div>
             </div>
 
-            <!-- ACTIONS WORKSPACE STRUCTURE -->
+            <!-- WORKSPACE SECTIONS -->
             <div class="workspace-layout">
-                
-                <!-- ROW BLOCK 1: DEPLOYMENT DISPATCH ENGINE -->
+                <!-- PANEL ORDER GENERATION ENGINE -->
                 <div class="panel-block">
                     <h3>Place New Order Pipeline</h3>
                     <div id="orderStatusFeedback" class="status-msg hidden"></div>
@@ -426,18 +415,17 @@
                     <button onclick="dispatchOrderToUpstreamGateway()">Authorize & Dispatch Payload</button>
                 </div>
 
-                <!-- ROW BLOCK 2: CONTEXT NOTICE INFRASTRUCTURE -->
+                <!-- NOTICES CONTEXT PANEL -->
                 <div class="panel-block">
                     <h3>Platform Operations Notice</h3>
                     <div class="notice-box">
                         Welcome to the high-performance GOWIND SMM Platform interface. 
                         Deploy immediate social signals natively through multiple configured backend APIs concurrently. 
-                        All automated processing loops calculate data constraints values natively on verification metrics nodes.
                     </div>
                 </div>
             </div>
 
-            <!-- CORE HISTORIC DATA TABLES REGISTRIES -->
+            <!-- LOGS LOGISTICS REGISTRY DATA TABLE -->
             <div class="table-responsive">
                 <h3 style="margin-bottom: 15px; font-size: 1.1rem; text-transform: uppercase; padding-left: 5px;">Transactional Pipeline Audit History Logs</h3>
                 <table>
@@ -460,12 +448,11 @@
                     </tbody>
                 </table>
             </div>
-
         </div>
     </div>
 
     <!-- ========================================== -->
-    <!-- CORE RUNTIME INTERCEPT ROUTING LOGIC ENGINE -->
+    <!-- BUSINESS ROUTING LOGIC EXECUTION RUNTIME -->
     <!-- ========================================== -->
     <script>
         const API_BASE_URL = "https://gowind-smm-panel-v3.onrender.com";
@@ -480,7 +467,7 @@
             }
         });
 
-        // Tab selection management functionality
+        // RE-DESIGNED SWITCH ENGINE: Flawless dynamic UI switching
         function switchAuthMode(mode) {
             const userTab = document.getElementById('userTab');
             const adminTab = document.getElementById('adminTab');
@@ -490,23 +477,23 @@
             if(mode === 'user') {
                 userTab.classList.add('active');
                 adminTab.classList.remove('active');
-                userForm.classList.remove('hidden');
-                adminForm.classList.add('hidden');
+                userForm.style.display = "block";
+                adminForm.style.display = "none";
             } else {
                 adminTab.classList.add('active');
                 userTab.classList.remove('active');
-                adminForm.classList.remove('hidden');
-                userForm.classList.add('hidden');
+                userForm.style.display = "none";
+                adminForm.style.display = "block";
             }
         }
 
-        // 1. Client Old Database Login Function
+        // CLIENT AUTH HOOK
         async function handleAccountLogin() {
             const usernameInput = document.getElementById('loginUser').value;
             const passwordInput = document.getElementById('loginPass').value;
 
             if(!usernameInput || !passwordInput) {
-                alert("Please fill in user verification fields completely.");
+                alert("Please fill in user credentials completely.");
                 return;
             }
 
@@ -517,8 +504,7 @@
                     body: JSON.stringify({ username: usernameInput, password: passwordInput })
                 });
                 const data = await res.json();
-                
-                if(!res.ok) throw new Error(data.error || "Identity validation error.");
+                if(!res.ok) throw new Error(data.error || "Login failed.");
 
                 activeSessionUser = data.user;
                 localStorage.setItem('smm_session_token', JSON.stringify(data.user));
@@ -528,18 +514,15 @@
             }
         }
 
-        // 2. Admin Password Only Redirection Routing Validation Function
+        // PASSWORD ONLY ROUTER FOR MASTER ADMIN
         function handleAdminGatewayValidation() {
             const adminSecret = document.getElementById('adminSecretKey').value;
-
             if(!adminSecret) {
-                alert("Please enter the master admin control access passcode key.");
+                alert("Please enter the admin passcode key.");
                 return;
             }
-
-            // Direct internal pass check or bypass evaluation system
+            // Set your designated password keys here
             if(adminSecret === "admin123" || adminSecret === "password") {
-                // If password matches, automatically transfer user layout framework context to admin portal
                 window.location.href = "admin.html";
             } else {
                 alert("Invalid Admin Key Security Access Blocked.");
@@ -556,4 +539,16 @@
 
         async function initializeSecureDashboardWorkspace() {
             document.getElementById('authContainer').classList.add('hidden');
-            document.getElementById('dashboardCont
+            document.getElementById('dashboardContainer').classList.remove('hidden');
+            document.getElementById('navActions').classList.remove('hidden');
+            document.getElementById('displayUsername').textContent = activeSessionUser.username;
+            await synchronizeClientProfileMetrics();
+            await pullAvailableOfferingsMatrix();
+            await synchronizeOrderActivityHistoryLogs();
+        }
+
+        async function synchronizeClientProfileMetrics() {
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/user/${activeSessionUser.id}`);
+                const data = await res.json();
+                if(res.ok && data
