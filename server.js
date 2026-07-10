@@ -471,6 +471,64 @@ app.post("/api/wallet/add", async (req, res) => {
         });
     }
 });
+// Add Provider API
+app.post("/api/providers", async (req, res) => {
+    try {
+
+        const {
+            name,
+            api_url,
+            api_key
+        } = req.body;
+
+        await db.query(
+            `INSERT INTO providers
+            (name, api_url, api_key)
+            VALUES ($1,$2,$3)`,
+            [
+                name,
+                api_url,
+                api_key
+            ]
+        );
+
+        res.json({
+            success: true,
+            message: "Provider Added Successfully"
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+});
+// Get Providers API
+app.get("/api/providers", async (req, res) => {
+    try {
+
+        const result = await db.query(
+            "SELECT * FROM providers ORDER BY id ASC"
+        );
+
+        res.json({
+            success: true,
+            total: result.rows.length,
+            providers: result.rows
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+});
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
