@@ -142,6 +142,10 @@ CREATE TABLE IF NOT EXISTS settings (
     });
   }
 });
+await db.query(`
+CREATE UNIQUE INDEX IF NOT EXISTS services_provider_unique
+ON services(provider_id, provider_service_id);
+`);
 // Login API
 app.post("/api/login", async (req, res) => {
     try {
@@ -537,29 +541,77 @@ app.get("/api/providers", async (req, res) => {
 
     }
 });
-app.post("/api/providers/import", async (req, res) => {
 
+// Import Services From Provider
+app.post("/api/providers/import", async (req, res) => {
     try {
 
         const { provider_id } = req.body;
 
-        const provider = await db.query(
+        const providerResult = await db.query(
             "SELECT * FROM providers WHERE id = $1",
             [provider_id]
         );
 
-        if (provider.rows.length === 0) {
+        if (providerResult.rows.length === 0) {
             return res.status(404).json({
                 success: false,
                 message: "Provider not found"
             });
         }
 
-        // அடுத்த கட்டத்தில் provider API call சேர்க்கப்படும்
+        const provider = providerResult.rows[0];
+
+        const response = await axios.post(
+            provider.api_url,
+            new URLSearchParams({
+                key: provider.api_key,
+                action: "services"
+            }),
+            {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
+            }
+        );
+
+        const services = response.data;
+
+        let imported = 0;
+
+        for (const service of services) {
+
+            await db.query(
+                `INSERT INTO services
+                (
+                    provider_id,
+                    provider_service_id,
+                    name,
+                    category,
+                    rate,
+                    min,
+                    max
+                )
+                VALUES ($1,$2,$3,$4,$5,$6,$7)
+                ON CONFLICT DO NOTHING`,
+                [
+                    provider.id,
+                    service.service,
+                    service.name,
+                    service.category,
+                    Number(service.rate),
+                    Number(service.min),
+                    Number(service.max)
+                ]
+            );
+
+            imported++;
+
+        }
 
         res.json({
             success: true,
-            message: "Import API Ready"
+            imported: imported
         });
 
     } catch (err) {
@@ -570,7 +622,6 @@ app.post("/api/providers/import", async (req, res) => {
         });
 
     }
-
 });
 const PORT = process.env.PORT || 3000;
 
