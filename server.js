@@ -1213,7 +1213,30 @@ app.get("/api/admin/dashboard", async (req, res) => {
     }
 
 });
+app.delete("/api/providers/:id", async (req, res) => {
 
+    try {
+
+        await db.query(
+            "DELETE FROM providers WHERE id = $1",
+            [req.params.id]
+        );
+
+        res.json({
+            success: true,
+            message: "Provider Deleted Successfully"
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
 /* ===========================
    SERVER START
 =========================== */
