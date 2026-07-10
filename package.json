@@ -4,7 +4,8 @@
   "description": "Private SMM Panel",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node server.js"
   },
   "author": "Gowind",
   "license": "MIT",
@@ -16,5 +17,8 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.16.0"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
