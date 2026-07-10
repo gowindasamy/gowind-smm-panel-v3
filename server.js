@@ -998,6 +998,221 @@ app.post("/api/providers/cancel", async (req, res) => {
     }
 
 });
+/* ===========================
+   SEND ORDER TO PROVIDER
+=========================== */
+
+app.post("/api/providers/order", async (req, res) => {
+
+    try {
+
+        const { order_id } = req.body;
+
+        const orderResult = await db.query(
+            `SELECT o.*, s.provider_service_id, s.provider_id,
+                    p.api_url, p.api_key
+             FROM orders o
+             JOIN services s ON o.service_id = s.id
+             JOIN providers p ON s.provider_id = p.id
+             WHERE o.id = $1`,
+            [order_id]
+        );
+
+        if (orderResult.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Order not found"
+            });
+        }
+
+        const order = orderResult.rows[0];
+
+        const response = await axios.post(
+            order.api_url,
+            new URLSearchParams({
+                key: order.api_key,
+                action: "add",
+                service: order.provider_service_id,
+                link: order.link,
+                quantity: order.quantity
+            }),
+            {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
+            }
+        );
+
+        if (response.data.order) {
+
+            await db.query(
+                `UPDATE orders
+                 SET provider_order_id=$1,
+                     provider_id=$2,
+                     status='Pending'
+                 WHERE id=$3`,
+                [
+                    response.data.order,
+                    order.provider_id,
+                    order.id
+                ]
+            );
+
+            return res.json({
+                success: true,
+                provider_order_id: response.data.order
+            });
+
+        }
+
+        res.status(400).json({
+            success: false,
+            provider_response: response.data
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
+/* ===========================
+   SYNC ALL ORDER STATUS
+=========================== */
+
+app.get("/api/providers/sync", async (req, res) => {
+
+    try {
+
+        const orders = await db.query(`
+            SELECT
+                o.id,
+                o.provider_order_id,
+                o.provider_id,
+                p.api_url,
+                p.api_key
+            FROM orders o
+            JOIN providers p
+            ON o.provider_id = p.id
+            WHERE o.provider_order_id IS NOT NULL
+        `);
+
+        let updated = 0;
+
+        for (const order of orders.rows) {
+
+            const response = await axios.post(
+                order.api_url,
+                new URLSearchParams({
+                    key: order.api_key,
+                    action: "status",
+                    order: order.provider_order_id
+                }),
+                {
+                    headers: {
+                        "Content-Type":
+                        "application/x-www-form-urlencoded"
+                    }
+                }
+            );
+
+            if (response.data.status) {
+
+                await db.query(
+                    `UPDATE orders
+                     SET status = $1
+                     WHERE id = $2`,
+                    [
+                        response.data.status,
+                        order.id
+                    ]
+                );
+
+                updated++;
+
+            }
+
+        }
+
+        res.json({
+            success: true,
+            updated
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
+/* ===========================
+   ADMIN DASHBOARD
+=========================== */
+
+app.get("/api/admin/dashboard", async (req, res) => {
+
+    try {
+
+        const users = await db.query(
+            "SELECT COUNT(*) AS total FROM users"
+        );
+
+        const orders = await db.query(
+            "SELECT COUNT(*) AS total FROM orders"
+        );
+
+        const providers = await db.query(
+            "SELECT COUNT(*) AS total FROM providers"
+        );
+
+        const services = await db.query(
+            "SELECT COUNT(*) AS total FROM services"
+        );
+
+        const revenue = await db.query(
+            "SELECT COALESCE(SUM(charge),0) AS total FROM orders"
+        );
+
+        res.json({
+
+            success: true,
+
+            dashboard: {
+
+                users: Number(users.rows[0].total),
+
+                orders: Number(orders.rows[0].total),
+
+                providers: Number(providers.rows[0].total),
+
+                services: Number(services.rows[0].total),
+
+                revenue: Number(revenue.rows[0].total)
+
+            }
+
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+
+            success: false,
+            error: err.message
+
+        });
+
+    }
+
+});
 
 /* ===========================
    SERVER START
