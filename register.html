@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>👤 Create Admin User</h1>
+</header>
+
+<main>
+
+<input type="text" id="username" placeholder="Username">
+
+<br><br>
+
+<input type="password" id="password" placeholder="Password">
+
+<br><br>
+
+<select id="role">
+    <option value="user">User</option>
+    <option value="admin">Admin</option>
+</select>
+
+<br><br>
+
+<button onclick="registerUser()">Create User</button>
+
+<p id="result"></p>
+
+<br>
+
+<button onclick="location.href='login.html'">
+⬅ Login
+</button>
+
+</main>
+
+<script>
+async function registerUser(){
+
+const username=document.getElementById("username").value;
+const password=document.getElementById("password").value;
+const role=document.getElementById("role").value;
+
+const response=await fetch("https://gowind-smm-panel-v3.onrender.com/api/register",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+username,
+password,
+role
+})
+});
+
+const data=await response.json();
+
+document.getElementById("result").innerHTML=data.message;
+
+}
+</script>
+
+</body>
+</html>
