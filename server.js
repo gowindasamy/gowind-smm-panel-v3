@@ -90,14 +90,15 @@ CREATE TABLE IF NOT EXISTS services (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 `);
+      await db.query(`
+CREATE UNIQUE INDEX IF NOT EXISTS services_provider_unique
+ON services(provider_id, provider_service_id);
+`);
 await db.query(`
 ALTER TABLE services
 ADD COLUMN IF NOT EXISTS provider_id INT;
 `);
-await db.query(`
-CREATE UNIQUE INDEX IF NOT EXISTS services_provider_unique
-ON services(provider_id, provider_service_id);
-`);
+
 await db.query(`
 ALTER TABLE services
 ADD COLUMN IF NOT EXISTS provider_service_id INT;
