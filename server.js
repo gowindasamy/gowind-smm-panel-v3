@@ -357,6 +357,29 @@ app.post("/api/orders", async (req, res) => {
 
     }
 });
+// Get Orders API
+app.get("/api/orders", async (req, res) => {
+    try {
+
+        const result = await db.query(
+            "SELECT * FROM orders ORDER BY id DESC"
+        );
+
+        res.json({
+            success: true,
+            total: result.rows.length,
+            orders: result.rows
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+});
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
