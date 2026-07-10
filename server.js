@@ -113,7 +113,10 @@ await db.query(`
 CREATE UNIQUE INDEX IF NOT EXISTS services_provider_unique
 ON services(provider_id, provider_service_id);
 `);
-
+await db.query(`
+ALTER TABLE orders
+ADD COLUMN IF NOT EXISTS provider_id INT;
+`);
 await db.query(`
 ALTER TABLE orders
 ADD COLUMN IF NOT EXISTS provider_order_id BIGINT;
