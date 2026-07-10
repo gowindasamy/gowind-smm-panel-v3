@@ -3,34 +3,87 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Register</title>
+<title>Create Admin User</title>
+
 <link rel="stylesheet" href="style.css">
+
+<style>
+body{
+    background:#111827;
+    color:white;
+    text-align:center;
+    font-family:Arial,sans-serif;
+}
+
+main{
+    width:90%;
+    max-width:400px;
+    margin:auto;
+    padding:20px;
+}
+
+input,select{
+    width:100%;
+    padding:14px;
+    margin:10px 0;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:8px;
+    background:#00d4ff;
+    color:#111827;
+    font-size:18px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#00b5d8;
+}
+
+#result{
+    margin-top:20px;
+    color:#00ff88;
+    font-weight:bold;
+    word-break:break-word;
+}
+</style>
+
 </head>
 
 <body>
 
 <header>
-    <h1>👤 Create Admin User</h1>
+<h1>👤 Create Admin User</h1>
 </header>
 
 <main>
 
-<input type="text" id="username" placeholder="Username">
+<input
+id="username"
+type="text"
+placeholder="Username"
+required>
 
-<br><br>
-
-<input type="password" id="password" placeholder="Password">
-
-<br><br>
+<input
+id="password"
+type="password"
+placeholder="Password"
+required>
 
 <select id="role">
-    <option value="user">User</option>
-    <option value="admin">Admin</option>
+<option value="user">User</option>
+<option value="admin">Admin</option>
 </select>
 
-<br><br>
-
-<button onclick="registerUser()">Create User</button>
+<button onclick="registerUser()">
+Create User
+</button>
 
 <p id="result"></p>
 
@@ -43,13 +96,23 @@
 </main>
 
 <script>
+
 async function registerUser(){
 
 const username=document.getElementById("username").value;
 const password=document.getElementById("password").value;
 const role=document.getElementById("role").value;
 
-const response=await fetch("https://gowind-smm-panel-v3.onrender.com/api/register",{
+if(username==="" || password===""){
+document.getElementById("result").innerHTML="Please fill all fields.";
+return;
+}
+
+try{
+
+const response=await fetch(
+"https://gowind-smm-panel-v3.onrender.com/api/register",
+{
 method:"POST",
 headers:{
 "Content-Type":"application/json"
@@ -59,13 +122,26 @@ username,
 password,
 role
 })
-});
+}
+);
 
 const data=await response.json();
 
-document.getElementById("result").innerHTML=data.message;
+document.getElementById("result").innerHTML=
+data.message ||
+data.error ||
+JSON.stringify(data);
 
 }
+catch(err){
+
+document.getElementById("result").innerHTML=
+"Error: "+err.message;
+
+}
+
+}
+
 </script>
 
 </body>
