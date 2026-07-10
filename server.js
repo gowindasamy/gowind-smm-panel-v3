@@ -5,264 +5,312 @@ const cors = require("cors");
 const helmet = require("helmet");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const db = require("./db");
 const axios = require("axios");
+const db = require("./db");
+
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 app.use(helmet());
 
-// Home
+/* ===========================
+   HOME
+=========================== */
+
 app.get("/", (req, res) => {
     res.json({
         success: true,
         name: "Gowind SMM Panel",
-        version: "3.0.1",
+        version: "3.1.0",
         status: "Online"
     });
 });
 
-// Health Check
+/* ===========================
+   HEALTH
+=========================== */
+
 app.get("/health", (req, res) => {
     res.json({
-        status: "OK",
+        success: true,
         uptime: process.uptime()
     });
 });
 
-// Database Test
+/* ===========================
+   DATABASE TEST
+=========================== */
+
 app.get("/db-test", async (req, res) => {
-    try {
+
+    try{
+
         const result = await db.query("SELECT NOW()");
 
         res.json({
-            success: true,
-            database: "Connected",
-            time: result.rows[0]
+            success:true,
+            database:"Connected",
+            time:result.rows[0]
         });
 
-    } catch (err) {
+    }catch(err){
+
         res.status(500).json({
-            success: false,
-            error: err.message
+            success:false,
+            error:err.message
         });
+
     }
+
 });
-app.get("/setup", async (req, res) => {
-  try {
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        username VARCHAR(50) UNIQUE NOT NULL,
-        password TEXT NOT NULL,
-        role VARCHAR(20) DEFAULT 'user',
-        status BOOLEAN DEFAULT TRUE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
-      await db.query(`
-ALTER TABLE users
-ADD COLUMN IF NOT EXISTS wallet DECIMAL(10,2) DEFAULT 0;
-`);
-    await db.query(`
-CREATE TABLE IF NOT EXISTS providers (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    api_url TEXT NOT NULL,
-    api_key TEXT NOT NULL,
-    status BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+/* ===========================
+   DATABASE SETUP
+=========================== */
+
+app.get("/setup", async (req,res)=>{
+
+try{
+
+await db.query(`
+CREATE TABLE IF NOT EXISTS users(
+id SERIAL PRIMARY KEY,
+username VARCHAR(50) UNIQUE NOT NULL,
+password TEXT NOT NULL,
+role VARCHAR(20) DEFAULT 'user',
+wallet DECIMAL(10,2) DEFAULT 0,
+status BOOLEAN DEFAULT TRUE,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 `);
 
 await db.query(`
-CREATE TABLE IF NOT EXISTS orders (
-    id SERIAL PRIMARY KEY,
-    user_id INT,
-    service_id INT,
-    link TEXT,
-    quantity INT,
-    charge DECIMAL(10,2),
-    status VARCHAR(30) DEFAULT 'Pending',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS providers(
+id SERIAL PRIMARY KEY,
+name VARCHAR(100),
+api_url TEXT,
+api_key TEXT,
+status BOOLEAN DEFAULT TRUE,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 `);
 
 await db.query(`
-CREATE TABLE IF NOT EXISTS transactions (
-    id SERIAL PRIMARY KEY,
-    user_id INT,
-    amount DECIMAL(10,2),
-    type VARCHAR(50),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS services(
+id SERIAL PRIMARY KEY,
+provider_id INT,
+provider_service_id INT,
+service_id INT,
+name VARCHAR(255),
+category VARCHAR(150),
+rate DECIMAL(10,2),
+min INT,
+max INT,
+status BOOLEAN DEFAULT TRUE,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 `);
-
-await db.query(`
-CREATE TABLE IF NOT EXISTS settings (
-    id SERIAL PRIMARY KEY,
-    site_name VARCHAR(100),
-    currency VARCHAR(10),
-    maintenance BOOLEAN DEFAULT FALSE
-);
-`);
-      
 
 await db.query(`
 CREATE UNIQUE INDEX IF NOT EXISTS services_provider_unique
-ON services(provider_id, provider_service_id);
-`);
-await db.query(`
-ALTER TABLE orders
-ADD COLUMN IF NOT EXISTS provider_id INT;
-`);
-await db.query(`
-ALTER TABLE orders
-ADD COLUMN IF NOT EXISTS provider_order_id BIGINT;
+ON services(provider_id,provider_service_id);
 `);
 
 await db.query(`
-CREATE TABLE IF NOT EXISTS services (
-    id SERIAL PRIMARY KEY,
-    provider_id INT,
-    provider_service_id INT,
-    service_id INT,
-    name VARCHAR(255),
-    category VARCHAR(100),
-    rate DECIMAL(10,2),
-    min INT,
-    max INT,
-    status BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS orders(
+id SERIAL PRIMARY KEY,
+user_id INT,
+provider_id INT,
+provider_order_id BIGINT,
+service_id INT,
+link TEXT,
+quantity INT,
+charge DECIMAL(10,2),
+status VARCHAR(30) DEFAULT 'Pending',
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 `);
 
-    res.json({
-      success: true,
-      message: "All database tables created successfully."
-    });
+await db.query(`
+CREATE TABLE IF NOT EXISTS transactions(
+id SERIAL PRIMARY KEY,
+user_id INT,
+amount DECIMAL(10,2),
+type VARCHAR(20),
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+`);
 
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      error: err.message
-    });
-  }
+await db.query(`
+CREATE TABLE IF NOT EXISTS settings(
+id SERIAL PRIMARY KEY,
+site_name VARCHAR(100),
+currency VARCHAR(10),
+maintenance BOOLEAN DEFAULT FALSE
+);
+`);
+
+res.json({
+success:true,
+message:"Database Ready"
 });
 
-// Login API
-app.post("/api/login", async (req, res) => {
-    try {
+}catch(err){
 
-        const { username, password } = req.body;
-
-        const result = await db.query(
-            "SELECT * FROM users WHERE username = $1",
-            [username]
-        );
-
-        if (result.rows.length === 0) {
-            return res.status(401).json({
-                success: false,
-                message: "Invalid Username"
-            });
-        }
-
-        const user = result.rows[0];
-
-        const match = await bcrypt.compare(
-            password,
-            user.password
-        );
-
-        if (!match) {
-            return res.status(401).json({
-                success: false,
-                message: "Invalid Password"
-            });
-        }
-
-        const token = jwt.sign(
-            {
-                id: user.id,
-                username: user.username,
-                role: user.role
-            },
-            process.env.JWT_SECRET,
-            {
-                expiresIn: "7d"
-            }
-        );
-
-        res.json({
-            success: true,
-            message: "Login Successful",
-            token,
-            user: {
-                id: user.id,
-                username: user.username,
-                role: user.role
-            }
-        });
-
-    } catch (err) {
-
-        res.status(500).json({
-            success: false,
-            error: err.message
-        });
-
-    }
+res.status(500).json({
+success:false,
+error:err.message
 });
-// Register API
-app.post("/api/register", async (req, res) => {
-    try {
-        const { username, password, role } = req.body;
 
-        // Check if user already exists
-        const checkUser = await db.query(
-            "SELECT * FROM users WHERE username = $1",
-            [username]
-        );
+}
 
-        if (checkUser.rows.length > 0) {
-            return res.status(400).json({
-                success: false,
-                message: "Username already exists"
-            });
-        }
-
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Insert user
-        await db.query(
-            "INSERT INTO users (username, password, role) VALUES ($1, $2, $3)",
-            [
-                username,
-                hashedPassword,
-                role || "user"
-            ]
-        );
-
-        res.json({
-            success: true,
-            message: "User registered successfully"
-        });
-
-    } catch (err) {
-        res.status(500).json({
-            success: false,
-            error: err.message
-        });
-    }
 });
-// Add Service
+
+/* ===========================
+   LOGIN
+=========================== */
+
+app.post("/api/login",async(req,res)=>{
+
+try{
+
+const {username,password}=req.body;
+
+const result=await db.query(
+"SELECT * FROM users WHERE username=$1",
+[username]
+);
+
+if(result.rows.length===0){
+
+return res.status(401).json({
+success:false,
+message:"Invalid Username"
+});
+
+}
+
+const user=result.rows[0];
+
+const match=await bcrypt.compare(
+password,
+user.password
+);
+
+if(!match){
+
+return res.status(401).json({
+success:false,
+message:"Invalid Password"
+});
+
+}
+
+const token=jwt.sign({
+
+id:user.id,
+username:user.username,
+role:user.role
+
+},
+process.env.JWT_SECRET,
+{
+expiresIn:"7d"
+});
+
+res.json({
+
+success:true,
+message:"Login Successful",
+token,
+user
+
+});
+
+}catch(err){
+
+res.status(500).json({
+
+success:false,
+error:err.message
+
+});
+
+}
+
+});
+
+/* ===========================
+   REGISTER
+=========================== */
+
+app.post("/api/register",async(req,res)=>{
+
+try{
+
+const {username,password,role}=req.body;
+
+const check=await db.query(
+"SELECT * FROM users WHERE username=$1",
+[username]
+);
+
+if(check.rows.length>0){
+
+return res.json({
+success:false,
+message:"Username already exists"
+});
+
+}
+
+const hash=await bcrypt.hash(password,10);
+
+await db.query(
+
+`INSERT INTO users
+(username,password,role)
+VALUES($1,$2,$3)`,
+
+[
+username,
+hash,
+role || "user"
+]
+
+);
+
+res.json({
+
+success:true,
+message:"User Registered Successfully"
+
+});
+
+}catch(err){
+
+res.status(500).json({
+
+success:false,
+error:err.message
+
+});
+
+}
+
+});
+/* ===========================
+   ADD SERVICE
+=========================== */
+
 app.post("/api/services", async (req, res) => {
+
     try {
 
         const {
+            provider_id,
+            provider_service_id,
             service_id,
             name,
             category,
@@ -273,9 +321,20 @@ app.post("/api/services", async (req, res) => {
 
         await db.query(
             `INSERT INTO services
-            (service_id, name, category, rate, min, max)
-            VALUES ($1,$2,$3,$4,$5,$6)`,
+            (
+                provider_id,
+                provider_service_id,
+                service_id,
+                name,
+                category,
+                rate,
+                min,
+                max
+            )
+            VALUES($1,$2,$3,$4,$5,$6,$7,$8)`,
             [
+                provider_id,
+                provider_service_id,
                 service_id,
                 name,
                 category,
@@ -298,13 +357,19 @@ app.post("/api/services", async (req, res) => {
         });
 
     }
+
 });
-// Get All Services API
+
+/* ===========================
+   GET SERVICES
+=========================== */
+
 app.get("/api/services", async (req, res) => {
+
     try {
 
         const result = await db.query(
-            "SELECT * FROM services WHERE status = TRUE ORDER BY id ASC"
+            "SELECT * FROM services WHERE status=TRUE ORDER BY id ASC"
         );
 
         res.json({
@@ -321,104 +386,34 @@ app.get("/api/services", async (req, res) => {
         });
 
     }
+
 });
-// Place Order API (Wallet Check)
-app.post("/api/orders", async (req, res) => {
+
+/* ===========================
+   GET SINGLE SERVICE
+=========================== */
+
+app.get("/api/services/:id", async (req, res) => {
+
     try {
 
-        const { user_id, service_id, link, quantity } = req.body;
-
-        // Get Service
-        const serviceResult = await db.query(
-            "SELECT * FROM services WHERE id = $1",
-            [service_id]
+        const result = await db.query(
+            "SELECT * FROM services WHERE id=$1",
+            [req.params.id]
         );
 
-        if (serviceResult.rows.length === 0) {
+        if (result.rows.length === 0) {
+
             return res.status(404).json({
                 success: false,
                 message: "Service not found"
             });
+
         }
-
-        const service = serviceResult.rows[0];
-
-        const charge = (Number(service.rate) * Number(quantity)) / 1000;
-
-        // Get User Wallet
-        const userResult = await db.query(
-            "SELECT wallet FROM users WHERE id = $1",
-            [user_id]
-        );
-
-        if (userResult.rows.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "User not found"
-            });
-        }
-
-        const wallet = Number(userResult.rows[0].wallet);
-
-        if (wallet < charge) {
-            return res.status(400).json({
-                success: false,
-                message: "Insufficient Wallet Balance"
-            });
-        }
-
-        // Deduct Wallet
-        await db.query(
-            "UPDATE users SET wallet = wallet - $1 WHERE id = $2",
-            [charge, user_id]
-        );
-
-        // Save Transaction
-        await db.query(
-            "INSERT INTO transactions (user_id, amount, type) VALUES ($1,$2,$3)",
-            [user_id, charge, "Debit"]
-        );
-
-        // Save Order
-        await db.query(
-            `INSERT INTO orders
-            (user_id, service_id, link, quantity, charge, status)
-            VALUES ($1,$2,$3,$4,$5,$6)`,
-            [
-                user_id,
-                service_id,
-                link,
-                quantity,
-                charge,
-                "Pending"
-            ]
-        );
 
         res.json({
             success: true,
-            message: "Order Placed Successfully",
-            charge: charge
-        });
-
-    } catch (err) {
-        res.status(500).json({
-            success: false,
-            error: err.message
-        });
-    }
-});
-// Get Orders API
-app.get("/api/orders", async (req, res) => {
-    try {
-
-        const result = await db.query(
-            "SELECT * FROM orders ORDER BY id DESC"
-        );
-
-        res.json({
-            success: true,
-            total: result.rows.length,
-            orders: result.rows
+            service: result.rows[0]
         });
 
     } catch (err) {
@@ -429,23 +424,29 @@ app.get("/api/orders", async (req, res) => {
         });
 
     }
+
 });
-// Wallet Balance API
+
+/* ===========================
+   WALLET BALANCE
+=========================== */
+
 app.get("/api/wallet/:userId", async (req, res) => {
+
     try {
 
-        const userId = req.params.userId;
-
         const result = await db.query(
-            "SELECT wallet FROM users WHERE id = $1",
-            [userId]
+            "SELECT wallet FROM users WHERE id=$1",
+            [req.params.userId]
         );
 
         if (result.rows.length === 0) {
+
             return res.status(404).json({
                 success: false,
                 message: "User not found"
             });
+
         }
 
         res.json({
@@ -454,64 +455,45 @@ app.get("/api/wallet/:userId", async (req, res) => {
         });
 
     } catch (err) {
+
         res.status(500).json({
             success: false,
             error: err.message
         });
+
     }
+
 });
-// Add Wallet Balance API
+
+/* ===========================
+   ADD WALLET
+=========================== */
+
 app.post("/api/wallet/add", async (req, res) => {
+
     try {
 
         const { user_id, amount } = req.body;
 
         await db.query(
-            "UPDATE users SET wallet = wallet + $1 WHERE id = $2",
+            "UPDATE users SET wallet=wallet+$1 WHERE id=$2",
             [amount, user_id]
         );
 
         await db.query(
-            "INSERT INTO transactions (user_id, amount, type) VALUES ($1, $2, $3)",
-            [user_id, amount, "Credit"]
-        );
-
-        res.json({
-            success: true,
-            message: "Wallet updated successfully"
-        });
-
-    } catch (err) {
-        res.status(500).json({
-            success: false,
-            error: err.message
-        });
-    }
-});
-// Add Provider API
-app.post("/api/providers", async (req, res) => {
-    try {
-
-        const {
-            name,
-            api_url,
-            api_key
-        } = req.body;
-
-        await db.query(
-            `INSERT INTO providers
-            (name, api_url, api_key)
-            VALUES ($1,$2,$3)`,
+            `INSERT INTO transactions
+            (user_id,amount,type)
+            VALUES($1,$2,$3)`,
             [
-                name,
-                api_url,
-                api_key
+                user_id,
+                amount,
+                "Credit"
             ]
         );
 
         res.json({
             success: true,
-            message: "Provider Added Successfully"
+            message: "Wallet Updated Successfully"
         });
 
     } catch (err) {
@@ -522,19 +504,29 @@ app.post("/api/providers", async (req, res) => {
         });
 
     }
+
 });
-// Get Providers API
-app.get("/api/providers", async (req, res) => {
+
+/* ===========================
+   TRANSACTION HISTORY
+=========================== */
+
+app.get("/api/transactions/:userId", async (req, res) => {
+
     try {
 
         const result = await db.query(
-            "SELECT * FROM providers ORDER BY id ASC"
+            `SELECT *
+             FROM transactions
+             WHERE user_id=$1
+             ORDER BY id DESC`,
+            [req.params.userId]
         );
 
         res.json({
             success: true,
             total: result.rows.length,
-            providers: result.rows
+            transactions: result.rows
         });
 
     } catch (err) {
@@ -545,16 +537,237 @@ app.get("/api/providers", async (req, res) => {
         });
 
     }
+
+});
+/* ===========================
+   PLACE ORDER
+=========================== */
+
+app.post("/api/orders", async (req, res) => {
+
+    try {
+
+        const {
+            user_id,
+            service_id,
+            link,
+            quantity
+        } = req.body;
+
+        const serviceResult = await db.query(
+            "SELECT * FROM services WHERE id=$1",
+            [service_id]
+        );
+
+        if (serviceResult.rows.length === 0) {
+            return res.status(404).json({
+                success:false,
+                message:"Service not found"
+            });
+        }
+
+        const service = serviceResult.rows[0];
+
+        const charge =
+        (Number(service.rate) * Number(quantity)) / 1000;
+
+        const userResult = await db.query(
+            "SELECT wallet FROM users WHERE id=$1",
+            [user_id]
+        );
+
+        if (userResult.rows.length === 0) {
+            return res.status(404).json({
+                success:false,
+                message:"User not found"
+            });
+        }
+
+        const wallet =
+        Number(userResult.rows[0].wallet);
+
+        if (wallet < charge) {
+
+            return res.status(400).json({
+                success:false,
+                message:"Insufficient Wallet Balance"
+            });
+
+        }
+
+        await db.query(
+            "UPDATE users SET wallet=wallet-$1 WHERE id=$2",
+            [charge,user_id]
+        );
+
+        await db.query(
+            `INSERT INTO transactions
+            (user_id,amount,type)
+            VALUES($1,$2,$3)`,
+            [
+                user_id,
+                charge,
+                "Debit"
+            ]
+        );
+
+        await db.query(
+            `INSERT INTO orders
+            (
+                user_id,
+                service_id,
+                provider_id,
+                link,
+                quantity,
+                charge,
+                status
+            )
+            VALUES($1,$2,$3,$4,$5,$6,$7)`,
+            [
+                user_id,
+                service_id,
+                service.provider_id,
+                link,
+                quantity,
+                charge,
+                "Pending"
+            ]
+        );
+
+        res.json({
+            success:true,
+            message:"Order Placed Successfully",
+            charge
+        });
+
+    } catch(err){
+
+        res.status(500).json({
+            success:false,
+            error:err.message
+        });
+
+    }
+
 });
 
-// Import Services From Provider
+/* ===========================
+   GET ORDERS
+=========================== */
+
+app.get("/api/orders", async(req,res)=>{
+
+    try{
+
+        const result=await db.query(
+        "SELECT * FROM orders ORDER BY id DESC"
+        );
+
+        res.json({
+            success:true,
+            total:result.rows.length,
+            orders:result.rows
+        });
+
+    }catch(err){
+
+        res.status(500).json({
+            success:false,
+            error:err.message
+        });
+
+    }
+
+});
+
+/* ===========================
+   ADD PROVIDER
+=========================== */
+
+app.post("/api/providers",async(req,res)=>{
+
+    try{
+
+        const{
+            name,
+            api_url,
+            api_key
+        }=req.body;
+
+        await db.query(
+
+        `INSERT INTO providers
+        (name,api_url,api_key)
+        VALUES($1,$2,$3)`,
+
+        [
+            name,
+            api_url,
+            api_key
+        ]
+
+        );
+
+        res.json({
+            success:true,
+            message:"Provider Added Successfully"
+        });
+
+    }catch(err){
+
+        res.status(500).json({
+            success:false,
+            error:err.message
+        });
+
+    }
+
+});
+
+/* ===========================
+   GET PROVIDERS
+=========================== */
+
+app.get("/api/providers",async(req,res)=>{
+
+    try{
+
+        const result=await db.query(
+        "SELECT * FROM providers ORDER BY id ASC"
+        );
+
+        res.json({
+
+            success:true,
+            total:result.rows.length,
+            providers:result.rows
+
+        });
+
+    }catch(err){
+
+        res.status(500).json({
+
+            success:false,
+            error:err.message
+
+        });
+
+    }
+
+});
+/* ===========================
+   IMPORT SERVICES
+=========================== */
+
 app.post("/api/providers/import", async (req, res) => {
+
     try {
 
         const { provider_id } = req.body;
 
         const providerResult = await db.query(
-            "SELECT * FROM providers WHERE id = $1",
+            "SELECT * FROM providers WHERE id=$1",
             [provider_id]
         );
 
@@ -575,7 +788,8 @@ app.post("/api/providers/import", async (req, res) => {
             }),
             {
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
+                    "Content-Type":
+                    "application/x-www-form-urlencoded"
                 }
             }
         );
@@ -591,17 +805,19 @@ app.post("/api/providers/import", async (req, res) => {
                 (
                     provider_id,
                     provider_service_id,
+                    service_id,
                     name,
                     category,
                     rate,
                     min,
                     max
                 )
-                VALUES ($1,$2,$3,$4,$5,$6,$7)
+                VALUES($1,$2,$3,$4,$5,$6,$7,$8)
                 ON CONFLICT DO NOTHING`,
                 [
                     provider.id,
-                    service.service,
+                    Number(service.service),
+                    Number(service.service),
                     service.name,
                     service.category,
                     Number(service.rate),
@@ -616,7 +832,7 @@ app.post("/api/providers/import", async (req, res) => {
 
         res.json({
             success: true,
-            imported: imported
+            imported
         });
 
     } catch (err) {
@@ -627,9 +843,170 @@ app.post("/api/providers/import", async (req, res) => {
         });
 
     }
+
 });
+
+/* ===========================
+   PROVIDER BALANCE
+=========================== */
+
+app.get("/api/providers/:id/balance", async (req, res) => {
+
+    try {
+
+        const result = await db.query(
+            "SELECT * FROM providers WHERE id=$1",
+            [req.params.id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Provider not found"
+            });
+        }
+
+        const provider = result.rows[0];
+
+        const response = await axios.post(
+            provider.api_url,
+            new URLSearchParams({
+                key: provider.api_key,
+                action: "balance"
+            }),
+            {
+                headers: {
+                    "Content-Type":
+                    "application/x-www-form-urlencoded"
+                }
+            }
+        );
+
+        res.json(response.data);
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
+
+/* ===========================
+   PROVIDER ORDER STATUS
+=========================== */
+
+app.post("/api/providers/status", async (req, res) => {
+
+    try {
+
+        const { provider_id, order } = req.body;
+
+        const result = await db.query(
+            "SELECT * FROM providers WHERE id=$1",
+            [provider_id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Provider not found"
+            });
+        }
+
+        const provider = result.rows[0];
+
+        const response = await axios.post(
+            provider.api_url,
+            new URLSearchParams({
+                key: provider.api_key,
+                action: "status",
+                order
+            }),
+            {
+                headers: {
+                    "Content-Type":
+                    "application/x-www-form-urlencoded"
+                }
+            }
+        );
+
+        res.json(response.data);
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
+
+/* ===========================
+   CANCEL ORDER
+=========================== */
+
+app.post("/api/providers/cancel", async (req, res) => {
+
+    try {
+
+        const { provider_id, order } = req.body;
+
+        const result = await db.query(
+            "SELECT * FROM providers WHERE id=$1",
+            [provider_id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Provider not found"
+            });
+        }
+
+        const provider = result.rows[0];
+
+        const response = await axios.post(
+            provider.api_url,
+            new URLSearchParams({
+                key: provider.api_key,
+                action: "cancel",
+                order
+            }),
+            {
+                headers: {
+                    "Content-Type":
+                    "application/x-www-form-urlencoded"
+                }
+            }
+        );
+
+        res.json(response.data);
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
+
+/* ===========================
+   SERVER START
+=========================== */
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
+
     console.log(`🚀 Server running on port ${PORT}`);
+
 });
