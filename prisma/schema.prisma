@@ -1,0 +1,66 @@
+generator client {
+provider = "prisma-client-js"
+}
+
+datasource db {
+provider = "postgresql"
+url      = env("DATABASE_URL")
+}
+
+model User {
+id        Int      @id @default(autoincrement())
+username  String   @unique
+password  String
+role      String   @default("user") // admin | user
+status    Boolean  @default(true)
+createdAt DateTime @default(now())
+
+orders Order[]
+}
+
+model Provider {
+id        Int      @id @default(autoincrement())
+name      String
+apiUrl    String
+apiKey    String
+status    Boolean  @default(true)
+createdAt DateTime @default(now())
+
+services Service[]
+}
+
+model Service {
+id         Int      @id @default(autoincrement())
+providerId Int
+serviceId  Int
+name       String
+category   String
+rate       Float
+min        Int
+max        Int
+status     Boolean  @default(true)
+
+provider Provider @relation(fields: [providerId], references: [id])
+orders   Order[]
+}
+
+model Order {
+id          Int      @id @default(autoincrement())
+userId      Int
+serviceId   Int
+link        String
+quantity    Int
+charge      Float
+status      String   @default("Pending")
+createdAt   DateTime @default(now())
+
+user    User    @relation(fields: [userId], references: [id])
+service Service @relation(fields: [serviceId], references: [id])
+}
+
+model Setting {
+id          Int    @id @default(1)
+siteName    String @default("Gowind SMM Panel")
+currency    String @default("INR")
+maintenance Boolean @default(false)
+}
