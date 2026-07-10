@@ -1,49 +1,248 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Order - Gowind SMM Panel</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Order</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+body{
+background:#111827;
+color:white;
+font-family:Arial,sans-serif;
+margin:0;
+}
+
+header{
+background:#1f2937;
+padding:20px;
+text-align:center;
+}
+
+main{
+width:90%;
+max-width:500px;
+margin:auto;
+padding:20px;
+}
+
+input,select{
+width:100%;
+padding:12px;
+margin:10px 0;
+border:none;
+border-radius:8px;
+font-size:16px;
+}
+
+button{
+width:100%;
+padding:14px;
+background:#00d4ff;
+border:none;
+border-radius:8px;
+font-size:18px;
+cursor:pointer;
+}
+
+button:hover{
+background:#00b5d8;
+}
+
+.card{
+background:#1f2937;
+padding:15px;
+border-radius:10px;
+margin-bottom:20px;
+}
+
+#result{
+margin-top:20px;
+font-weight:bold;
+}
+</style>
+
 </head>
+
 <body>
 
 <header>
-    <h1>📦 New Order</h1>
+<h1>📦 New Order</h1>
 </header>
 
 <main>
 
-    <select id="service">
-        <option>Select Service</option>
-        <option>Instagram Followers</option>
-        <option>Instagram Likes</option>
-        <option>YouTube Views</option>
-        <option>YouTube Subscribers</option>
-        <option>Facebook Likes</option>
-    </select>
+<div class="card">
 
-    <br><br>
+<select id="service" onchange="calculateCharge()">
+<option>Loading Services...</option>
+</select>
 
-    <input type="text" id="link" placeholder="Enter Link">
+<input
+type="text"
+id="link"
+placeholder="Instagram / YouTube Link">
 
-    <br><br>
+<input
+type="number"
+id="quantity"
+placeholder="Quantity"
+oninput="calculateCharge()">
 
-    <input type="number" id="quantity" placeholder="Quantity">
+<h3>
+Charge :
+₹ <span id="charge">0.00</span>
+</h3>
 
-    <br><br>
+<button onclick="placeOrder()">
+Place Order
+</button>
 
-    <button onclick="placeOrder()">Place Order</button>
+<p id="result"></p>
 
-    <br><br>
+</div>
 
-    <button onclick="location.href='dashboard.html'">⬅ Dashboard</button>
-
-    <p id="result"></p>
+<button onclick="location.href='dashboard.html'">
+🏠 Dashboard
+</button>
 
 </main>
 
-<script src="script.js"></script>
+<script>
+
+let services=[];
+
+async function loadServices(){
+
+try{
+
+const response=await fetch(
+"https://gowind-smm-panel-v3.onrender.com/api/services"
+);
+
+const data=await response.json();
+
+services=data.services;
+
+let html="";
+
+if(services.length===0){
+
+html="<option>No Services</option>";
+
+}else{
+
+services.forEach(service=>{
+
+html+=`
+<option value="${service.id}">
+${service.name} - ₹${service.rate}/1000
+</option>
+`;
+
+});
+
+}
+
+document.getElementById("service").innerHTML=html;
+
+calculateCharge();
+
+}catch(err){
+
+document.getElementById("result").innerHTML=
+err.message;
+
+}
+
+}
+
+function calculateCharge(){
+
+const serviceId=
+Number(document.getElementById("service").value);
+
+const quantity=
+Number(document.getElementById("quantity").value);
+
+const service=
+services.find(s=>s.id==serviceId);
+
+if(!service || !quantity){
+
+document.getElementById("charge").innerHTML="0.00";
+
+return;
+
+}
+
+const charge=
+(Number(service.rate)*quantity)/1000;
+
+document.getElementById("charge").innerHTML=
+charge.toFixed(2);
+
+}
+
+async function placeOrder(){
+
+const service_id=
+Number(document.getElementById("service").value);
+
+const link=
+document.getElementById("link").value;
+
+const quantity=
+Number(document.getElementById("quantity").value);
+
+if(!service_id || !link || !quantity){
+
+document.getElementById("result").innerHTML=
+"Please fill all fields.";
+
+return;
+
+}
+
+try{
+
+const response=await fetch(
+"https://gowind-smm-panel-v3.onrender.com/api/orders",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+
+user_id:1,
+service_id,
+link,
+quantity
+
+})
+}
+);
+
+const data=await response.json();
+
+document.getElementById("result").innerHTML=
+data.message || data.error;
+
+}catch(err){
+
+document.getElementById("result").innerHTML=
+err.message;
+
+}
+
+}
+
+loadServices();
+
+</script>
 
 </body>
 </html>
