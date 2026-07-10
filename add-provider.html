@@ -1,13 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Provider</title>
+
+<style>
+body{
+font-family:Arial;
+background:#111827;
+color:white;
+text-align:center;
+padding:30px;
+}
+
+input{
+width:320px;
+padding:12px;
+margin:10px;
+border-radius:8px;
+border:none;
+}
+
+button{
+padding:12px 25px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#1d4ed8;
+}
+
+#result{
+margin-top:20px;
+font-weight:bold;
+}
+</style>
+
+</head>
+
+<body>
+
+<h2>Add SMM Provider</h2>
+
+<input id="name" placeholder="Provider Name">
+
+<br>
+
+<input id="url" placeholder="API URL">
+
+<br>
+
+<input id="key" placeholder="API Key">
+
+<br><br>
+
+<button onclick="addProvider()">
+Add Provider
+</button>
+
+<p id="result"></p>
+
 <script>
-fetch("https://gowind-smm-panel-v3.onrender.com/api/providers", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    name: "IndianSMM",
-    api_url: "https://indiansmm.store/api/v2",
-    api_key: "f801de64d5ff37013ac34218bd4309ba92e4863d"
-  })
+
+async function addProvider(){
+
+const response = await fetch(
+"https://gowind-smm-panel-v3.onrender.com/api/providers",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+
+name:document.getElementById("name").value,
+
+api_url:document.getElementById("url").value,
+
+api_key:document.getElementById("key").value
+
+})
 });
+
+const data=await response.json();
+
+document.getElementById("result").innerHTML=
+JSON.stringify(data,null,2);
+
+}
+
 </script>
+
+</body>
+</html>
