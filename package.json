@@ -1,15 +1,15 @@
 {
   "name": "gowind-smm-panel-v3",
-  "version": "3.0.1",
-  "description": "Private SMM Panel",
+  "version": "3.1.0",
+  "description": "Private Multi Provider SMM Panel",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "start": "node server.js"
   },
   "author": "Gowind",
   "license": "MIT",
   "dependencies": {
+    "axios": "^1.11.0",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.0.0",
@@ -17,8 +17,5 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.16.0"
-  },
-  "engines": {
-    "node": ">=20"
   }
 }
