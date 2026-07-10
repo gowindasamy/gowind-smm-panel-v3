@@ -49,7 +49,31 @@ app.get("/db-test", async (req, res) => {
         });
     }
 });
+app.get("/setup", async (req, res) => {
+  try {
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        username VARCHAR(50) UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        role VARCHAR(20) DEFAULT 'user',
+        status BOOLEAN DEFAULT TRUE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
 
+    res.json({
+      success: true,
+      message: "Users table created successfully."
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: err.message
+    });
+  }
+});
 // Login API
 app.post("/api/login", async (req, res) => {
     try {
