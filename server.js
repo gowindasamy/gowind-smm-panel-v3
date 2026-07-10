@@ -1,18 +1,43 @@
+require("dotenv").config();
+
 const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
+
 const app = express();
 
 app.use(express.json());
+app.use(cors());
+app.use(helmet());
 
+// Home
 app.get("/", (req, res) => {
-  res.json({
-    status: "online",
-    name: "Gowind SMM Panel V3.0",
-    version: "3.0.1"
-  });
+    res.json({
+        success: true,
+        name: "Gowind SMM Panel",
+        version: "3.0.1",
+        status: "Online"
+    });
+});
+
+// Health Check
+app.get("/health", (req, res) => {
+    res.json({
+        status: "OK",
+        uptime: process.uptime()
+    });
+});
+
+// Login API (Placeholder)
+app.post("/api/login", (req, res) => {
+    res.json({
+        success: true,
+        message: "Login API Ready"
+    });
 });
 
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
