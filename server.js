@@ -537,6 +537,41 @@ app.get("/api/providers", async (req, res) => {
 
     }
 });
+app.post("/api/providers/import", async (req, res) => {
+
+    try {
+
+        const { provider_id } = req.body;
+
+        const provider = await db.query(
+            "SELECT * FROM providers WHERE id = $1",
+            [provider_id]
+        );
+
+        if (provider.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Provider not found"
+            });
+        }
+
+        // அடுத்த கட்டத்தில் provider API call சேர்க்கப்படும்
+
+        res.json({
+            success: true,
+            message: "Import API Ready"
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
