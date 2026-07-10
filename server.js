@@ -301,6 +301,62 @@ app.get("/api/services", async (req, res) => {
 
     }
 });
+// Place Order API
+app.post("/api/orders", async (req, res) => {
+    try {
+
+        const {
+            user_id,
+            service_id,
+            link,
+            quantity
+        } = req.body;
+
+        // Service details
+        const service = await db.query(
+            "SELECT * FROM services WHERE id = $1",
+            [service_id]
+        );
+
+        if (service.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Service not found"
+            });
+        }
+
+        const price =
+            (Number(service.rows[0].rate) * Number(quantity)) / 1000;
+
+        await db.query(
+            `INSERT INTO orders
+            (user_id, service_id, link, quantity, charge, status)
+            VALUES ($1,$2,$3,$4,$5,$6)`,
+            [
+                user_id,
+                service_id,
+                link,
+                quantity,
+                price,
+                "Pending"
+            ]
+        );
+
+        res.json({
+            success: true,
+            message: "Order Placed Successfully",
+            charge: price
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+});
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
