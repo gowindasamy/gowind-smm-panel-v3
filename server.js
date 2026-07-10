@@ -163,58 +163,85 @@ app.get('/api/services/active', async (req, res) => {
 });
 
 // ==========================================
-// TRANSACTIONAL PIPELINES ENGINE IMPLEMENTATIONS
+// TRANSACTIONAL PIPELINES ENGINE IMPLEMENTATIONS (REAL SMM INTEGRATION)
 // ==========================================
 
 app.post('/api/orders/new', async (req, res) => {
   const { userId, serviceId, link, quantity } = req.body;
-  if (!userId || !serviceId || !link || !quantity) return res.status(400).json({ error: 'Missing active telemetry deployment transaction fields parameters' });
+  if (!userId || !serviceId || !link || !quantity) {
+    return res.status(400).json({ error: 'Missing active telemetry deployment transaction fields parameters' });
+  }
   
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
     
-    // Acquire lock control matrix on client asset profile row instantly to block concurrent operations racing
+    // 1. Lock and check user record
     const uSearch = await client.query('SELECT * FROM users WHERE id = $1 FOR UPDATE', [parseInt(userId)]);
-    if (uSearch.rows.length === 0) throw new Error('Client context registration target node vanished or broken');
+    if (uSearch.rows.length === 0) throw new Error('Client context registration target node broken');
     const userRow = uSearch.rows[0];
 
+    // 2. Fetch service data along with provider authentication variables
     const sSearch = await client.query(`
       SELECT s.*, p.api_url, p.api_key, p.enabled as provider_enabled 
       FROM services s 
       JOIN api_providers p ON s.api_provider_id = p.id 
       WHERE s.id = $1
     `, [parseInt(serviceId)]);
-    if (sSearch.rows.length === 0) throw new Error('Catalog offerings element target reference map index dropped or invalid');
+    if (sSearch.rows.length === 0) throw new Error('Catalog offerings element target reference map index invalid');
     const svcRow = sSearch.rows[0];
 
-    if (!svcRow.enabled || !svcRow.provider_enabled) throw new Error('Target selection strategy profile is globally offline at this timestamp');
+    if (!svcRow.enabled || !svcRow.provider_enabled) throw new Error('Target selection strategy profile is globally offline');
     if (quantity < svcRow.min_quantity || quantity > svcRow.max_quantity) {
-      throw new Error(`Quantity specification out of boundaries constraints limits indices (${svcRow.min_quantity} - ${svcRow.max_quantity})`);
+      throw new Error(`Quantity specification out of boundaries constraints (${svcRow.min_quantity} - ${svcRow.max_quantity})`);
     }
 
     const calculatedPriceCost = (quantity / 1000) * parseFloat(svcRow.price);
-    if (parseFloat(userRow.balance) < calculatedPriceCost) throw new Error('Insufficient client liquid capitalization funds liquidity balance');
+    if (parseFloat(userRow.balance) < calculatedPriceCost) throw new Error('Insufficient client capital funds');
 
-    // Perform internal asset allocation debit mutation safely
+    // 3. Deduct local balance
     await client.query('UPDATE users SET balance = balance - $1 WHERE id = $2', [calculatedPriceCost, userRow.id]);
 
     // ========================================================
-    // SIMULATED UPSTREAM GATEWAY INTERCEPT MULTI-PROVIDER LOGIC
+    // NATIVE SMM PROVIDER POST HANDSHAKE INTEGRATION
     // ========================================================
-    // In strict enterprise mode, standard loop handles external network fetch execution routines.
-    // If the server link responds normally, the unique code drops directly into tracking grids:
-    const mockUpstreamRemoteTrackingIdGenerated = "REMOTE_API_V3_" + Math.floor(100000 + Math.random() * 900000);
-    const mockStatusesSampleSpace = ['Processing', 'In Progress', 'Completed'];
-    const chosenInitialUpstreamMockStatus = mockStatusesSampleSpace[Math.floor(Math.random() * mockStatusesSampleSpace.length)];
+    const providerPayload = new URLSearchParams();
+    providerPayload.append('key', svcRow.api_key);
+    providerPayload.append('action', 'add');
+    providerPayload.append('service', svcRow.remote_service_id.toString());
+    providerPayload.append('url', link.trim());
+    providerPayload.append('quantity', quantity.toString());
 
+    let providerOrderId = null;
+    let initialStatus = 'Processing';
+
+    try {
+      const providerResponse = await fetch(svcRow.api_url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: providerPayload.toString()
+      });
+
+      const providerData = await providerResponse.json();
+
+      if (providerResponse.ok && providerData && providerData.order) {
+        providerOrderId = providerData.order.toString(); // Captures actual number generated (e.g. 23501)
+      } else {
+        throw new Error(providerData.error || 'Provider execution API rejected format syntax parameters');
+      }
+    } catch (apiErr) {
+      console.error("Provider pipeline communication error:", apiErr.message);
+      throw new Error("Upstream Provider Connectivity Error: " + apiErr.message);
+    }
+
+    // 4. Record output directly into local data tables rows
     const insertOrderLogResult = await client.query(`
       INSERT INTO orders (user_id, service_id, provider_order_id, link, quantity, price, status)
       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id
-    `, [userRow.id, svcRow.id, mockUpstreamRemoteTrackingIdGenerated, link.trim(), quantity, calculatedPriceCost, chosenInitialUpstreamMockStatus]);
+    `, [userRow.id, svcRow.id, providerOrderId, link.trim(), quantity, calculatedPriceCost, initialStatus]);
 
     await client.query('COMMIT');
-    return res.json({ success: true, orderId: insertOrderLogResult.rows[0].id, remoteId: mockUpstreamRemoteTrackingIdGenerated });
+    return res.json({ success: true, orderId: insertOrderLogResult.rows[0].id, remoteId: providerOrderId });
   } catch (err) {
     await client.query('ROLLBACK');
     return res.status(400).json({ error: err.message });
