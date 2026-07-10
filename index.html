@@ -64,7 +64,7 @@
         }
 
         /* ========================================== */
-        /* AUTH / LOGIN INTERFACE DESIGN */
+        /* AUTH / LOGIN & REGISTER INTERFACE DESIGN */
         /* ========================================== */
         .auth-wrapper {
             display: flex;
@@ -139,6 +139,18 @@
 
         button:active {
             transform: scale(0.98);
+        }
+
+        .secondary-btn {
+            background-color: #2b2b2b;
+            color: #aaaaaa;
+            margin-top: 15px;
+            border: 1px solid #444;
+        }
+
+        .secondary-btn:hover {
+            background-color: #383838;
+            color: #ffffff;
         }
 
         /* ========================================== */
@@ -294,11 +306,11 @@
         </header>
 
         <!-- ========================================== -->
-        <!-- SYSTEM ACCESS SECURITY GATEWAYS (LOGIN) -->
+        <!-- SYSTEM ACCESS SECURITY GATEWAYS (LOGIN / REGISTER) -->
         <!-- ========================================== -->
         <div id="authContainer" class="auth-wrapper">
             <div class="auth-box">
-                <h2>Secure Login</h2>
+                <h2>Secure Gateway</h2>
                 <div class="form-group">
                     <label>Username</label>
                     <input type="text" id="loginUser" placeholder="Enter registration identifier">
@@ -307,7 +319,8 @@
                     <label>Password</label>
                     <input type="password" id="loginPass" placeholder="••••••••">
                 </div>
-                <button onclick="handleAccountLogin()">Authenticate Identity</button>
+                <button onclick="handleAccountLogin()">Authenticate Identity (Login)</button>
+                <button class="secondary-btn" onclick="handleAccountRegister()">Register New Account</button>
             </div>
         </div>
 
@@ -468,6 +481,31 @@
             }
         }
 
+        async function handleAccountRegister() {
+            const usernameInput = document.getElementById('loginUser').value;
+            const passwordInput = document.getElementById('loginPass').value;
+
+            if(!usernameInput || !passwordInput) {
+                alert("Please enter a username and password to register.");
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: usernameInput, password: passwordInput })
+                });
+                const data = await res.json();
+                
+                if(!res.ok) throw new Error(data.error || "Registration process failed.");
+
+                alert("Account created successfully! Neenga ippo 'Authenticate Identity (Login)' button-ah click panni Login pannalam.");
+            } catch(err) {
+                alert("Registration Denied: " + err.message);
+            }
+        }
+
         function handleSessionLogout() {
             localStorage.removeItem('smm_session_token');
             activeSessionUser = null;
@@ -511,37 +549,4 @@
                 
                 if(localGlobalCatalogMap.length === 0) {
                     dropdown.innerHTML = '<option value="">No services mapped inside server registries</option>';
-                    return;
-                }
-
-                localGlobalCatalogMap.forEach(svc => {
-                    const opt = document.createElement('option');
-                    opt.value = svc.id;
-                    opt.textContent = `${svc.name} - $${parseFloat(svc.price).toFixed(4)}`;
-                    dropdown.appendChild(opt);
-                });
-            } catch(err) {
-                dropdown.innerHTML = '<option value="">Error compiling remote data arrays</option>';
-            }
-        }
-
-        function evaluateSelectedServiceMetadata() {
-            const selectionId = document.getElementById('serviceDropdown').value;
-            if(!selectionId) {
-                resetServiceMetadataFields();
-                return;
-            }
-
-            const activeSvcObj = localGlobalCatalogMap.find(x => x.id == parseInt(selectionId));
-            if(activeSvcObj) {
-                document.getElementById('targetProvider').value = activeSvcObj.provider_name || "Remote Node";
-                document.getElementById('ratePer1000').value = `$${parseFloat(activeSvcObj.price).toFixed(4)}`;
-                document.getElementById('minQty').value = activeSvcObj.min_quantity;
-                document.getElementById('maxQty').value = activeSvcObj.max_quantity;
-                calculateDynamicPricingTotal();
-            }
-        }
-
-        function resetServiceMetadataFields() {
-            document.getElementById('targetProvider').value = "N/A";
-            document.getElementById('ratePer1000').value =
+                    ret
