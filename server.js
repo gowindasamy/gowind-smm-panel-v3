@@ -61,6 +61,10 @@ app.get("/setup", async (req, res) => {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
+      await db.query(`
+ALTER TABLE users
+ADD COLUMN IF NOT EXISTS wallet DECIMAL(10,2) DEFAULT 0;
+`);
     await db.query(`
 CREATE TABLE IF NOT EXISTS providers (
     id SERIAL PRIMARY KEY,
@@ -378,6 +382,36 @@ app.get("/api/orders", async (req, res) => {
             error: err.message
         });
 
+    }
+});
+// Wallet Balance API
+app.get("/api/wallet/:userId", async (req, res) => {
+    try {
+
+        const userId = req.params.userId;
+
+        const result = await db.query(
+            "SELECT wallet FROM users WHERE id = $1",
+            [userId]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        res.json({
+            success: true,
+            wallet: result.rows[0].wallet
+        });
+
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
     }
 });
 const PORT = process.env.PORT || 3000;
