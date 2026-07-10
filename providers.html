@@ -1,11 +1,471 @@
-fetch("https://gowind-smm-panel-v3.onrender.com/api/providers/import", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    provider_id: 3
-  })
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Providers</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+
+background:#0f172a;
+color:#fff;
+
+}
+
+header{
+
+background:#1e293b;
+padding:18px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+
+}
+
+.container{
+
+max-width:900px;
+margin:auto;
+padding:20px;
+
+}
+
+.card{
+
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+
+}
+
+.card h2{
+
+margin-bottom:15px;
+
+}
+
+input{
+
+width:100%;
+padding:12px;
+margin-bottom:12px;
+border:none;
+border-radius:8px;
+font-size:15px;
+
+}
+
+button{
+
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+margin-top:10px;
+
+}
+
+.add{
+
+background:#16a34a;
+color:white;
+
+}
+
+.import{
+
+background:#2563eb;
+color:white;
+
+}
+
+.balance{
+
+background:#f59e0b;
+color:white;
+
+}
+
+.delete{
+
+background:#dc2626;
+color:white;
+
+}
+
+table{
+
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+
+}
+
+th{
+
+background:#334155;
+padding:10px;
+
+}
+
+td{
+
+padding:10px;
+border-bottom:1px solid #475569;
+text-align:center;
+
+}
+
+.status{
+
+margin-top:15px;
+text-align:center;
+font-weight:bold;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+Provider Management
+
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Add Provider</h2>
+
+<input
+id="name"
+placeholder="Provider Name">
+
+<input
+id="url"
+placeholder="API URL">
+
+<input
+id="key"
+placeholder="API Key">
+
+<button
+class="add"
+onclick="addProvider()">
+
+Add Provider
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h2>Provider List</h2>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Name</th>
+
+<th>Status</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="providerTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+<p
+id="result"
+class="status">
+
+</p>
+
+</div>
+<script>
+
+const API =
+"https://gowind-smm-panel-v3.onrender.com";
+
+/* ===========================
+   LOAD PROVIDERS
+=========================== */
+
+async function loadProviders(){
+
+const response = await fetch(
+API + "/api/providers"
+);
+
+const data = await response.json();
+
+const table =
+document.getElementById("providerTable");
+
+table.innerHTML = "";
+
+data.providers.forEach(provider=>{
+
+table.innerHTML += `
+
+<tr>
+
+<td>${provider.id}</td>
+
+<td>${provider.name}</td>
+
+<td>
+
+${provider.status
+? "🟢 Active"
+: "🔴 Disabled"}
+
+</td>
+
+<td>
+
+<button
+class="import"
+onclick="importServices(${provider.id})">
+Import
+</button>
+
+<br><br>
+
+<button
+class="balance"
+onclick="checkBalance(${provider.id})">
+Balance
+</button>
+
+<br><br>
+
+<button
+class="delete"
+onclick="deleteProvider(${provider.id})">
+Delete
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+/* ===========================
+   ADD PROVIDER
+=========================== */
+
+async function addProvider(){
+
+const response = await fetch(
+
+API + "/api/providers",
+
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+name:
+document.getElementById("name").value,
+
+api_url:
+document.getElementById("url").value,
+
+api_key:
+document.getElementById("key").value
+
 })
-.then(res => res.json())
-.then(console.log);
+
+}
+
+);
+
+const data =
+await response.json();
+
+document.getElementById("result")
+.innerHTML =
+data.message;
+
+loadProviders();
+
+}
+
+/* ===========================
+   PAGE LOAD
+=========================== */
+
+loadProviders();
+
+</script>
+/* ===========================
+   IMPORT SERVICES
+=========================== */
+
+async function importServices(providerId){
+
+document.getElementById("result").innerHTML =
+"⏳ Importing services...";
+
+const response = await fetch(
+
+API + "/api/providers/import",
+
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+provider_id:providerId
+
+})
+
+}
+
+);
+
+const data = await response.json();
+
+if(data.success){
+
+document.getElementById("result").innerHTML =
+"✅ Imported " +
+data.imported +
+" Services";
+
+}else{
+
+document.getElementById("result").innerHTML =
+"❌ " +
+(data.error || data.message);
+
+}
+
+}
+
+/* ===========================
+   CHECK BALANCE
+=========================== */
+
+async function checkBalance(providerId){
+
+document.getElementById("result").innerHTML =
+"⏳ Checking Balance...";
+
+const response = await fetch(
+
+API +
+"/api/providers/" +
+providerId +
+"/balance"
+
+);
+
+const data = await response.json();
+
+if(data.balance){
+
+document.getElementById("result").innerHTML =
+
+"💰 Balance : " +
+data.balance +
+" " +
+(data.currency || "");
+
+}else{
+
+document.getElementById("result").innerHTML =
+
+JSON.stringify(data);
+
+}
+
+}
+  /* ===========================
+   DELETE PROVIDER
+=========================== */
+
+async function deleteProvider(providerId){
+
+if(!confirm("Delete this provider?")){
+return;
+}
+
+const response = await fetch(
+
+API + "/api/providers/" + providerId,
+
+{
+method:"DELETE"
+}
+
+);
+
+const data = await response.json();
+
+document.getElementById("result").innerHTML =
+data.message || data.error;
+
+loadProviders();
+
+}
+
+/* ===========================
+   AUTO REFRESH
+=========================== */
+
+setInterval(loadProviders,30000);
+
+</script>
+
+</body>
+</html>
