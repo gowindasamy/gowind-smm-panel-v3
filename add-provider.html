@@ -1,0 +1,13 @@
+<script>
+fetch("https://gowind-smm-panel-v3.onrender.com/api/providers", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    name: "IndianSMM",
+    api_url: "https://YOUR_PROVIDER_DOMAIN/api/v2",
+    api_key: "YOUR_API_KEY"
+  })
+});
+</script>
