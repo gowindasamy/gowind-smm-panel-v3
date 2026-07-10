@@ -61,10 +61,66 @@ app.get("/setup", async (req, res) => {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
+    await db.query(`
+CREATE TABLE IF NOT EXISTS providers (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    api_url TEXT NOT NULL,
+    api_key TEXT NOT NULL,
+    status BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+`);
 
+await db.query(`
+CREATE TABLE IF NOT EXISTS services (
+    id SERIAL PRIMARY KEY,
+    provider_id INT,
+    service_id INT,
+    name VARCHAR(255),
+    category VARCHAR(100),
+    rate DECIMAL(10,2),
+    min INT,
+    max INT,
+    status BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+`);
+
+await db.query(`
+CREATE TABLE IF NOT EXISTS orders (
+    id SERIAL PRIMARY KEY,
+    user_id INT,
+    service_id INT,
+    link TEXT,
+    quantity INT,
+    charge DECIMAL(10,2),
+    status VARCHAR(30) DEFAULT 'Pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+`);
+
+await db.query(`
+CREATE TABLE IF NOT EXISTS transactions (
+    id SERIAL PRIMARY KEY,
+    user_id INT,
+    amount DECIMAL(10,2),
+    type VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+`);
+
+await db.query(`
+CREATE TABLE IF NOT EXISTS settings (
+    id SERIAL PRIMARY KEY,
+    site_name VARCHAR(100),
+    currency VARCHAR(10),
+    maintenance BOOLEAN DEFAULT FALSE
+);
+`);
     res.json({
       success: true,
-      message: "Users table created successfully."
+      message: "All database tables created successfully."
     });
 
   } catch (err) {
@@ -179,6 +235,47 @@ app.post("/api/register", async (req, res) => {
             success: false,
             error: err.message
         });
+    }
+});
+// Add Service
+app.post("/api/services", async (req, res) => {
+    try {
+
+        const {
+            service_id,
+            name,
+            category,
+            rate,
+            min,
+            max
+        } = req.body;
+
+        await db.query(
+            `INSERT INTO services
+            (service_id, name, category, rate, min, max)
+            VALUES ($1,$2,$3,$4,$5,$6)`,
+            [
+                service_id,
+                name,
+                category,
+                rate,
+                min,
+                max
+            ]
+        );
+
+        res.json({
+            success: true,
+            message: "Service Added Successfully"
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
     }
 });
 const PORT = process.env.PORT || 3000;
