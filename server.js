@@ -135,8 +135,19 @@ ADD COLUMN IF NOT EXISTS provider_order_id BIGINT;
 `);
 
 await db.query(`
-ALTER TABLE orders
-ADD COLUMN IF NOT EXISTS provider_id INT;
+CREATE TABLE IF NOT EXISTS services (
+    id SERIAL PRIMARY KEY,
+    provider_id INT,
+    provider_service_id INT,
+    service_id INT,
+    name VARCHAR(255),
+    category VARCHAR(100),
+    rate DECIMAL(10,2),
+    min INT,
+    max INT,
+    status BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 `);
 
     res.json({
