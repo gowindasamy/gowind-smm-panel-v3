@@ -414,6 +414,34 @@ app.get("/api/wallet/:userId", async (req, res) => {
         });
     }
 });
+// Add Wallet Balance API
+app.post("/api/wallet/add", async (req, res) => {
+    try {
+
+        const { user_id, amount } = req.body;
+
+        await db.query(
+            "UPDATE users SET wallet = wallet + $1 WHERE id = $2",
+            [amount, user_id]
+        );
+
+        await db.query(
+            "INSERT INTO transactions (user_id, amount, type) VALUES ($1, $2, $3)",
+            [user_id, amount, "Credit"]
+        );
+
+        res.json({
+            success: true,
+            message: "Wallet updated successfully"
+        });
+
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+    }
+});
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
