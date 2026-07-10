@@ -278,6 +278,29 @@ app.post("/api/services", async (req, res) => {
 
     }
 });
+// Get All Services API
+app.get("/api/services", async (req, res) => {
+    try {
+
+        const result = await db.query(
+            "SELECT * FROM services WHERE status = TRUE ORDER BY id ASC"
+        );
+
+        res.json({
+            success: true,
+            total: result.rows.length,
+            services: result.rows
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+});
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
