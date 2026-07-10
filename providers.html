@@ -1,57 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>API Providers</title>
-<link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-
-<header>
-    <h1>🌐 API Providers</h1>
-</header>
-
-<main>
-
-<div class="card">
-    <h3>Add Provider</h3>
-
-    <input type="text" placeholder="Provider Name"><br><br>
-
-    <input type="text" placeholder="API URL"><br><br>
-
-    <input type="password" placeholder="API Key"><br><br>
-
-    <button>Add Provider</button>
-</div>
-
-<div class="card">
-    <h3>Provider List</h3>
-
-    <table border="1" width="100%">
-        <tr>
-            <th>Name</th>
-            <th>Status</th>
-        </tr>
-
-        <tr>
-            <td>Demo Provider</td>
-            <td>✅ Active</td>
-        </tr>
-    </table>
-</div>
-
-<br>
-
-<button onclick="location.href='dashboard.html'">
-🏠 Dashboard
-</button>
-
-</main>
-
-<script src="script.js"></script>
-
-</body>
-</html>
+fetch("https://gowind-smm-panel-v3.onrender.com/api/providers/import", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    provider_id: 3
+  })
+})
+.then(res => res.json())
+.then(console.log);
