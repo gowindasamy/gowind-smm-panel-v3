@@ -5,154 +5,423 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GOWIND SMM PANEL</title>
     <style>
-        body { font-family: sans-serif; margin: 20px; line-height: 1.4; color: #333; }
-        h1, h2 { font-family: serif; font-weight: bold; margin-bottom: 5px; }
-        .version { color: #555; font-size: 0.9rem; margin-bottom: 20px; }
-        .auth-box { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; max-width: 350px; background: #fafafa; }
-        .auth-box label { display: inline-block; width: 80px; }
-        .auth-box input { margin-bottom: 5px; padding: 3px; width: 180px; }
-        .auth-box button { margin-top: 5px; width: 100%; padding: 5px; cursor: pointer; }
-        .section { margin-top: 25px; border-top: 1px solid #ccc; padding-top: 15px; }
-        .form-group { margin-bottom: 10px; }
-        .form-group label { display: block; font-weight: bold; margin-bottom: 2px; }
-        .form-group input, .form-group select { width: 100%; max-width: 400px; padding: 6px; box-sizing: border-box; }
-        .info-text { font-size: 0.95rem; max-width: 600px; margin-bottom: 15px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .hidden { display: none; }
-        .status-msg { color: #d9534f; font-weight: bold; margin-top: 10px; }
+        :root {
+            --bg-dark: #121212;
+            --bg-card: #1e1e1e;
+            --primary-red: #e50914;
+            --text-light: #ffffff;
+            --text-muted: #aaaaaa;
+            --border-color: #333333;
+            --success-green: #39ff14;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            border-bottom: 3px solid var(--primary-red);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+        }
+
+        h1 span {
+            color: var(--primary-red);
+        }
+
+        .version {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: #2a2a2a;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        /* ========================================== */
+        /* AUTH / LOGIN INTERFACE DESIGN */
+        /* ========================================== */
+        .auth-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 70vh;
+        }
+
+        .auth-box {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+
+        .auth-box h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--primary-red);
+            text-transform: uppercase;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            background-color: #2b2b2b;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-red);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-red);
+            color: var(--text-light);
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.3s, transform 0.1s;
+        }
+
+        button:hover {
+            background-color: #b80710;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* ========================================== */
+        /* DASHBOARD METRICS CARDS DESIGN */
+        /* ========================================== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: var(--bg-card);
+            border-left: 4px solid var(--primary-red);
+            border-radius: 6px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .stat-card h3 {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card .value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--text-light);
+        }
+
+        /* ========================================== */
+        /* MAIN WORKSPACE SPLIT BLOCK */
+        /* ========================================== */
+        .workspace-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        @media (min-width: 768px) {
+            .workspace-layout {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .panel-block {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+        }
+
+        .panel-block h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--text-light);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .notice-box {
+            background-color: #251214;
+            border: 1px solid #5a1418;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #ff9999;
+        }
+
+        /* ========================================== */
+        /* DATA TABLES AUDIT DESIGN */
+        /* ========================================== */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 30px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: #1a1a1a;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover {
+            background-color: #252525;
+        }
+
+        .badge {
+            background-color: #333;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .badge-success {
+            background-color: #1b4332;
+            color: var(--success-green);
+        }
+
+        .status-msg {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .hidden { display: none !important; }
+        .logout-btn { background-color: #333; width: auto; padding: 8px 16px; font-size: 0.85rem;}
+        .logout-btn:hover { background-color: #444; }
     </style>
 </head>
 <body>
 
-    <h1>GOWIND SMM PANEL</h1>
-    <div class="version">Version 3.0.0 Stable</div>
-
-    <!-- ========================================== -->
-    <!-- GUEST GATEWAY / LOGIN MODULES -->
-    <!-- ========================================== -->
-    <div id="authContainer">
-        <div class="auth-box">
-            <div class="form-group">
-                <label>Username</label>
-                <input type="text" id="loginUser" placeholder="Enter username">
+    <div class="container">
+        <!-- HEADER ELEMENT PANEL -->
+        <header>
+            <div>
+                <h1>GOWIND <span>SMM PANEL</span></h1>
+                <div class="version">Version 3.0.0 Stable</div>
             </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="loginPass" placeholder="Enter password">
+            <div id="navActions" class="hidden">
+                <button class="logout-btn" onclick="handleSessionLogout()">Logout</button>
             </div>
-            <button id="btnLogin" onclick="handleAccountLogin()">Login</button>
-            <button id="btnAdminPortal" onclick="handleAdminPortalMock()" style="margin-top: 8px; background: #e7e7e7;">Admin Portal</button>
-        </div>
-    </div>
+        </header>
 
-    <!-- ========================================== -->
-    <!-- SECURE ACTIVE SESSION WORKSPACE (DASHBOARD)-->
-    <!-- ========================================== -->
-    <div id="dashboardContainer" class="hidden">
-        <div><strong>GOWIND SMM V3</strong></div>
-        <ul>
-            <li>Dashboard</li>
-            <li>New Order</li>
-            <li>Order History</li>
-        </ul>
-        <button onclick="handleSessionLogout()" style="padding: 5px 15px; cursor: pointer;">Logout</button>
-
-        <h2>Welcome Back, <span id="displayUsername">User</span>!</h2>
-        <div class="form-group">
-            <label>Balance: $<span id="displayBalance">0.00</span></label>
+        <!-- ========================================== -->
+        <!-- SYSTEM ACCESS SECURITY GATEWAYS (LOGIN) -->
+        <!-- ========================================== -->
+        <div id="authContainer" class="auth-wrapper">
+            <div class="auth-box">
+                <h2>Secure Login</h2>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="loginUser" placeholder="Enter registration identifier">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPass" placeholder="••••••••">
+                </div>
+                <button onclick="handleAccountLogin()">Authenticate Identity</button>
+            </div>
         </div>
 
-        <h3>Current Funds Available</h3>
-        <p>$<span id="displayBalanceCard">0.00</span></p>
-
-        <h3>Total Orders Submitted</h3>
-        <p id="displayTotalOrdersCount">0</p>
-
-        <div class="section">
-            <h3>Platform Notice</h3>
-            <p class="info-text">
-                Welcome to the high-performance GOWIND SMM Platform interface. 
-                Deploy immediate social signals natively through multiple configured backend APIs concurrently. 
-                Check active histories via the secondary tab navigation menus.
-            </p>
-        </div>
-
-        <!-- TRANSACTION PLACE NEW ORDER PIPELINES -->
-        <div class="section">
-            <h3>Place a New Order</h3>
-            <div id="orderStatusFeedback" class="status-msg" style="color: blue;"></div>
+        <!-- ========================================== -->
+        <!-- MAIN PRODUCTION SECURITY WORKSPACE -->
+        <!-- ========================================== -->
+        <div id="dashboardContainer" class="hidden">
             
-            <div class="form-group">
-                <label for="serviceDropdown">Select Target Service Cluster</label>
-                <select id="serviceDropdown" onchange="evaluateSelectedServiceMetadata()">
-                    <option value="">Loading services matrix allocations...</option>
-                </select>
+            <!-- METRICS SUMMARY GRIDS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Account Entity Identity</h3>
+                    <div class="value" id="displayUsername" style="color: var(--primary-red);">User</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Available Liquidity Funds</h3>
+                    <div class="value">$<span id="displayBalance">0.00</span></div>
+                </div>
+                <div class="stat-card">
+                    <h3>Historic Log Elements</h3>
+                    <div class="value" id="displayTotalOrdersCount">0</div>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label>Target Core Provider</label>
-                <input type="text" id="targetProvider" value="N/A" disabled>
+            <!-- ACTIONS WORKSPACE STRUCTURE -->
+            <div class="workspace-layout">
+                
+                <!-- ROW BLOCK 1: DEPLOYMENT DISPATCH ENGINE -->
+                <div class="panel-block">
+                    <h3>Place New Order Pipeline</h3>
+                    <div id="orderStatusFeedback" class="status-msg hidden"></div>
+                    
+                    <div class="form-group">
+                        <label>Select Target Service Cluster</label>
+                        <select id="serviceDropdown" onchange="evaluateSelectedServiceMetadata()">
+                            <option value="">Syncing core remote endpoints...</option>
+                        </select>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label>Target Provider Node</label>
+                            <input type="text" id="targetProvider" value="N/A" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>Rate Per 1000 Units</label>
+                            <input type="text" id="ratePer1000" value="$0.00" disabled>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label>Minimum Bounds</label>
+                            <input type="number" id="minQty" value="0" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>Maximum Bounds</label>
+                            <input type="number" id="maxQty" value="0" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Target Destination Resource Link</label>
+                        <input type="url" id="targetLink" placeholder="https://instagram.com/profile_target">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Desired Operational Quantity</label>
+                        <input type="number" id="orderQty" placeholder="Enter unit volume" oninput="calculateDynamicPricingTotal()">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Calculated Dynamic Capital Total Cost</label>
+                        <input type="text" id="calculatedPrice" value="$0.00" disabled style="color: var(--success-green); font-weight: bold; background: #152515;">
+                    </div>
+
+                    <button onclick="dispatchOrderToUpstreamGateway()">Authorize & Dispatch Payload</button>
+                </div>
+
+                <!-- ROW BLOCK 2: CONTEXT NOTICE INFRASTRUCTURE -->
+                <div class="panel-block">
+                    <h3>Platform Operations Notice</h3>
+                    <div class="notice-box">
+                        Welcome to the high-performance GOWIND SMM Platform interface. 
+                        Deploy immediate social signals natively through multiple configured backend APIs concurrently. 
+                        All automated processing loops calculate data constraints values natively on verification metrics nodes.
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label>Rate Per 1000 Units</label>
-                <input type="text" id="ratePer1000" value="$0.00" disabled>
+            <!-- CORE HISTORIC DATA TABLES REGISTRIES -->
+            <div class="table-responsive">
+                <h3 style="margin-bottom: 15px; font-size: 1.1rem; text-transform: uppercase; padding-left: 5px;">Transactional Pipeline Audit History Logs</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Native ID</th>
+                            <th>Remote Tracker ID</th>
+                            <th>Execution Timestamp</th>
+                            <th>Selected Target Service</th>
+                            <th>Resource Target Link</th>
+                            <th>Quantity Metrics</th>
+                            <th>Charged Rate</th>
+                            <th>Deployment Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderLogsTableBody">
+                        <tr>
+                            <td colspan="8" style="text-align: center; color: var(--text-muted);">No active records synchronized currently.</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <div class="form-group">
-                <label>Minimum Permissible Quantity</label>
-                <input type="number" id="minQty" value="0" disabled>
-            </div>
-
-            <div class="form-group">
-                <label>Maximum Permissible Quantity</label>
-                <input type="number" id="maxQty" value="0" disabled>
-            </div>
-
-            <div class="form-group">
-                <label>Target Resource Link (Instagram/Universal)</label>
-                <input type="url" id="targetLink" placeholder="https://instagram.com/">
-            </div>
-
-            <div class="form-group">
-                <label>Desired Operational Quantity</label>
-                <input type="number" id="orderQty" placeholder="Enter numeric units quantity" oninput="calculateDynamicPricingTotal()">
-            </div>
-
-            <div class="form-group">
-                <label>Calculated Dynamic Pricing Total</label>
-                <input type="text" id="calculatedPrice" value="$0.00" disabled>
-            </div>
-
-            <button id="btnSubmitOrder" onclick="dispatchOrderToUpstreamGateway()" style="padding: 10px; width: 100%; max-width: 400px; background: #e7e7e7; font-weight: bold; cursor: pointer;">
-                Authorize and Dispatch Order
-            </button>
-        </div>
-
-        <!-- HISTORIC AUDIT LOG TRACE MATRICES -->
-        <div class="section">
-            <h3>Transactional Pipeline Audit Logs</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Native ID</th>
-                        <th>Remote Tracker ID</th>
-                        <th>Execution Timestamp</th>
-                        <th>Selected Target Service</th>
-                        <th>Resource Target Link</th>
-                        <th>Quantity Metrics</th>
-                        <th>Charged Rate</th>
-                        <th>Deployment Status</th>
-                    </tr>
-                </thead>
-                <tbody id="orderLogsTableBody">
-                    <tr>
-                        <td colspan="8" style="text-align: center; color: #777;">No active records synchronized currently.</td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
 
@@ -160,14 +429,11 @@
     <!-- CORE RUNTIME INTERCEPT ROUTING LOGIC ENGINE -->
     <!-- ========================================== -->
     <script>
-        // Connecting specifically to your production deployment endpoint setup on Render
         const API_BASE_URL = "https://gowind-smm-panel-v3.onrender.com";
         let activeSessionUser = null;
         let localGlobalCatalogMap = [];
 
-        // Application initial lifecycle intercept point
         window.addEventListener('DOMContentLoaded', () => {
-            // Check if user session data is cached locally inside client memory parameters
             const cachedUser = localStorage.getItem('smm_session_token');
             if (cachedUser) {
                 activeSessionUser = JSON.parse(cachedUser);
@@ -180,7 +446,7 @@
             const passwordInput = document.getElementById('loginPass').value;
 
             if(!usernameInput || !passwordInput) {
-                alert("Please fill in evaluation fields credentials completely.");
+                alert("Please fill in execution evaluation parameters credentials completely.");
                 return;
             }
 
@@ -192,13 +458,13 @@
                 });
                 const data = await res.json();
                 
-                if(!res.ok) throw new Error(data.error || "Identity system mapping mismatch error");
+                if(!res.ok) throw new Error(data.error || "Identity validation error.");
 
                 activeSessionUser = data.user;
                 localStorage.setItem('smm_session_token', JSON.stringify(data.user));
                 initializeSecureDashboardWorkspace();
             } catch(err) {
-                alert("Authentication Failed: " + err.message);
+                alert("Authentication Denied: " + err.message);
             }
         }
 
@@ -206,22 +472,17 @@
             localStorage.removeItem('smm_session_token');
             activeSessionUser = null;
             document.getElementById('dashboardContainer').classList.add('hidden');
+            document.getElementById('navActions').classList.add('hidden');
             document.getElementById('authContainer').classList.remove('hidden');
         }
 
-        function handleAdminPortalMock() {
-            alert("Redirecting context intercept layers towards system master controls matrix dashboards console panel root...");
-        }
-
         async function initializeSecureDashboardWorkspace() {
-            // Shift UI layouts frames
             document.getElementById('authContainer').classList.add('hidden');
             document.getElementById('dashboardContainer').classList.remove('hidden');
+            document.getElementById('navActions').classList.remove('hidden');
             
-            // Render basic parameters details maps
             document.getElementById('displayUsername').textContent = activeSessionUser.username;
             
-            // Perform downstream global data telemetry fetch arrays sync jobs
             await synchronizeClientProfileMetrics();
             await pullAvailableOfferingsMatrix();
             await synchronizeOrderActivityHistoryLogs();
@@ -232,11 +493,9 @@
                 const res = await fetch(`${API_BASE_URL}/api/user/${activeSessionUser.id}`);
                 const data = await res.json();
                 if(res.ok && data.user) {
-                    const parsedBal = parseFloat(data.user.balance).toFixed(2);
-                    document.getElementById('displayBalance').textContent = parsedBal;
-                    document.getElementById('displayBalanceCard').textContent = parsedBal;
+                    document.getElementById('displayBalance').textContent = parseFloat(data.user.balance).toFixed(2);
                 }
-            } catch(e) { console.error("Identity balancing sync disruption fault:", e); }
+            } catch(e) { console.error("Balance sync break:", e); }
         }
 
         async function pullAvailableOfferingsMatrix() {
@@ -245,25 +504,24 @@
                 const res = await fetch(`${API_BASE_URL}/api/services/active`);
                 const data = await res.json();
                 
-                if(!res.ok) throw new Error("Catalog matrix endpoint transmission error dropped.");
+                if(!res.ok) throw new Error("Catalog dynamic linkage failed.");
                 
                 localGlobalCatalogMap = data.services || [];
                 dropdown.innerHTML = '<option value="">Select Target Service Cluster</option>';
                 
                 if(localGlobalCatalogMap.length === 0) {
-                    dropdown.innerHTML = '<option value="">No services mapped into active systems directories</option>';
+                    dropdown.innerHTML = '<option value="">No services mapped inside server registries</option>';
                     return;
                 }
 
                 localGlobalCatalogMap.forEach(svc => {
                     const opt = document.createElement('option');
                     opt.value = svc.id;
-                    opt.textContent = `${svc.name} - $${parseFloat(svc.price).toFixed(4)} per 1000`;
+                    opt.textContent = `${svc.name} - $${parseFloat(svc.price).toFixed(4)}`;
                     dropdown.appendChild(opt);
                 });
             } catch(err) {
-                dropdown.innerHTML = '<option value="">Error syncing live telemetry structural offerings</option>';
-                console.error(err);
+                dropdown.innerHTML = '<option value="">Error compiling remote data arrays</option>';
             }
         }
 
@@ -276,7 +534,7 @@
 
             const activeSvcObj = localGlobalCatalogMap.find(x => x.id == parseInt(selectionId));
             if(activeSvcObj) {
-                document.getElementById('targetProvider').value = activeSvcObj.provider_name || "Remote Node API Source Gateway";
+                document.getElementById('targetProvider').value = activeSvcObj.provider_name || "Remote Node";
                 document.getElementById('ratePer1000').value = `$${parseFloat(activeSvcObj.price).toFixed(4)}`;
                 document.getElementById('minQty').value = activeSvcObj.min_quantity;
                 document.getElementById('maxQty').value = activeSvcObj.max_quantity;
@@ -286,113 +544,4 @@
 
         function resetServiceMetadataFields() {
             document.getElementById('targetProvider').value = "N/A";
-            document.getElementById('ratePer1000').value = "$0.00";
-            document.getElementById('minQty').value = "0";
-            document.getElementById('maxQty').value = "0";
-            document.getElementById('calculatedPrice').value = "$0.00";
-        }
-
-        function calculateDynamicPricingTotal() {
-            const selectionId = document.getElementById('serviceDropdown').value;
-            const inputQty = parseInt(document.getElementById('orderQty').value) || 0;
-            
-            if(!selectionId || inputQty <= 0) {
-                document.getElementById('calculatedPrice').value = "$0.00";
-                return;
-            }
-
-            const activeSvcObj = localGlobalCatalogMap.find(x => x.id == parseInt(selectionId));
-            if(activeSvcObj) {
-                const evaluatedCost = (inputQty / 1000) * parseFloat(activeSvcObj.price);
-                document.getElementById('calculatedPrice').value = `$${evaluatedCost.toFixed(4)}`;
-            }
-        }
-
-        async function dispatchOrderToUpstreamGateway() {
-            const feedbackBox = document.getElementById('orderStatusFeedback');
-            feedbackBox.textContent = "";
-
-            const serviceId = document.getElementById('serviceDropdown').value;
-            const link = document.getElementById('targetLink').value;
-            const quantity = document.getElementById('orderQty').value;
-
-            if(!serviceId || !link || !quantity) {
-                alert("Please provide valid data inside core transaction execution metrics inputs completely.");
-                return;
-            }
-
-            feedbackBox.style.color = "blue";
-            feedbackBox.textContent = "Processing transactional handshakes across remote external clusters grids pipelines...";
-
-            try {
-                const res = await fetch(`${API_BASE_URL}/api/orders/new`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        userId: activeSessionUser.id,
-                        serviceId: parseInt(serviceId),
-                        link: link.trim(),
-                        quantity: parseInt(quantity)
-                    })
-                });
-
-                const data = await res.json();
-                if(!res.ok) throw new Error(data.error || "Gateway intercept parameters structural failure");
-
-                feedbackBox.style.color = "green";
-                feedbackBox.textContent = `Order processed successfully! Local Tracker ID: ${data.orderId}, Upstream Provider Reference ID: ${data.remoteId || 'N/A'}`;
-                
-                // Clear state values inputs fields tracking variables contexts arrays maps strings objects
-                document.getElementById('targetLink').value = "";
-                document.getElementById('orderQty').value = "";
-                resetServiceMetadataFields();
-                document.getElementById('serviceDropdown').value = "";
-
-                // Refresh downstream global profiles counters balances
-                await synchronizeClientProfileMetrics();
-                await synchronizeOrderActivityHistoryLogs();
-            } catch(err) {
-                feedbackBox.style.color = "red";
-                feedbackBox.textContent = "Execution Fault Anomaly: " + err.message;
-            }
-        }
-
-        async function synchronizeOrderActivityHistoryLogs() {
-            const tBody = document.getElementById('orderLogsTableBody');
-            try {
-                const res = await fetch(`${API_BASE_URL}/api/orders/user/${activeSessionUser.id}`);
-                const data = await res.json();
-                
-                if(!res.ok) throw new Error("Could not pull historic log matrices items metrics rows pipelines");
-
-                const ordersList = data.orders || [];
-                document.getElementById('displayTotalOrdersCount').textContent = ordersList.length;
-
-                if(ordersList.length === 0) {
-                    tBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #777;">No active records synchronized currently.</td></tr>`;
-                    return;
-                }
-
-                tBody.innerHTML = "";
-                ordersList.forEach(ord => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${ord.id}</td>
-                        <td><strong>${ord.provider_order_id || 'LOCAL_REJECT'}</strong></td>
-                        <td>${new Date(ord.created_at).toLocaleString()}</td>
-                        <td>${ord.service_name || 'Legacy Catalog Elements Profile Link'}</td>
-                        <td><a href="${ord.link}" target="_blank" style="color: blue; text-decoration: underline;">${ord.link}</a></td>
-                        <td>${ord.quantity}</td>
-                        <td>$${parseFloat(ord.price).toFixed(4)}</td>
-                        <td><span style="padding: 2px 6px; font-size:0.85rem; background: #e7e7e7; font-weight: bold; border-radius: 4px;">${ord.status}</span></td>
-                    `;
-                    tBody.appendChild(tr);
-                });
-            } catch(e) {
-                console.error("Historic execution sync breakdown event:", e);
-                tBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: red;">Failed to synchronise operational history matrices charts logs vectors pipelines maps data elements.</td></tr>`;
-            }
-        }
-    </script>
-</body>
-</html>
+            document.getElementById('ratePer1000').value =
