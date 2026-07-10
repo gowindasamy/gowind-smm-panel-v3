@@ -94,7 +94,10 @@ await db.query(`
 ALTER TABLE services
 ADD COLUMN IF NOT EXISTS provider_id INT;
 `);
-
+await db.query(`
+CREATE UNIQUE INDEX IF NOT EXISTS services_provider_unique
+ON services(provider_id, provider_service_id);
+`);
 await db.query(`
 ALTER TABLE services
 ADD COLUMN IF NOT EXISTS provider_service_id INT;
@@ -142,10 +145,7 @@ CREATE TABLE IF NOT EXISTS settings (
     });
   }
 });
-await db.query(`
-CREATE UNIQUE INDEX IF NOT EXISTS services_provider_unique
-ON services(provider_id, provider_service_id);
-`);
+
 // Login API
 app.post("/api/login", async (req, res) => {
     try {
