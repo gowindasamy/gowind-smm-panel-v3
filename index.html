@@ -1,166 +1,398 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GOWIND SMM PANEL V3 - Client Panel</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOWIND SMM PANEL</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; line-height: 1.4; color: #333; }
+        h1, h2 { font-family: serif; font-weight: bold; margin-bottom: 5px; }
+        .version { color: #555; font-size: 0.9rem; margin-bottom: 20px; }
+        .auth-box { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; max-width: 350px; background: #fafafa; }
+        .auth-box label { display: inline-block; width: 80px; }
+        .auth-box input { margin-bottom: 5px; padding: 3px; width: 180px; }
+        .auth-box button { margin-top: 5px; width: 100%; padding: 5px; cursor: pointer; }
+        .section { margin-top: 25px; border-top: 1px solid #ccc; padding-top: 15px; }
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 2px; }
+        .form-group input, .form-group select { width: 100%; max-width: 400px; padding: 6px; box-sizing: border-box; }
+        .info-text { font-size: 0.95rem; max-width: 600px; margin-bottom: 15px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .hidden { display: none; }
+        .status-msg { color: #d9534f; font-weight: bold; margin-top: 10px; }
+    </style>
 </head>
 <body>
 
-  <!-- Auth View Container -->
-  <div id="auth-view" class="auth-container">
-    <div class="auth-card">
-      <div class="auth-header">
-        <h1>GOWIND SMM PANEL</h1>
-        <p>Version 3.0.0 Stable</p>
-      </div>
-      <form id="login-form">
-        <div class="form-group">
-          <label for="login-username">Username</label>
-          <input type="text" id="login-username" class="form-control" placeholder="Enter username" required>
+    <h1>GOWIND SMM PANEL</h1>
+    <div class="version">Version 3.0.0 Stable</div>
+
+    <!-- ========================================== -->
+    <!-- GUEST GATEWAY / LOGIN MODULES -->
+    <!-- ========================================== -->
+    <div id="authContainer">
+        <div class="auth-box">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="loginUser" placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPass" placeholder="Enter password">
+            </div>
+            <button id="btnLogin" onclick="handleAccountLogin()">Login</button>
+            <button id="btnAdminPortal" onclick="handleAdminPortalMock()" style="margin-top: 8px; background: #e7e7e7;">Admin Portal</button>
         </div>
-        <div class="form-group">
-          <label for="login-password">Password</label>
-          <input type="password" id="login-password" class="form-control" placeholder="Enter password" required>
-        </div>
-        <button type="submit" id="btn-login" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Login</button>
-        <button type="button" id="btn-goto-admin" class="btn btn-secondary" style="width: 100%; margin-top: 12px;">Admin Portal</button>
-      </form>
     </div>
-  </div>
 
-  <!-- Application Workspace Container -->
-  <div id="app-view" class="app-wrapper d-none">
-    <!-- Sidebar Navigation -->
-    <aside class="sidebar">
-      <div class="sidebar-brand">GOWIND SMM V3</div>
-      <ul class="sidebar-menu">
-        <li class="sidebar-item">
-          <a class="sidebar-link active" data-target="section-dashboard">Dashboard</a>
-        </li>
-        <li class="sidebar-item">
-          <a class="sidebar-link" data-target="section-new-order">New Order</a>
-        </li>
-        <li class="sidebar-item">
-          <a class="sidebar-link" data-target="section-history">Order History</a>
-        </li>
-      </ul>
-      <div class="sidebar-footer">
-        <button id="btn-logout" class="btn btn-danger btn-sm" style="width: 100%;">Logout</button>
-      </div>
-    </aside>
+    <!-- ========================================== -->
+    <!-- SECURE ACTIVE SESSION WORKSPACE (DASHBOARD)-->
+    <!-- ========================================== -->
+    <div id="dashboardContainer" class="hidden">
+        <div><strong>GOWIND SMM V3</strong></div>
+        <ul>
+            <li>Dashboard</li>
+            <li>New Order</li>
+            <li>Order History</li>
+        </ul>
+        <button onclick="handleSessionLogout()" style="padding: 5px 15px; cursor: pointer;">Logout</button>
 
-    <!-- Main View Workspace -->
-    <main class="main-content">
-      <header class="top-header">
-        <div>
-          <h2>Welcome Back, <span id="display-username">User</span>!</h2>
+        <h2>Welcome Back, <span id="displayUsername">User</span>!</h2>
+        <div class="form-group">
+            <label>Balance: $<span id="displayBalance">0.00</span></label>
         </div>
-        <div class="user-meta">
-          <div class="balance-pill">Balance: <span id="display-balance">$0.00</span></div>
-        </div>
-      </header>
 
-      <!-- Dashboard Grid Component -->
-      <div id="section-dashboard" class="panel-view">
-        <div class="grid-metrics">
-          <div class="card-metric">
-            <h3>Current Funds Available</h3>
-            <div class="value" id="dash-balance">$0.00</div>
-          </div>
-          <div class="card-metric">
-            <h3>Total Orders Submitted</h3>
-            <div class="value" id="dash-total-orders">0</div>
-          </div>
-        </div>
-        <div class="panel-section">
-          <div class="section-title">Platform Notice</div>
-          <p style="color: var(--text-muted); line-height: 1.6;">Welcome to the high-performance GOWIND SMM Platform interface. Deploy immediate social signals natively through multiple configured backend APIs concurrently. Check active histories via the secondary tab navigation menus.</p>
-        </div>
-      </div>
+        <h3>Current Funds Available</h3>
+        <p>$<span id="displayBalanceCard">0.00</span></p>
 
-      <!-- New Order Execution Component -->
-      <div id="section-new-order" class="panel-view d-none">
-        <div class="panel-section" style="max-width: 700px;">
-          <div class="section-title">Place a New Order</div>
-          <form id="order-form">
-            <div class="form-group">
-              <label for="order-service-select">Select Target Service Cluster</label>
-              <select id="order-service-select" class="form-control" required></select>
-            </div>
+        <h3>Total Orders Submitted</h3>
+        <p id="displayTotalOrdersCount">0</p>
+
+        <div class="section">
+            <h3>Platform Notice</h3>
+            <p class="info-text">
+                Welcome to the high-performance GOWIND SMM Platform interface. 
+                Deploy immediate social signals natively through multiple configured backend APIs concurrently. 
+                Check active histories via the secondary tab navigation menus.
+            </p>
+        </div>
+
+        <!-- TRANSACTION PLACE NEW ORDER PIPELINES -->
+        <div class="section">
+            <h3>Place a New Order</h3>
+            <div id="orderStatusFeedback" class="status-msg" style="color: blue;"></div>
             
-            <div class="form-row">
-              <div class="form-group">
+            <div class="form-group">
+                <label for="serviceDropdown">Select Target Service Cluster</label>
+                <select id="serviceDropdown" onchange="evaluateSelectedServiceMetadata()">
+                    <option value="">Loading services matrix allocations...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
                 <label>Target Core Provider</label>
-                <input type="text" id="order-provider-readonly" class="form-control" readonly placeholder="N/A">
-              </div>
-              <div class="form-group">
+                <input type="text" id="targetProvider" value="N/A" disabled>
+            </div>
+
+            <div class="form-group">
                 <label>Rate Per 1000 Units</label>
-                <input type="text" id="order-price-readonly" class="form-control" readonly placeholder="$0.00">
-              </div>
+                <input type="text" id="ratePer1000" value="$0.00" disabled>
             </div>
 
-            <div class="form-row">
-              <div class="form-group">
+            <div class="form-group">
                 <label>Minimum Permissible Quantity</label>
-                <input type="text" id="order-min-readonly" class="form-control" readonly placeholder="0">
-              </div>
-              <div class="form-group">
+                <input type="number" id="minQty" value="0" disabled>
+            </div>
+
+            <div class="form-group">
                 <label>Maximum Permissible Quantity</label>
-                <input type="text" id="order-max-readonly" class="form-control" readonly placeholder="0">
-              </div>
+                <input type="number" id="maxQty" value="0" disabled>
             </div>
 
             <div class="form-group">
-              <label for="order-link">Target Resource Link (Instagram/Universal)</label>
-              <input type="url" id="order-link" class="form-control" placeholder="https://instagram.com/..." required>
+                <label>Target Resource Link (Instagram/Universal)</label>
+                <input type="url" id="targetLink" placeholder="https://instagram.com/">
             </div>
 
             <div class="form-group">
-              <label for="order-quantity">Desired Operational Quantity</label>
-              <input type="number" id="order-quantity" class="form-control" placeholder="Enter numeric units quantity" required>
+                <label>Desired Operational Quantity</label>
+                <input type="number" id="orderQty" placeholder="Enter numeric units quantity" oninput="calculateDynamicPricingTotal()">
             </div>
 
             <div class="form-group">
-              <label>Calculated Dynamic Pricing Total</label>
-              <input type="text" id="order-total-price" class="form-control" readonly value="$0.00" style="font-weight: 700; color: var(--success);">
+                <label>Calculated Dynamic Pricing Total</label>
+                <input type="text" id="calculatedPrice" value="$0.00" disabled>
             </div>
 
-            <button type="submit" id="btn-submit-order" class="btn btn-primary" style="width: 100%;">Authorize and Dispatch Order</button>
-          </form>
+            <button id="btnSubmitOrder" onclick="dispatchOrderToUpstreamGateway()" style="padding: 10px; width: 100%; max-width: 400px; background: #e7e7e7; font-weight: bold; cursor: pointer;">
+                Authorize and Dispatch Order
+            </button>
         </div>
-      </div>
 
-      <!-- Historical Record Track Component -->
-      <div id="section-history" class="panel-view d-none">
-        <div class="panel-section">
-          <div class="section-title">Transactional Pipeline Audit Logs</div>
-          <div class="table-responsive">
-            <table class="custom-table">
-              <thead>
-                <tr>
-                  <th>Native ID</th>
-                  <th>Remote Tracker</th>
-                  <th>Execution Timestamp</th>
-                  <th>Selected Target Service</th>
-                  <th>Resource Target Link</th>
-                  <th>Quantity Metrics</th>
-                  <th>Charged Rate</th>
-                  <th>Deployment Status</th>
-                </tr>
-              </thead>
-              <tbody id="user-history-table-body">
-                <!-- Executed dynamically dynamically injection -->
-              </tbody>
+        <!-- HISTORIC AUDIT LOG TRACE MATRICES -->
+        <div class="section">
+            <h3>Transactional Pipeline Audit Logs</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Native ID</th>
+                        <th>Remote Tracker ID</th>
+                        <th>Execution Timestamp</th>
+                        <th>Selected Target Service</th>
+                        <th>Resource Target Link</th>
+                        <th>Quantity Metrics</th>
+                        <th>Charged Rate</th>
+                        <th>Deployment Status</th>
+                    </tr>
+                </thead>
+                <tbody id="orderLogsTableBody">
+                    <tr>
+                        <td colspan="8" style="text-align: center; color: #777;">No active records synchronized currently.</td>
+                    </tr>
+                </tbody>
             </table>
-          </div>
         </div>
-      </div>
+    </div>
 
-    </main>
-  </div>
+    <!-- ========================================== -->
+    <!-- CORE RUNTIME INTERCEPT ROUTING LOGIC ENGINE -->
+    <!-- ========================================== -->
+    <script>
+        // Connecting specifically to your production deployment endpoint setup on Render
+        const API_BASE_URL = "https://gowind-smm-panel-v3.onrender.com";
+        let activeSessionUser = null;
+        let localGlobalCatalogMap = [];
 
-  <script src="script.js"></script>
+        // Application initial lifecycle intercept point
+        window.addEventListener('DOMContentLoaded', () => {
+            // Check if user session data is cached locally inside client memory parameters
+            const cachedUser = localStorage.getItem('smm_session_token');
+            if (cachedUser) {
+                activeSessionUser = JSON.parse(cachedUser);
+                initializeSecureDashboardWorkspace();
+            }
+        });
+
+        async function handleAccountLogin() {
+            const usernameInput = document.getElementById('loginUser').value;
+            const passwordInput = document.getElementById('loginPass').value;
+
+            if(!usernameInput || !passwordInput) {
+                alert("Please fill in evaluation fields credentials completely.");
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: usernameInput, password: passwordInput })
+                });
+                const data = await res.json();
+                
+                if(!res.ok) throw new Error(data.error || "Identity system mapping mismatch error");
+
+                activeSessionUser = data.user;
+                localStorage.setItem('smm_session_token', JSON.stringify(data.user));
+                initializeSecureDashboardWorkspace();
+            } catch(err) {
+                alert("Authentication Failed: " + err.message);
+            }
+        }
+
+        function handleSessionLogout() {
+            localStorage.removeItem('smm_session_token');
+            activeSessionUser = null;
+            document.getElementById('dashboardContainer').classList.add('hidden');
+            document.getElementById('authContainer').classList.remove('hidden');
+        }
+
+        function handleAdminPortalMock() {
+            alert("Redirecting context intercept layers towards system master controls matrix dashboards console panel root...");
+        }
+
+        async function initializeSecureDashboardWorkspace() {
+            // Shift UI layouts frames
+            document.getElementById('authContainer').classList.add('hidden');
+            document.getElementById('dashboardContainer').classList.remove('hidden');
+            
+            // Render basic parameters details maps
+            document.getElementById('displayUsername').textContent = activeSessionUser.username;
+            
+            // Perform downstream global data telemetry fetch arrays sync jobs
+            await synchronizeClientProfileMetrics();
+            await pullAvailableOfferingsMatrix();
+            await synchronizeOrderActivityHistoryLogs();
+        }
+
+        async function synchronizeClientProfileMetrics() {
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/user/${activeSessionUser.id}`);
+                const data = await res.json();
+                if(res.ok && data.user) {
+                    const parsedBal = parseFloat(data.user.balance).toFixed(2);
+                    document.getElementById('displayBalance').textContent = parsedBal;
+                    document.getElementById('displayBalanceCard').textContent = parsedBal;
+                }
+            } catch(e) { console.error("Identity balancing sync disruption fault:", e); }
+        }
+
+        async function pullAvailableOfferingsMatrix() {
+            const dropdown = document.getElementById('serviceDropdown');
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/services/active`);
+                const data = await res.json();
+                
+                if(!res.ok) throw new Error("Catalog matrix endpoint transmission error dropped.");
+                
+                localGlobalCatalogMap = data.services || [];
+                dropdown.innerHTML = '<option value="">Select Target Service Cluster</option>';
+                
+                if(localGlobalCatalogMap.length === 0) {
+                    dropdown.innerHTML = '<option value="">No services mapped into active systems directories</option>';
+                    return;
+                }
+
+                localGlobalCatalogMap.forEach(svc => {
+                    const opt = document.createElement('option');
+                    opt.value = svc.id;
+                    opt.textContent = `${svc.name} - $${parseFloat(svc.price).toFixed(4)} per 1000`;
+                    dropdown.appendChild(opt);
+                });
+            } catch(err) {
+                dropdown.innerHTML = '<option value="">Error syncing live telemetry structural offerings</option>';
+                console.error(err);
+            }
+        }
+
+        function evaluateSelectedServiceMetadata() {
+            const selectionId = document.getElementById('serviceDropdown').value;
+            if(!selectionId) {
+                resetServiceMetadataFields();
+                return;
+            }
+
+            const activeSvcObj = localGlobalCatalogMap.find(x => x.id == parseInt(selectionId));
+            if(activeSvcObj) {
+                document.getElementById('targetProvider').value = activeSvcObj.provider_name || "Remote Node API Source Gateway";
+                document.getElementById('ratePer1000').value = `$${parseFloat(activeSvcObj.price).toFixed(4)}`;
+                document.getElementById('minQty').value = activeSvcObj.min_quantity;
+                document.getElementById('maxQty').value = activeSvcObj.max_quantity;
+                calculateDynamicPricingTotal();
+            }
+        }
+
+        function resetServiceMetadataFields() {
+            document.getElementById('targetProvider').value = "N/A";
+            document.getElementById('ratePer1000').value = "$0.00";
+            document.getElementById('minQty').value = "0";
+            document.getElementById('maxQty').value = "0";
+            document.getElementById('calculatedPrice').value = "$0.00";
+        }
+
+        function calculateDynamicPricingTotal() {
+            const selectionId = document.getElementById('serviceDropdown').value;
+            const inputQty = parseInt(document.getElementById('orderQty').value) || 0;
+            
+            if(!selectionId || inputQty <= 0) {
+                document.getElementById('calculatedPrice').value = "$0.00";
+                return;
+            }
+
+            const activeSvcObj = localGlobalCatalogMap.find(x => x.id == parseInt(selectionId));
+            if(activeSvcObj) {
+                const evaluatedCost = (inputQty / 1000) * parseFloat(activeSvcObj.price);
+                document.getElementById('calculatedPrice').value = `$${evaluatedCost.toFixed(4)}`;
+            }
+        }
+
+        async function dispatchOrderToUpstreamGateway() {
+            const feedbackBox = document.getElementById('orderStatusFeedback');
+            feedbackBox.textContent = "";
+
+            const serviceId = document.getElementById('serviceDropdown').value;
+            const link = document.getElementById('targetLink').value;
+            const quantity = document.getElementById('orderQty').value;
+
+            if(!serviceId || !link || !quantity) {
+                alert("Please provide valid data inside core transaction execution metrics inputs completely.");
+                return;
+            }
+
+            feedbackBox.style.color = "blue";
+            feedbackBox.textContent = "Processing transactional handshakes across remote external clusters grids pipelines...";
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/orders/new`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: activeSessionUser.id,
+                        serviceId: parseInt(serviceId),
+                        link: link.trim(),
+                        quantity: parseInt(quantity)
+                    })
+                });
+
+                const data = await res.json();
+                if(!res.ok) throw new Error(data.error || "Gateway intercept parameters structural failure");
+
+                feedbackBox.style.color = "green";
+                feedbackBox.textContent = `Order processed successfully! Local Tracker ID: ${data.orderId}, Upstream Provider Reference ID: ${data.remoteId || 'N/A'}`;
+                
+                // Clear state values inputs fields tracking variables contexts arrays maps strings objects
+                document.getElementById('targetLink').value = "";
+                document.getElementById('orderQty').value = "";
+                resetServiceMetadataFields();
+                document.getElementById('serviceDropdown').value = "";
+
+                // Refresh downstream global profiles counters balances
+                await synchronizeClientProfileMetrics();
+                await synchronizeOrderActivityHistoryLogs();
+            } catch(err) {
+                feedbackBox.style.color = "red";
+                feedbackBox.textContent = "Execution Fault Anomaly: " + err.message;
+            }
+        }
+
+        async function synchronizeOrderActivityHistoryLogs() {
+            const tBody = document.getElementById('orderLogsTableBody');
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/orders/user/${activeSessionUser.id}`);
+                const data = await res.json();
+                
+                if(!res.ok) throw new Error("Could not pull historic log matrices items metrics rows pipelines");
+
+                const ordersList = data.orders || [];
+                document.getElementById('displayTotalOrdersCount').textContent = ordersList.length;
+
+                if(ordersList.length === 0) {
+                    tBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #777;">No active records synchronized currently.</td></tr>`;
+                    return;
+                }
+
+                tBody.innerHTML = "";
+                ordersList.forEach(ord => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${ord.id}</td>
+                        <td><strong>${ord.provider_order_id || 'LOCAL_REJECT'}</strong></td>
+                        <td>${new Date(ord.created_at).toLocaleString()}</td>
+                        <td>${ord.service_name || 'Legacy Catalog Elements Profile Link'}</td>
+                        <td><a href="${ord.link}" target="_blank" style="color: blue; text-decoration: underline;">${ord.link}</a></td>
+                        <td>${ord.quantity}</td>
+                        <td>$${parseFloat(ord.price).toFixed(4)}</td>
+                        <td><span style="padding: 2px 6px; font-size:0.85rem; background: #e7e7e7; font-weight: bold; border-radius: 4px;">${ord.status}</span></td>
+                    `;
+                    tBody.appendChild(tr);
+                });
+            } catch(e) {
+                console.error("Historic execution sync breakdown event:", e);
+                tBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: red;">Failed to synchronise operational history matrices charts logs vectors pipelines maps data elements.</td></tr>`;
+            }
+        }
+    </script>
 </body>
 </html>
