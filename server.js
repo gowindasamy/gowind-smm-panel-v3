@@ -114,7 +114,49 @@ app.post("/api/login", async (req, res) => {
 
     }
 });
+// Register API
+app.post("/api/register", async (req, res) => {
+    try {
+        const { username, password, role } = req.body;
 
+        // Check if user already exists
+        const checkUser = await db.query(
+            "SELECT * FROM users WHERE username = $1",
+            [username]
+        );
+
+        if (checkUser.rows.length > 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Username already exists"
+            });
+        }
+
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Insert user
+        await db.query(
+            "INSERT INTO users (username, password, role) VALUES ($1, $2, $3)",
+            [
+                username,
+                hashedPassword,
+                role || "user"
+            ]
+        );
+
+        res.json({
+            success: true,
+            message: "User registered successfully"
+        });
+
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+    }
+});
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
