@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Order - Gowind SMM Panel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h1>📦 New Order</h1>
+</header>
+
+<main>
+
+    <select id="service">
+        <option>Select Service</option>
+        <option>Instagram Followers</option>
+        <option>Instagram Likes</option>
+        <option>YouTube Views</option>
+        <option>YouTube Subscribers</option>
+        <option>Facebook Likes</option>
+    </select>
+
+    <br><br>
+
+    <input type="text" id="link" placeholder="Enter Link">
+
+    <br><br>
+
+    <input type="number" id="quantity" placeholder="Quantity">
+
+    <br><br>
+
+    <button onclick="placeOrder()">Place Order</button>
+
+    <br><br>
+
+    <button onclick="location.href='dashboard.html'">⬅ Dashboard</button>
+
+    <p id="result"></p>
+
+</main>
+
+<script src="script.js"></script>
+
+</body>
+</html>
