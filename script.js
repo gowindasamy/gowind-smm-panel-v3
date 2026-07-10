@@ -20,3 +20,16 @@ if (form) {
         }
     });
 }
+function placeOrder() {
+    const service = document.getElementById("service").value;
+    const link = document.getElementById("link").value;
+    const quantity = document.getElementById("quantity").value;
+
+    if (!link || !quantity || service === "Select Service") {
+        document.getElementById("result").innerHTML = "❌ Please fill all fields.";
+        return;
+    }
+
+    document.getElementById("result").innerHTML =
+        "✅ Order Submitted Successfully!";
+}
