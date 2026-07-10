@@ -90,6 +90,29 @@
             text-transform: uppercase;
         }
 
+        /* Tabs to switch between User and Admin login panels */
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .tab.active {
+            color: var(--primary-red);
+            border-bottom: 2px solid var(--primary-red);
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -139,18 +162,6 @@
 
         button:active {
             transform: scale(0.98);
-        }
-
-        .secondary-btn {
-            background-color: #2b2b2b;
-            color: #aaaaaa;
-            margin-top: 15px;
-            border: 1px solid #444;
-        }
-
-        .secondary-btn:hover {
-            background-color: #383838;
-            color: #ffffff;
         }
 
         /* ========================================== */
@@ -306,22 +317,36 @@
         </header>
 
         <!-- ========================================== -->
-        <!-- SYSTEM ACCESS SECURITY GATEWAYS (LOGIN ONLY) -->
+        <!-- SYSTEM ACCESS SECURITY GATEWAYS -->
         <!-- ========================================== -->
         <div id="authContainer" class="auth-wrapper">
             <div class="auth-box">
-                <h2>Secure Login</h2>
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" id="loginUser" placeholder="Enter registration identifier">
+                <div class="auth-tabs">
+                    <div id="userTab" class="tab active" onclick="switchAuthMode('user')">Client Login</div>
+                    <div id="adminTab" class="tab" onclick="switchAuthMode('admin')">Admin Gateway</div>
                 </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="loginPass" placeholder="••••••••">
+
+                <!-- CLIENT LOGIN FORM BLOCK -->
+                <div id="userFormGroup">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="loginUser" placeholder="Enter registration identifier">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="loginPass" placeholder="••••••••">
+                    </div>
+                    <button onclick="handleAccountLogin()">Authenticate Identity</button>
                 </div>
-                <button onclick="handleAccountLogin()">Authenticate Identity (Login)</button>
-                <!-- Admin portal-ku poga direct seamless switch button link -->
-                <button class="secondary-btn" onclick="navigateToAdminPortal()">Admin Portal</button>
+
+                <!-- ADMIN LOGWAY FORM BLOCK (PASSWORD ONLY) -->
+                <div id="adminFormGroup" class="hidden">
+                    <div class="form-group">
+                        <label>Secure Admin Key Password</label>
+                        <input type="password" id="adminSecretKey" placeholder="••••••••••••••••">
+                    </div>
+                    <button onclick="handleAdminGatewayValidation()">Authorize Master Session</button>
+                </div>
             </div>
         </div>
 
@@ -455,20 +480,33 @@
             }
         });
 
+        // Tab selection management functionality
+        function switchAuthMode(mode) {
+            const userTab = document.getElementById('userTab');
+            const adminTab = document.getElementById('adminTab');
+            const userForm = document.getElementById('userFormGroup');
+            const adminForm = document.getElementById('adminFormGroup');
+
+            if(mode === 'user') {
+                userTab.classList.add('active');
+                adminTab.classList.remove('active');
+                userForm.classList.remove('hidden');
+                adminForm.classList.add('hidden');
+            } else {
+                adminTab.classList.add('active');
+                userTab.classList.remove('active');
+                adminForm.classList.remove('hidden');
+                userForm.classList.add('hidden');
+            }
+        }
+
+        // 1. Client Old Database Login Function
         async function handleAccountLogin() {
             const usernameInput = document.getElementById('loginUser').value;
             const passwordInput = document.getElementById('loginPass').value;
 
             if(!usernameInput || !passwordInput) {
-                alert("Please fill in execution evaluation parameters credentials completely.");
-                return;
-            }
-
-            // QUICK SYSTEM TESTING BYPASS MODE (Bypasses delay errors if server is taking time to fetch database)
-            if (usernameInput === "admin" && passwordInput === "admin123") {
-                activeSessionUser = { id: 1, username: "GowindAdmin", balance: "100.00" };
-                localStorage.setItem('smm_session_token', JSON.stringify(activeSessionUser));
-                initializeSecureDashboardWorkspace();
+                alert("Please fill in user verification fields completely.");
                 return;
             }
 
@@ -480,7 +518,7 @@
                 });
                 const data = await res.json();
                 
-                if(!res.ok) throw new Error(data.error || "Identity validation mismatch in old database entries.");
+                if(!res.ok) throw new Error(data.error || "Identity validation error.");
 
                 activeSessionUser = data.user;
                 localStorage.setItem('smm_session_token', JSON.stringify(data.user));
@@ -490,9 +528,22 @@
             }
         }
 
-        function navigateToAdminPortal() {
-            // Direct transfer layout direction map to admin portal file context
-            window.location.href = "admin.html";
+        // 2. Admin Password Only Redirection Routing Validation Function
+        function handleAdminGatewayValidation() {
+            const adminSecret = document.getElementById('adminSecretKey').value;
+
+            if(!adminSecret) {
+                alert("Please enter the master admin control access passcode key.");
+                return;
+            }
+
+            // Direct internal pass check or bypass evaluation system
+            if(adminSecret === "admin123" || adminSecret === "password") {
+                // If password matches, automatically transfer user layout framework context to admin portal
+                window.location.href = "admin.html";
+            } else {
+                alert("Invalid Admin Key Security Access Blocked.");
+            }
         }
 
         function handleSessionLogout() {
@@ -505,46 +556,4 @@
 
         async function initializeSecureDashboardWorkspace() {
             document.getElementById('authContainer').classList.add('hidden');
-            document.getElementById('dashboardContainer').classList.remove('hidden');
-            document.getElementById('navActions').classList.remove('hidden');
-            
-            document.getElementById('displayUsername').textContent = activeSessionUser.username;
-            
-            await synchronizeClientProfileMetrics();
-            await pullAvailableOfferingsMatrix();
-            await synchronizeOrderActivityHistoryLogs();
-        }
-
-        async function synchronizeClientProfileMetrics() {
-            try {
-                const res = await fetch(`${API_BASE_URL}/api/user/${activeSessionUser.id}`);
-                const data = await res.json();
-                if(res.ok && data.user) {
-                    document.getElementById('displayBalance').textContent = parseFloat(data.user.balance).toFixed(2);
-                }
-            } catch(e) { console.error("Balance sync break:", e); }
-        }
-
-        async function pullAvailableOfferingsMatrix() {
-            const dropdown = document.getElementById('serviceDropdown');
-            try {
-                const res = await fetch(`${API_BASE_URL}/api/services/active`);
-                const data = await res.json();
-                
-                if(!res.ok) throw new Error("Catalog dynamic linkage failed.");
-                
-                localGlobalCatalogMap = data.services || [];
-                dropdown.innerHTML = '<option value="">Select Target Service Cluster</option>';
-                
-                if(localGlobalCatalogMap.length === 0) {
-                    dropdown.innerHTML = '<option value="">No services mapped inside server registries</option>';
-                    return;
-                }
-
-                localGlobalCatalogMap.forEach(svc => {
-                    const opt = document.createElement('option');
-                    opt.value = svc.id;
-                    opt.textContent = `${svc.name} - $${parseFloat(svc.price).toFixed(4)}`;
-                    dropdown.appendChild(opt);
-                });
-            } catc
+            document.getElementById('dashboardCont
