@@ -305,33 +305,64 @@ app.get("/api/services", async (req, res) => {
 
     }
 });
-// Place Order API
+// Place Order API (Wallet Check)
 app.post("/api/orders", async (req, res) => {
     try {
 
-        const {
-            user_id,
-            service_id,
-            link,
-            quantity
-        } = req.body;
+        const { user_id, service_id, link, quantity } = req.body;
 
-        // Service details
-        const service = await db.query(
+        // Get Service
+        const serviceResult = await db.query(
             "SELECT * FROM services WHERE id = $1",
             [service_id]
         );
 
-        if (service.rows.length === 0) {
+        if (serviceResult.rows.length === 0) {
             return res.status(404).json({
                 success: false,
                 message: "Service not found"
             });
         }
 
-        const price =
-            (Number(service.rows[0].rate) * Number(quantity)) / 1000;
+        const service = serviceResult.rows[0];
 
+        const charge = (Number(service.rate) * Number(quantity)) / 1000;
+
+        // Get User Wallet
+        const userResult = await db.query(
+            "SELECT wallet FROM users WHERE id = $1",
+            [user_id]
+        );
+
+        if (userResult.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        const wallet = Number(userResult.rows[0].wallet);
+
+        if (wallet < charge) {
+            return res.status(400).json({
+                success: false,
+                message: "Insufficient Wallet Balance"
+            });
+        }
+
+        // Deduct Wallet
+        await db.query(
+            "UPDATE users SET wallet = wallet - $1 WHERE id = $2",
+            [charge, user_id]
+        );
+
+        // Save Transaction
+        await db.query(
+            "INSERT INTO transactions (user_id, amount, type) VALUES ($1,$2,$3)",
+            [user_id, charge, "Debit"]
+        );
+
+        // Save Order
         await db.query(
             `INSERT INTO orders
             (user_id, service_id, link, quantity, charge, status)
@@ -341,7 +372,7 @@ app.post("/api/orders", async (req, res) => {
                 service_id,
                 link,
                 quantity,
-                price,
+                charge,
                 "Pending"
             ]
         );
@@ -349,16 +380,14 @@ app.post("/api/orders", async (req, res) => {
         res.json({
             success: true,
             message: "Order Placed Successfully",
-            charge: price
+            charge: charge
         });
 
     } catch (err) {
-
         res.status(500).json({
             success: false,
             error: err.message
         });
-
     }
 });
 // Get Orders API
