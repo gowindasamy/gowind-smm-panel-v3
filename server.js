@@ -41,3 +41,17 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+app.get("/db-test", async (req, res) => {
+    try {
+        const result = await db.query("SELECT NOW()");
+        res.json({
+            success: true,
+            time: result.rows[0]
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+    }
+});
