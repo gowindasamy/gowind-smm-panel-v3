@@ -335,15 +335,14 @@ max
 )
 VALUES($1,$2,$3,$4,$5,$6,$7)`,
             [
-                provider_id,
-                provider_service_id,
-                service_id,
-                name,
-                category,
-                rate,
-                min,
-                max
-            ]
+    provider_id,
+    provider_service_id,
+    name,
+    category,
+    rate,
+    min,
+    max
+]
         );
 
         res.json({
