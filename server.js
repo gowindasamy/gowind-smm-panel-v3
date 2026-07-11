@@ -1490,45 +1490,7 @@ app.delete("/api/users/:id", async (req, res) => {
     }
 
 });
-/* ===========================
-   GET SETTINGS
-=========================== */
 
-app.get("/api/settings", async (req, res) => {
-
-    try {
-
-        const result = await db.query(
-            "SELECT * FROM settings LIMIT 1"
-        );
-
-        if(result.rows.length === 0){
-
-            return res.json({
-                success:true,
-                settings:{
-                    site_name:"Gowind SMM Panel",
-                    maintenance:false
-                }
-            });
-
-        }
-
-        res.json({
-            success:true,
-            settings:result.rows[0]
-        });
-
-    } catch(err){
-
-        res.status(500).json({
-            success:false,
-            error:err.message
-        });
-
-    }
-
-});
 /* ===========================
    SAVE SETTINGS
 =========================== */
