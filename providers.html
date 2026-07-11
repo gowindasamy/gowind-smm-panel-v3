@@ -22,18 +22,116 @@ background:#0f172a;
 color:white;
 }
 
-header{
+.container{
+width:100%;
+max-width:1400px;
+margin:auto;
+padding:15px;
+}
+
+.header{
 background:#1e293b;
 padding:20px;
+border-radius:10px;
 text-align:center;
-font-size:24px;
+margin-bottom:20px;
+}
+
+.header h2{
+font-size:30px;
+}
+
+.search{
+width:100%;
+padding:14px;
+border:none;
+border-radius:8px;
+font-size:16px;
+margin-bottom:15px;
+}
+
+.actions{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:20px;
+}
+
+.actions button{
+flex:1;
+min-width:140px;
+padding:13px;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+color:white;
+}
+
+.refresh{
+background:#7c3aed;
+}
+
+.add{
+background:#22c55e;
+}
+
+.table-container{
+width:100%;
+overflow-x:auto;
+-webkit-overflow-scrolling:touch;
+}
+
+table{
+width:100%;
+min-width:850px;
+border-collapse:collapse;
+background:#1e293b;
+}
+
+th{
+background:#334155;
+padding:14px;
+text-align:center;
+}
+
+td{
+padding:14px;
+text-align:center;
+border-bottom:1px solid #334155;
+white-space:nowrap;
+}
+
+.balance{
+background:#f59e0b;
+color:#fff;
+font-weight:bold;
+padding:10px 14px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+margin:3px;
+}
+
+.delete{
+background:#dc2626;
+color:#fff;
+font-weight:bold;
+padding:10px 14px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+margin:3px;
+}
+
+.status-active{
+color:#22c55e;
 font-weight:bold;
 }
 
-.container{
-max-width:1100px;
-margin:auto;
-padding:20px;
+.status-disabled{
+color:#ef4444;
+font-weight:bold;
 }
 
 .card{
@@ -43,71 +141,34 @@ border-radius:10px;
 margin-bottom:20px;
 }
 
-.card h2{
+.card h3{
 margin-bottom:15px;
 }
 
-input{
+.card input{
 width:100%;
 padding:12px;
-margin:8px 0;
+margin-bottom:12px;
 border:none;
 border-radius:8px;
-outline:none;
 font-size:15px;
 }
 
-button{
-padding:12px;
+.card button{
+width:100%;
+padding:13px;
 border:none;
 border-radius:8px;
-cursor:pointer;
-font-size:15px;
-margin:5px;
-}
-
-.add{
 background:#22c55e;
 color:white;
+font-size:16px;
+cursor:pointer;
 }
 
-.import{
-background:#2563eb;
-color:white;
-}
-
-.balance{
-background:#f59e0b;
-color:white;
-}
-
-.delete{
-background:#dc2626;
-color:white;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:15px;
-}
-
-th{
-background:#334155;
-padding:12px;
-}
-
-td{
-padding:10px;
-border-bottom:1px solid #475569;
-text-align:center;
-}
-
-.status{
+.message{
 margin-top:15px;
 text-align:center;
 font-weight:bold;
-font-size:18px;
 }
 
 </style>
@@ -116,35 +177,65 @@ font-size:18px;
 
 <body>
 
-<header>
+<div class="container">
+
+<div class="header">
+
+<h2>
 
 🌐 Provider Management
 
-</header>
+</h2>
 
-<div class="container">
+</div>
+
+<input
+
+class="search"
+
+id="search"
+
+type="text"
+
+placeholder="Search Provider..."
+
+onkeyup="searchProviders()">
+
+<div class="actions">
+
+<button
+
+class="refresh"
+
+onclick="loadProviders()">
+
+Refresh
+
+</button>
+
+</div>
 
 <div class="card">
 
-<h2>Add Provider</h2>
+<h3>
+
+Add Provider
+
+</h3>
 
 <input
-type="text"
 id="name"
 placeholder="Provider Name">
 
 <input
-type="text"
 id="url"
 placeholder="API URL">
 
 <input
-type="text"
 id="key"
 placeholder="API Key">
 
 <button
-class="add"
 onclick="addProvider()">
 
 Add Provider
@@ -153,9 +244,7 @@ Add Provider
 
 </div>
 
-<div class="card">
-
-<h2>Provider List</h2>
+<div class="table-container">
 
 <table>
 
@@ -174,6 +263,16 @@ Add Provider
 
 <tbody id="providerTable">
 
+<tr>
+
+<td colspan="4">
+
+Loading...
+
+</td>
+
+</tr>
+
 </tbody>
 
 </table>
@@ -181,8 +280,8 @@ Add Provider
 </div>
 
 <div
-id="result"
-class="status">
+class="message"
+id="result">
 
 Ready...
 
@@ -192,7 +291,27 @@ Ready...
 
 const API =
 "https://gowind-smm-panel-v3.onrender.com";
+
+let allProviders = [];
    /* ===========================
+   LOGIN CHECK
+=========================== */
+
+const USER = JSON.parse(localStorage.getItem("user"));
+
+if(!localStorage.getItem("token")){
+
+location.href="login.html";
+
+}
+
+if(!USER || USER.role!=="admin"){
+
+location.href="login.html";
+
+}
+
+/* ===========================
    LOAD PROVIDERS
 =========================== */
 
@@ -200,20 +319,60 @@ async function loadProviders(){
 
 try{
 
-const response = await fetch(
-API + "/api/providers"
+const response=await fetch(
+API+"/api/providers"
 );
 
-const data = await response.json();
+const data=await response.json();
 
-const table =
+if(!data.success){
+
+document.getElementById("providerTable").innerHTML=
+
+"<tr><td colspan='4'>No Providers Found</td></tr>";
+
+return;
+
+}
+
+allProviders=data.providers;
+
+renderProviders(allProviders);
+
+}catch(err){
+
+document.getElementById("providerTable").innerHTML=
+
+"<tr><td colspan='4'>"+err.message+"</td></tr>";
+
+}
+
+}
+
+/* ===========================
+   RENDER TABLE
+=========================== */
+
+function renderProviders(list){
+
+const table=
 document.getElementById("providerTable");
 
-table.innerHTML = "";
+table.innerHTML="";
 
-data.providers.forEach(provider=>{
+if(list.length===0){
 
-table.innerHTML += `
+table.innerHTML=
+
+"<tr><td colspan='4'>No Providers Found</td></tr>";
+
+return;
+
+}
+
+list.forEach(provider=>{
+
+table.innerHTML+=`
 
 <tr>
 
@@ -223,27 +382,27 @@ table.innerHTML += `
 
 <td>
 
+<span class="${
+provider.status
+? "status-active"
+: "status-disabled"
+}">
+
 ${provider.status
 ? "🟢 Active"
 : "🔴 Disabled"}
+
+</span>
 
 </td>
 
 <td>
 
 <button
-class="import"
-onclick="importServices(${provider.id})">
-
-Import
-
-</button>
-
-<button
 class="balance"
 onclick="checkBalance(${provider.id})">
 
-Balance
+💰 Balance
 
 </button>
 
@@ -251,7 +410,7 @@ Balance
 class="delete"
 onclick="deleteProvider(${provider.id})">
 
-Delete
+🗑 Delete
 
 </button>
 
@@ -263,42 +422,67 @@ Delete
 
 });
 
-}catch(err){
-
-document.getElementById("result").innerHTML =
-err.message;
-
-}
-
 }
 
 /* ===========================
+   SEARCH PROVIDERS
+=========================== */
+
+function searchProviders(){
+
+const keyword=
+
+document.getElementById("search")
+.value
+.toLowerCase();
+
+const filtered=
+
+allProviders.filter(provider=>
+
+provider.name
+.toLowerCase()
+.includes(keyword)
+
+||
+
+String(provider.id)
+.includes(keyword)
+
+);
+
+renderProviders(filtered);
+
+                    }
+   /* ===========================
    ADD PROVIDER
 =========================== */
 
 async function addProvider(){
 
-const name =
-document.getElementById("name").value;
+const name=
+document.getElementById("name").value.trim();
 
-const url =
-document.getElementById("url").value;
+const url=
+document.getElementById("url").value.trim();
 
-const key =
-document.getElementById("key").value;
+const key=
+document.getElementById("key").value.trim();
 
 if(!name || !url || !key){
 
-document.getElementById("result").innerHTML =
-"Please fill all fields";
+document.getElementById("result").innerHTML=
+"⚠️ Please fill all fields";
 
 return;
 
 }
 
-const response = await fetch(
+try{
 
-API + "/api/providers",
+const response=await fetch(
+
+API+"/api/providers",
 
 {
 
@@ -320,11 +504,11 @@ api_key:key
 
 );
 
-const data =
-await response.json();
+const data=await response.json();
 
-document.getElementById("result").innerHTML =
-data.message;
+document.getElementById("result").innerHTML=
+
+data.message || data.error;
 
 document.getElementById("name").value="";
 document.getElementById("url").value="";
@@ -332,62 +516,10 @@ document.getElementById("key").value="";
 
 loadProviders();
 
-}
-   /* ===========================
-   IMPORT SERVICES
-=========================== */
-
-async function importServices(providerId){
-
-document.getElementById("result").innerHTML =
-"⏳ Importing services...";
-
-try{
-
-const response = await fetch(
-
-API + "/api/providers/import",
-
-{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-
-provider_id:providerId
-
-})
-
-}
-
-);
-
-const data = await response.json();
-
-if(data.success){
-
-document.getElementById("result").innerHTML =
-
-"✅ Imported " +
-data.imported +
-" Services Successfully";
-
-}else{
-
-document.getElementById("result").innerHTML =
-
-"❌ " +
-(data.error || data.message);
-
-}
-
 }catch(err){
 
-document.getElementById("result").innerHTML =
+document.getElementById("result").innerHTML=
+
 err.message;
 
 }
@@ -395,71 +527,76 @@ err.message;
 }
 
 /* ===========================
-   PROVIDER BALANCE
+   CHECK BALANCE
 =========================== */
 
 async function checkBalance(providerId){
 
-document.getElementById("result").innerHTML =
-"⏳ Checking Balance...";
+document.getElementById("result").innerHTML=
+"⏳ Checking Provider Balance...";
 
 try{
 
-const response = await fetch(
+const response=await fetch(
 
-API +
-"/api/providers/" +
-providerId +
+API+
+"/api/providers/"+
+providerId+
 "/balance"
 
 );
 
-const data = await response.json();
+const data=await response.json();
 
 if(data.balance){
 
-document.getElementById("result").innerHTML =
+document.getElementById("result").innerHTML=
 
-"💰 Balance : " +
-data.balance +
-" " +
+"💰 Balance : "+
+data.balance+
+" "+
 (data.currency || "");
 
 }else{
 
-document.getElementById("result").innerHTML =
+document.getElementById("result").innerHTML=
 
+data.message ||
 JSON.stringify(data);
 
 }
 
 }catch(err){
 
-document.getElementById("result").innerHTML =
+document.getElementById("result").innerHTML=
+
 err.message;
 
 }
 
-   }
-   /* ===========================
+}
+
+/* ===========================
    DELETE PROVIDER
 =========================== */
 
 async function deleteProvider(providerId){
 
-const ok = confirm(
+const ok=confirm(
 "Delete this provider?"
 );
 
 if(!ok){
+
 return;
+
 }
 
 try{
 
-const response = await fetch(
+const response=await fetch(
 
-API + "/api/providers/" + providerId,
+API+"/api/providers/"+providerId,
 
 {
 method:"DELETE"
@@ -467,17 +604,18 @@ method:"DELETE"
 
 );
 
-const data =
-await response.json();
+const data=await response.json();
 
-document.getElementById("result").innerHTML =
+document.getElementById("result").innerHTML=
+
 data.message || data.error;
 
 loadProviders();
 
 }catch(err){
 
-document.getElementById("result").innerHTML =
+document.getElementById("result").innerHTML=
+
 err.message;
 
 }
@@ -485,10 +623,23 @@ err.message;
 }
 
 /* ===========================
-   PAGE LOAD
+   REFRESH
 =========================== */
 
+function refreshProviders(){
+
 loadProviders();
+
+   }
+   /* ===========================
+   WINDOW LOAD
+=========================== */
+
+window.onload=function(){
+
+loadProviders();
+
+};
 
 /* ===========================
    AUTO REFRESH
@@ -496,7 +647,66 @@ loadProviders();
 
 setInterval(loadProviders,30000);
 
+/* ===========================
+   BUTTON ANIMATION
+=========================== */
+
+document.addEventListener("mouseover",function(e){
+
+if(e.target.tagName==="BUTTON"){
+
+e.target.style.transform="scale(1.03)";
+e.target.style.transition=".2s";
+
+}
+
+});
+
+document.addEventListener("mouseout",function(e){
+
+if(e.target.tagName==="BUTTON"){
+
+e.target.style.transform="scale(1)";
+
+}
+
+});
+
+/* ===========================
+   SHORTCUT KEYS
+=========================== */
+
+document.addEventListener("keydown",function(e){
+
+if(e.ctrlKey && e.key==="r"){
+
+e.preventDefault();
+
+loadProviders();
+
+}
+
+if(e.key==="Escape"){
+
+document.getElementById("name").value="";
+document.getElementById("url").value="";
+document.getElementById("key").value="";
+
+document.getElementById("result").innerHTML=
+"Ready...";
+
+}
+
+});
+
+/* ===========================
+   PAGE READY
+=========================== */
+
+console.log("Providers Management Ready");
+
 </script>
 
 </body>
+
 </html>
