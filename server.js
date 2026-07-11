@@ -1834,6 +1834,51 @@ app.delete("/api/orders/:id", async (req, res) => {
 
 });
 /* ===========================
+   USER ORDER HISTORY
+=========================== */
+
+app.get("/api/orders/user/:id", async (req, res) => {
+
+    try {
+
+        const result = await db.query(`
+
+SELECT
+o.id,
+s.name AS service_name,
+o.link,
+o.quantity,
+o.charge,
+o.status,
+o.created_at
+
+FROM orders o
+
+LEFT JOIN services s
+ON o.service_id = s.id
+
+WHERE o.user_id = $1
+
+ORDER BY o.id DESC
+
+        `,[req.params.id]);
+
+        res.json({
+            success: true,
+            orders: result.rows
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+}); 
+/* ===========================
    SERVER START
 =========================== */
 
