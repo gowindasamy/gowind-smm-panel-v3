@@ -260,59 +260,66 @@ error:err.message
    REGISTER
 =========================== */
 
-app.post("/api/register",async(req,res)=>{
+app.post("/api/register", async (req, res) => {
 
-try{
+    try {
 
-const {username,password,role}=req.body;
+        const { username, password, role } = req.body;
 
-const check=await db.query(
-"SELECT * FROM users WHERE username=$1",
-[username]
-);
+        const check = await db.query(
+            "SELECT * FROM users WHERE username=$1",
+            [username]
+        );
 
-if(check.rows.length>0){
+        if (check.rows.length > 0) {
 
-return res.json({
-success:false,
-message:"Username already exists"
-});
+            return res.json({
+                success: false,
+                message: "Username already exists"
+            });
 
-}
+        }
 
-const hash=await bcrypt.hash(password,10);
+        const hash = await bcrypt.hash(password, 10);
 
-await db.query(
+        const result = await db.query(
 
-`INSERT INTO users
-(username,password,role)
-VALUES($1,$2,$3)`,
+            `INSERT INTO users
+            (username,password,role)
+            VALUES($1,$2,$3)
+            RETURNING id,username,role`,
 
-[
-username,
-hash,
-role || "user"
-]
+            [
+                username,
+                hash,
+                role || "user"
+            ]
 
-);
+        );
 
-res.json({
+        res.json({
 
-success:true,
-message:"User Registered Successfully"
+            success: true,
+            message: "User Registered Successfully",
 
-});
+            user: {
+                id: result.rows[0].id,
+                username: result.rows[0].username,
+                role: result.rows[0].role
+            }
 
-}catch(err){
+        });
 
-res.status(500).json({
+    } catch (err) {
 
-success:false,
-error:err.message
+        res.status(500).json({
 
-});
+            success: false,
+            error: err.message
 
-}
+        });
+
+    }
 
 });
 /* ===========================
