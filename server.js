@@ -1334,6 +1334,108 @@ app.delete("/api/users/:id", async (req, res) => {
 
 });
 /* ===========================
+   GET SETTINGS
+=========================== */
+
+app.get("/api/settings", async (req, res) => {
+
+    try {
+
+        const result = await db.query(
+            "SELECT * FROM settings LIMIT 1"
+        );
+
+        if(result.rows.length === 0){
+
+            return res.json({
+                success:true,
+                settings:{
+                    site_name:"Gowind SMM Panel",
+                    maintenance:false
+                }
+            });
+
+        }
+
+        res.json({
+            success:true,
+            settings:result.rows[0]
+        });
+
+    } catch(err){
+
+        res.status(500).json({
+            success:false,
+            error:err.message
+        });
+
+    }
+
+});
+/* ===========================
+   SAVE SETTINGS
+=========================== */
+
+app.post("/api/settings", async (req, res) => {
+
+    try {
+
+        const { site_name, maintenance } = req.body;
+
+        const check = await db.query(
+            "SELECT id FROM settings LIMIT 1"
+        );
+
+        if(check.rows.length === 0){
+
+            await db.query(
+
+                `INSERT INTO settings
+                (site_name,maintenance)
+                VALUES($1,$2)`,
+
+                [
+                    site_name,
+                    maintenance
+                ]
+
+            );
+
+        }else{
+
+            await db.query(
+
+                `UPDATE settings
+                 SET site_name=$1,
+                     maintenance=$2
+                 WHERE id=$3`,
+
+                [
+                    site_name,
+                    maintenance,
+                    check.rows[0].id
+                ]
+
+            );
+
+        }
+
+        res.json({
+            success:true,
+            message:"Settings Saved Successfully"
+        });
+
+    } catch(err){
+
+        res.status(500).json({
+            success:false,
+            error:err.message
+        });
+
+    }
+
+});
+/* ===========================
    SERVER START
 =========================== */
 
