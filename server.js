@@ -1506,6 +1506,46 @@ app.get("/api/orders-columns", async (req, res) => {
 
 });
 /* ===========================
+   SET USER BALANCE
+=========================== */
+
+app.post("/api/users/set-balance", async (req, res) => {
+
+    try {
+
+        const { user_id, balance } = req.body;
+
+        await db.query(
+
+            "UPDATE users SET wallet=$1 WHERE id=$2",
+
+            [
+                balance,
+                user_id
+            ]
+
+        );
+
+        res.json({
+
+            success: true,
+            message: "Balance Updated Successfully"
+
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+
+            success: false,
+            error: err.message
+
+        });
+
+    }
+
+});
+/* ===========================
    SERVER START
 =========================== */
 
