@@ -180,8 +180,7 @@ location.href="dashboard.html";
 }else{
 
 document.getElementById("result").innerHTML =
-data.message || "Login Failed";
-
+JSON.stringify(data);
 }
 
 }catch(err){
