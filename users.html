@@ -4,7 +4,8 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Users Management</title>
 
@@ -32,9 +33,10 @@ padding:15px;
 .header{
 background:#1e293b;
 padding:20px;
-border-radius:10px;
+border-radius:12px;
 text-align:center;
 margin-bottom:20px;
+box-shadow:0 5px 15px rgba(0,0,0,.3);
 }
 
 .header h2{
@@ -45,9 +47,10 @@ font-size:30px;
 width:100%;
 padding:14px;
 border:none;
-border-radius:8px;
+border-radius:10px;
 font-size:16px;
 margin-bottom:15px;
+outline:none;
 }
 
 .actions{
@@ -59,13 +62,14 @@ margin-bottom:20px;
 
 .actions button{
 flex:1;
-min-width:140px;
+min-width:150px;
 padding:13px;
 border:none;
-border-radius:8px;
+border-radius:10px;
 font-size:16px;
-color:#fff;
 cursor:pointer;
+color:#fff;
+font-weight:bold;
 }
 
 .refresh{
@@ -80,11 +84,12 @@ background:#22c55e;
 width:100%;
 overflow-x:auto;
 -webkit-overflow-scrolling:touch;
+border-radius:10px;
 }
 
 table{
 width:100%;
-min-width:900px;
+min-width:950px;
 border-collapse:collapse;
 background:#1e293b;
 }
@@ -104,13 +109,13 @@ white-space:nowrap;
 
 .admin{
 background:#2563eb;
-padding:6px 10px;
+padding:6px 12px;
 border-radius:6px;
 }
 
 .user{
 background:#16a34a;
-padding:6px 10px;
+padding:6px 12px;
 border-radius:6px;
 }
 
@@ -119,13 +124,25 @@ font-weight:bold;
 color:#22c55e;
 }
 
-.delete{
-background:#dc2626;
+.balance{
+background:#f59e0b;
+color:#fff;
 padding:8px 12px;
 border:none;
 border-radius:6px;
-color:white;
 cursor:pointer;
+margin-right:5px;
+font-weight:bold;
+}
+
+.delete{
+background:#dc2626;
+color:#fff;
+padding:8px 12px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+font-weight:bold;
 }
 
 .modal{
@@ -138,6 +155,7 @@ height:100%;
 background:rgba(0,0,0,.6);
 justify-content:center;
 align-items:center;
+z-index:999;
 }
 
 .modal-content{
@@ -149,8 +167,8 @@ max-width:420px;
 }
 
 .modal-content h3{
-margin-bottom:15px;
 text-align:center;
+margin-bottom:15px;
 }
 
 .modal-content input,
@@ -160,6 +178,7 @@ padding:12px;
 margin-bottom:12px;
 border:none;
 border-radius:8px;
+outline:none;
 }
 
 .modal-buttons{
@@ -173,7 +192,8 @@ padding:12px;
 border:none;
 border-radius:8px;
 cursor:pointer;
-color:white;
+color:#fff;
+font-weight:bold;
 }
 
 .save{
@@ -193,14 +213,25 @@ background:#ef4444;
 <div class="container">
 
 <div class="header">
-<h2>Users Management</h2>
+
+<h2>
+
+👥 Users Management
+
+</h2>
+
 </div>
 
 <input
+
 class="search"
+
 id="search"
+
 type="text"
+
 placeholder="Search User..."
+
 onkeyup="searchUsers()">
 
 <div class="actions">
@@ -208,13 +239,17 @@ onkeyup="searchUsers()">
 <button
 class="refresh"
 onclick="loadUsers()">
-Refresh
+
+🔄 Refresh
+
 </button>
 
 <button
 class="register"
 onclick="openRegister()">
-Register User
+
+➕ Register User
+
 </button>
 
 </div>
@@ -263,48 +298,106 @@ id="registerModal">
 
 <div class="modal-content">
 
-<h3>Register User</h3>
+<h3>
+
+Register User
+
+</h3>
 
 <input
-type="text"
 id="username"
 placeholder="Username">
 
 <input
-type="password"
 id="password"
+type="password"
 placeholder="Password">
 
 <select id="role">
 
-<option value="user">
-User
-</option>
+<option value="user">User</option>
 
-<option value="admin">
-Admin
-</option>
+<option value="admin">Admin</option>
 
 </select>
 
 <input
-type="number"
 id="wallet"
-placeholder="Wallet Balance"
-value="0">
+type="number"
+value="0"
+placeholder="Wallet Balance">
 
 <div class="modal-buttons">
 
 <button
 class="save"
 onclick="registerUser()">
+
 Register
+
 </button>
 
 <button
 class="cancel"
 onclick="closeRegister()">
+
 Cancel
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- Balance Modal -->
+
+<div
+class="modal"
+id="balanceModal">
+
+<div class="modal-content">
+
+<h3>
+
+✏️ Set Wallet Balance
+
+</h3>
+
+<p>
+
+Current Balance :
+
+<b id="currentBalance">
+
+₹0.00
+
+</b>
+
+</p>
+
+<input
+id="newBalance"
+type="number"
+placeholder="New Balance">
+
+<div class="modal-buttons">
+
+<button
+class="save"
+onclick="saveBalance()">
+
+Save
+
+</button>
+
+<button
+class="cancel"
+onclick="closeBalanceModal()">
+
+Cancel
+
 </button>
 
 </div>
@@ -318,12 +411,15 @@ Cancel
 const API =
 "https://gowind-smm-panel-v3.onrender.com";
 
-let allUsers = [];
+const USER =
+JSON.parse(localStorage.getItem("user"));
+
+let allUsers=[];
+
+let selectedUserId=null;
   /* ===========================
    LOGIN CHECK
 =========================== */
-
-const USER = JSON.parse(localStorage.getItem("user"));
 
 if(!localStorage.getItem("token")){
 
@@ -345,28 +441,35 @@ async function loadUsers(){
 
 try{
 
-const response = await fetch(
-API + "/api/users"
+const response=await fetch(
+API+"/api/users"
 );
 
-const data = await response.json();
+const data=await response.json();
+
+const table=
+document.getElementById("usersTable");
+
+table.innerHTML="";
 
 if(!data.success){
 
-document.getElementById("usersTable").innerHTML =
+table.innerHTML=
+
 "<tr><td colspan='5'>No Users Found</td></tr>";
 
 return;
 
 }
 
-allUsers = data.users;
+allUsers=data.users;
 
 renderUsers(allUsers);
 
 }catch(err){
 
-document.getElementById("usersTable").innerHTML =
+document.getElementById("usersTable").innerHTML=
+
 "<tr><td colspan='5'>"+err.message+"</td></tr>";
 
 }
@@ -379,7 +482,7 @@ document.getElementById("usersTable").innerHTML =
 
 function renderUsers(list){
 
-const table =
+const table=
 document.getElementById("usersTable");
 
 table.innerHTML="";
@@ -387,6 +490,7 @@ table.innerHTML="";
 if(list.length===0){
 
 table.innerHTML=
+
 "<tr><td colspan='5'>No Users Found</td></tr>";
 
 return;
@@ -395,7 +499,7 @@ return;
 
 list.forEach(user=>{
 
-table.innerHTML += `
+table.innerHTML+=`
 
 <tr>
 
@@ -406,7 +510,9 @@ table.innerHTML += `
 <td>
 
 <span class="${
-user.role==="admin" ? "admin" : "user"
+user.role==="admin"
+? "admin"
+: "user"
 }">
 
 ${user.role}
@@ -424,10 +530,18 @@ ${user.role}
 <td>
 
 <button
+class="balance"
+onclick="openBalanceModal(${user.id},${user.wallet})">
+
+✏️ Balance
+
+</button>
+
+<button
 class="delete"
 onclick="deleteUser(${user.id})">
 
-Delete
+🗑 Delete
 
 </button>
 
@@ -442,17 +556,20 @@ Delete
 }
 
 /* ===========================
-   SEARCH USER
+   SEARCH USERS
 =========================== */
 
 function searchUsers(){
 
-const keyword =
+const keyword=
+
 document.getElementById("search")
 .value
 .toLowerCase();
 
-const filtered = allUsers.filter(user=>
+const filtered=
+
+allUsers.filter(user=>
 
 user.username
 .toLowerCase()
@@ -473,7 +590,7 @@ String(user.id)
 
 renderUsers(filtered);
 
-  }
+   }
   /* ===========================
    OPEN REGISTER
 =========================== */
@@ -528,22 +645,30 @@ return;
 try{
 
 const response=await fetch(
+
 API+"/api/register",
+
 {
+
 method:"POST",
+
 headers:{
 "Content-Type":"application/json"
 },
+
 body:JSON.stringify({
+
 username,
 password,
 role
+
 })
+
 }
+
 );
 
 const data=await response.json();
-  console.log("Register Response:", data);
 
 if(!data.success){
 
@@ -553,27 +678,34 @@ return;
 
 }
 
-/* Optional Wallet */
-
 if(wallet>0){
 
 await fetch(
+
 API+"/api/wallet/add",
+
 {
+
 method:"POST",
+
 headers:{
 "Content-Type":"application/json"
 },
+
 body:JSON.stringify({
-user_id:data.user?.id,
+
+user_id:data.user.id,
 amount:wallet
+
 })
+
 }
+
 );
 
 }
 
-alert("User Registered Successfully");
+alert("User Created Successfully");
 
 closeRegister();
 
@@ -588,12 +720,48 @@ alert(err.message);
 }
 
 /* ===========================
-   DELETE USER
+   OPEN BALANCE MODAL
 =========================== */
 
-async function deleteUser(id){
+function openBalanceModal(id,balance){
 
-if(!confirm("Delete this user?")){
+selectedUserId=id;
+
+document.getElementById("balanceModal").style.display="flex";
+
+document.getElementById("currentBalance").innerHTML=
+
+"₹"+Number(balance).toFixed(2);
+
+document.getElementById("newBalance").value=balance;
+
+}
+
+/* ===========================
+   CLOSE BALANCE MODAL
+=========================== */
+
+function closeBalanceModal(){
+
+document.getElementById("balanceModal").style.display="none";
+
+document.getElementById("newBalance").value="";
+
+selectedUserId=null;
+
+}
+
+/* ===========================
+   SAVE BALANCE
+=========================== */
+
+async function saveBalance(){
+
+const balance=
+
+Number(document.getElementById("newBalance").value);
+
+if(selectedUserId===null){
 
 return;
 
@@ -602,15 +770,75 @@ return;
 try{
 
 const response=await fetch(
-API+"/api/users/"+id,
+
+API+"/api/users/set-balance",
+
 {
-method:"DELETE"
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+user_id:selectedUserId,
+
+balance:balance
+
+})
+
 }
+
 );
 
 const data=await response.json();
 
 alert(data.message);
+
+closeBalanceModal();
+
+loadUsers();
+
+}catch(err){
+
+alert(err.message);
+
+}
+
+  }
+ /* ===========================
+   DELETE USER
+=========================== */
+
+async function deleteUser(id){
+
+const ok=confirm(
+"Delete this user?"
+);
+
+if(!ok){
+
+return;
+
+}
+
+try{
+
+const response=await fetch(
+
+API+"/api/users/"+id,
+
+{
+method:"DELETE"
+}
+
+);
+
+const data=await response.json();
+
+alert(data.message || data.error);
 
 loadUsers();
 
@@ -621,6 +849,26 @@ alert(err.message);
 }
 
 }
+
+/* ===========================
+   CLOSE MODALS
+=========================== */
+
+window.onclick=function(e){
+
+if(e.target===document.getElementById("registerModal")){
+
+closeRegister();
+
+}
+
+if(e.target===document.getElementById("balanceModal")){
+
+closeBalanceModal();
+
+}
+
+};
 
 /* ===========================
    WINDOW LOAD
@@ -637,41 +885,29 @@ loadUsers();
 =========================== */
 
 setInterval(loadUsers,30000);
-  /* ===========================
-   CLOSE MODAL OUTSIDE CLICK
-=========================== */
-
-window.onclick=function(e){
-
-const modal=
-document.getElementById("registerModal");
-
-if(e.target===modal){
-
-closeRegister();
-
-}
-
-};
 
 /* ===========================
    BUTTON ANIMATION
 =========================== */
 
-document.querySelectorAll("button").forEach(btn=>{
+document.addEventListener("mouseover",function(e){
 
-btn.addEventListener("mouseenter",function(){
+if(e.target.tagName==="BUTTON"){
 
-this.style.transform="scale(1.04)";
-this.style.transition=".2s";
+e.target.style.transform="scale(1.04)";
+e.target.style.transition=".2s";
 
-});
-
-btn.addEventListener("mouseleave",function(){
-
-this.style.transform="scale(1)";
+}
 
 });
+
+document.addEventListener("mouseout",function(e){
+
+if(e.target.tagName==="BUTTON"){
+
+e.target.style.transform="scale(1)";
+
+}
 
 });
 
@@ -684,6 +920,8 @@ document.addEventListener("keydown",function(e){
 if(e.key==="Escape"){
 
 closeRegister();
+
+closeBalanceModal();
 
 }
 
@@ -715,4 +953,4 @@ console.log("Users Management Ready");
 
 </body>
 
-</html>
+</html> 
