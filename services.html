@@ -4,7 +4,9 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Services Management</title>
 
@@ -18,85 +20,139 @@ font-family:Arial,sans-serif;
 }
 
 body{
+
 background:#0f172a;
 color:white;
-}
 
-header{
-background:#1e293b;
-padding:20px;
-text-align:center;
-font-size:24px;
-font-weight:bold;
 }
 
 .container{
-width:95%;
-margin:auto;
+
+width:98%;
+max-width:1400px;
+margin:20px auto;
+
+}
+
+.header{
+
+background:#1e293b;
 padding:20px;
+border-radius:10px;
+text-align:center;
+margin-bottom:20px;
+
+}
+
+.header h2{
+
+font-size:32px;
+
 }
 
 .search{
-margin-bottom:20px;
-}
-
-.search input{
 
 width:100%;
-padding:12px;
+padding:14px;
 border:none;
 border-radius:8px;
 font-size:16px;
+margin-bottom:15px;
+
+}
+
+.actions{
+
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:20px;
+
+}
+
+.actions button{
+
+flex:1;
+min-width:140px;
+padding:13px;
+border:none;
+border-radius:8px;
+color:white;
+font-size:16px;
+cursor:pointer;
+
+}
+
+.refresh{
+
+background:#7c3aed;
+
+}
+
+.add{
+
+background:#22c55e;
+
+}
+
+.delete{
+
+background:#dc2626;
+
+}
+
+.table-container{
+
+width:100%;
+overflow-x:auto;
+-webkit-overflow-scrolling:touch;
 
 }
 
 table{
 
 width:100%;
+min-width:1100px;
 border-collapse:collapse;
+background:#1e293b;
 
 }
 
 th{
 
 background:#334155;
-padding:12px;
+padding:14px;
+text-align:left;
 
 }
 
 td{
 
-padding:10px;
-text-align:center;
-border-bottom:1px solid #475569;
+padding:14px;
+border-bottom:1px solid #334155;
 
-}
-
-button{
-
-padding:10px 18px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-color:white;
-margin:3px;
-
-}
-
-.add{
-background:#22c55e;
 }
 
 .edit{
-background:#3b82f6;
+
+background:#2563eb;
+padding:8px 12px;
+border:none;
+border-radius:6px;
+color:white;
+cursor:pointer;
+
 }
 
-.delete{
-background:#ef4444;
-}
+.remove{
 
-.refresh{
-background:#9333ea;
+background:#dc2626;
+padding:8px 12px;
+border:none;
+border-radius:6px;
+color:white;
+cursor:pointer;
+
 }
 
 </style>
@@ -105,23 +161,65 @@ background:#9333ea;
 
 <body>
 
-<header>
-
-🛒 Services Management
-
-</header>
-
 <div class="container">
 
-<div class="search">
+<div class="header">
 
-<input
-type="text"
-id="search"
-placeholder="Search Service..."
-onkeyup="searchServices()">
+<h2>
+
+Services Management
+
+</h2>
 
 </div>
+
+<input
+
+class="search"
+
+id="search"
+
+type="text"
+
+placeholder="Search Service..."
+
+onkeyup="searchService()">
+
+<div class="actions">
+
+<button
+
+class="refresh"
+
+onclick="loadServices()">
+
+Refresh
+
+</button>
+
+<button
+
+class="add"
+
+onclick="openAddService()">
+
+Add Service
+
+</button>
+
+<button
+
+class="delete"
+
+onclick="deleteAllServices()">
+
+Delete All Services
+
+</button>
+
+</div>
+
+<div class="table-container">
 
 <table>
 
@@ -149,43 +247,50 @@ onkeyup="searchServices()">
 
 </thead>
 
-<tbody id="servicesTable">
+<tbody id="serviceTable">
+
+<tr>
+
+<td colspan="8"
+style="text-align:center;">
+
+Loading...
+
+</td>
+
+</tr>
 
 </tbody>
 
 </table>
 
-<br>
+</div>
 
-<button
-class="refresh"
-onclick="loadServices()">
-
-🔄 Refresh
-
-</button>
-
-<button
-class="add"
-onclick="location.href='add-service.html'">
-
-➕ Add Service
-
-</button>
-<button
-onclick="deleteAllServices()"
-style="background:#dc2626;color:white;">
-
-Delete All Services
-
-</button>
 <script>
 
 const API =
 "https://gowind-smm-panel-v3.onrender.com";
 
-let allServices = [];
+let SERVICES=[];
   /* ===========================
+   LOGIN CHECK
+=========================== */
+
+const USER = JSON.parse(localStorage.getItem("user"));
+
+if(!localStorage.getItem("token")){
+
+location.href="login.html";
+
+}
+
+if(!USER || USER.role!=="admin"){
+
+location.href="login.html";
+
+}
+
+/* ===========================
    LOAD SERVICES
 =========================== */
 
@@ -193,92 +298,85 @@ async function loadServices(){
 
 try{
 
-const response = await fetch(
-API + "/api/services"
+const response=await fetch(
+API+"/api/services"
 );
 
-const data = await response.json();
+const data=await response.json();
 
-allServices = data.services || [];
+SERVICES=data.services || [];
 
-renderServices(allServices);
+renderTable(SERVICES);
 
 }catch(err){
 
-console.log(err);
+document.getElementById("serviceTable").innerHTML=
 
-document.getElementById("servicesTable").innerHTML =
-
-`<tr>
-<td colspan="8">
-Failed to load services
-</td>
-</tr>`;
+"<tr><td colspan='8'>"+err.message+"</td></tr>";
 
 }
 
 }
 
 /* ===========================
-   RENDER SERVICES
+   RENDER TABLE
 =========================== */
 
-function renderServices(list){
+function renderTable(list){
 
-const table =
-document.getElementById("servicesTable");
+const table=document.getElementById("serviceTable");
 
-table.innerHTML = "";
+table.innerHTML="";
 
 if(list.length===0){
 
-table.innerHTML =
+table.innerHTML=
 
-`<tr>
-<td colspan="8">
-No Services Found
-</td>
-</tr>`;
+"<tr><td colspan='8' style='text-align:center;'>No Services Found</td></tr>";
 
 return;
 
 }
 
-list.forEach(service=>{
+list.forEach(item=>{
 
-table.innerHTML += `
+table.innerHTML+=`
 
 <tr>
 
-<td>${service.id}</td>
+<td>${item.id}</td>
 
-<td>${service.provider_id || "-"}</td>
+<td>${item.provider_name || "-"}</td>
 
-<td>${service.name}</td>
+<td>${item.name}</td>
 
-<td>${service.category}</td>
+<td>${item.category}</td>
 
-<td>₹ ${service.rate}</td>
+<td>₹${item.rate}</td>
 
-<td>${service.min}</td>
+<td>${item.min}</td>
 
-<td>${service.max}</td>
+<td>${item.max}</td>
 
 <td>
 
 <button
-class="edit"
-onclick="editService(${service.id})">
 
-✏ Edit
+class="edit"
+
+onclick="editService(${item.id})">
+
+Edit
 
 </button>
 
 <button
-class="delete"
-onclick="deleteService(${service.id})">
 
-🗑 Delete
+class="remove"
+
+onclick="deleteService(${item.id})">
+
+Delete
 
 </button>
 
@@ -291,42 +389,38 @@ onclick="deleteService(${service.id})">
 });
 
 }
-  /* ===========================
-   SEARCH SERVICES
+
+/* ===========================
+   SEARCH
 =========================== */
 
-function searchServices(){
+function searchService(){
 
-const keyword =
+const key=
+
 document.getElementById("search")
-.value
-.toLowerCase();
+.value.toLowerCase();
 
-const filtered = allServices.filter(service =>
+const result=
 
-String(service.id)
-.includes(keyword)
+SERVICES.filter(service=>
 
-||
+service.name.toLowerCase().includes(key) ||
 
-String(service.name)
-.toLowerCase()
-.includes(keyword)
-
-||
-
-String(service.category)
-.toLowerCase()
-.includes(keyword)
-
-||
-
-String(service.provider_id || "")
-.includes(keyword)
+service.category.toLowerCase().includes(key)
 
 );
 
-renderServices(filtered);
+renderTable(result);
+
+      }
+  /* ===========================
+   ADD SERVICE
+=========================== */
+
+function openAddService(){
+
+location.href="add-service.html";
 
 }
 
@@ -334,65 +428,41 @@ renderServices(filtered);
    EDIT SERVICE
 =========================== */
 
-function editService(serviceId){
+function editService(id){
 
-location.href =
-"edit-service.html?id=" + serviceId;
+location.href="edit-service.html?id="+id;
 
 }
 
 /* ===========================
    DELETE SERVICE
 =========================== */
-async function deleteAllServices(){
 
-if(!confirm("Are you sure you want to delete all services?")){
+async function deleteService(id){
 
-return;
-
-}
-
-const response = await fetch(API+"/api/services",{
-
-method:"DELETE"
-
-});
-
-const data = await response.json();
-
-alert(data.message);
-
-loadServices();
-
-  }
-async function deleteService(serviceId){
-
-const ok = confirm(
+const ok=confirm(
 "Delete this service?"
 );
 
-if(!ok){
-return;
-}
+if(!ok) return;
 
 try{
 
-const response = await fetch(
+const response=await fetch(
 
-API + "/api/services/" + serviceId,
+API+"/api/services/"+id,
 
 {
+
 method:"DELETE"
+
 }
 
 );
 
-const data =
-await response.json();
+const data=await response.json();
 
-alert(
-data.message || data.error
-);
+alert(data.message || "Service Deleted");
 
 loadServices();
 
@@ -405,10 +475,50 @@ alert(err.message);
 }
 
 /* ===========================
-   PAGE LOAD
+   DELETE ALL SERVICES
 =========================== */
 
+async function deleteAllServices(){
+
+const ok=confirm(
+
+"⚠️ Are you sure?\n\nThis will permanently delete ALL services."
+
+);
+
+if(!ok){
+
+return;
+
+}
+
+try{
+
+const response=await fetch(
+
+API+"/api/services",
+
+{
+
+method:"DELETE"
+
+}
+
+);
+
+const data=await response.json();
+
+alert(data.message);
+
 loadServices();
+
+}catch(err){
+
+alert(err.message);
+
+}
+
+}
 
 /* ===========================
    AUTO REFRESH
@@ -417,51 +527,65 @@ loadServices();
 setInterval(loadServices,30000);
 
 /* ===========================
-   LOGOUT
+   PAGE LOAD
 =========================== */
 
-function logout(){
+window.onload=function(){
 
-localStorage.removeItem("token");
-localStorage.removeItem("user");
+loadServices();
 
-location.href="login.html";
-
-}
-  /* ===========================
-   LOGIN CHECK
-=========================== */
-
-if (!localStorage.getItem("token")) {
-    location.href = "login.html";
-}
-
-/* ===========================
-   WINDOW LOAD
-=========================== */
-
-window.onload = function () {
-    loadServices();
 };
-
-/* ===========================
+  /* ===========================
    BUTTON ANIMATION
 =========================== */
 
-document.querySelectorAll("button").forEach(btn => {
+document.querySelectorAll("button").forEach(btn=>{
 
-    btn.addEventListener("mouseenter", () => {
-        btn.style.transform = "scale(1.05)";
-        btn.style.transition = ".2s";
-    });
+btn.addEventListener("mouseenter",function(){
 
-    btn.addEventListener("mouseleave", () => {
-        btn.style.transform = "scale(1)";
-    });
+this.style.transform="scale(1.03)";
+this.style.transition=".2s";
 
 });
+
+btn.addEventListener("mouseleave",function(){
+
+this.style.transform="scale(1)";
+
+});
+
+});
+
+/* ===========================
+   SHORTCUT KEYS
+=========================== */
+
+document.addEventListener("keydown",function(e){
+
+if(e.key==="Escape"){
+
+location.href="admindashboard.html";
+
+}
+
+if(e.ctrlKey && e.key==="r"){
+
+e.preventDefault();
+
+loadServices();
+
+}
+
+});
+
+/* ===========================
+   PAGE READY
+=========================== */
+
+console.log("Services Page Ready");
 
 </script>
 
 </body>
+
 </html>
