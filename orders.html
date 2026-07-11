@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Orders</title>
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0">
+
+<title>Orders Management</title>
 
 <style>
 
@@ -17,96 +20,145 @@ font-family:Arial,sans-serif;
 }
 
 body{
-background:#0f172a;
-color:#fff;
-}
 
-header{
-background:#1e293b;
-padding:20px;
-text-align:center;
-font-size:24px;
-font-weight:bold;
+background:#0f172a;
+color:white;
+
 }
 
 .container{
-width:95%;
-margin:auto;
-padding:20px;
+
+width:98%;
+max-width:1400px;
+margin:20px auto;
+padding:15px;
+
 }
 
-.search{
+.header{
 
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+text-align:center;
 margin-bottom:20px;
 
 }
 
-.search input{
+.header h2{
+
+font-size:32px;
+
+}
+
+.search{
 
 width:100%;
-padding:12px;
+padding:14px;
 border:none;
 border-radius:8px;
 font-size:16px;
+margin-bottom:15px;
+
+}
+
+.actions{
+
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:20px;
+
+}
+
+.actions button{
+
+flex:1;
+min-width:140px;
+padding:13px;
+border:none;
+border-radius:8px;
+color:white;
+font-size:16px;
+cursor:pointer;
+
+}
+
+.refresh{
+
+background:#7c3aed;
+
+}
+
+.logout{
+
+background:#dc2626;
+
+}
+
+.table-container{
+
+width:100%;
+overflow-x:auto;
+-webkit-overflow-scrolling:touch;
 
 }
 
 table{
 
 width:100%;
+min-width:1200px;
 border-collapse:collapse;
+background:#1e293b;
 
 }
 
 th{
 
 background:#334155;
-padding:12px;
+padding:14px;
+text-align:center;
 
 }
 
 td{
 
-padding:10px;
+padding:14px;
 text-align:center;
-border-bottom:1px solid #475569;
+border-bottom:1px solid #334155;
 
 }
 
 .status{
 
 padding:6px 10px;
-border-radius:5px;
+border-radius:6px;
 font-weight:bold;
 
 }
 
 .pending{
-background:#f59e0b;
-color:#000;
-}
 
-.completed{
-background:#22c55e;
+background:#f59e0b;
+color:black;
+
 }
 
 .processing{
+
 background:#3b82f6;
+
+}
+
+.completed{
+
+background:#22c55e;
+
 }
 
 .cancelled{
+
 background:#ef4444;
-}
-
-button{
-
-padding:10px 18px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-background:#2563eb;
-color:white;
-margin-top:20px;
 
 }
 
@@ -116,23 +168,51 @@ margin-top:20px;
 
 <body>
 
-<header>
-
-📦 Orders Management
-
-</header>
-
 <div class="container">
 
-<div class="search">
+<div class="header">
 
-<input
-type="text"
-id="search"
-placeholder="Search Order ID / User"
-onkeyup="searchOrders()">
+<h2>
+
+Orders Management
+
+</h2>
 
 </div>
+
+<input
+
+class="search"
+
+id="search"
+
+type="text"
+
+placeholder="Search Order..."
+
+onkeyup="searchOrders()">
+
+<div class="actions">
+
+<button
+class="refresh"
+onclick="loadOrders()">
+
+Refresh
+
+</button>
+
+<button
+class="logout"
+onclick="logout()">
+
+Logout
+
+</button>
+
+</div>
+
+<div class="table-container">
 
 <table>
 
@@ -160,38 +240,55 @@ onkeyup="searchOrders()">
 
 <tbody id="ordersTable">
 
+<tr>
+
+<td colspan="7">
+
+Loading...
+
+</td>
+
+</tr>
+
 </tbody>
 
 </table>
 
-<button onclick="loadOrders()">
+</div>
 
-🔄 Refresh
-
-</button>
-<button
-style="background:#ef4444"
-onclick="logout()">
-
-🚪 Logout
-
-</button>
 <script>
 
-const API =
-"https://gowind-smm-panel-v3.onrender.com";
+const API="https://gowind-smm-panel-v3.onrender.com";
+
+let allOrders=[];
   /* ===========================
-   LOAD ORDERS
+   LOGIN CHECK
 =========================== */
 
-let allOrders = [];
+const USER = JSON.parse(localStorage.getItem("user"));
+
+if(!localStorage.getItem("token")){
+
+location.href="login.html";
+
+}
+
+if(!USER || USER.role!=="admin"){
+
+location.href="login.html";
+
+}
+
+/* ===========================
+   LOAD ORDERS
+=========================== */
 
 async function loadOrders(){
 
 try{
 
 const response = await fetch(
-API + "/api/orders"
+API+"/api/orders"
 );
 
 const data = await response.json();
@@ -202,15 +299,9 @@ renderOrders(allOrders);
 
 }catch(err){
 
-console.log(err);
+document.getElementById("ordersTable").innerHTML=
 
-document.getElementById("ordersTable").innerHTML =
-
-`<tr>
-<td colspan="7">
-Failed to load orders
-</td>
-</tr>`;
+"<tr><td colspan='7'>Failed to load orders</td></tr>";
 
 }
 
@@ -222,20 +313,15 @@ Failed to load orders
 
 function renderOrders(list){
 
-const table =
-document.getElementById("ordersTable");
+const table=document.getElementById("ordersTable");
 
-table.innerHTML = "";
+table.innerHTML="";
 
 if(list.length===0){
 
-table.innerHTML =
+table.innerHTML=
 
-`<tr>
-<td colspan="7">
-No Orders Found
-</td>
-</tr>`;
+"<tr><td colspan='7' style='text-align:center;'>No Orders Found</td></tr>";
 
 return;
 
@@ -243,18 +329,23 @@ return;
 
 list.forEach(order=>{
 
-let cls="pending";
+let statusClass="pending";
 
-if(order.status==="Completed")
-cls="completed";
+if(order.status==="Completed"){
 
-else if(order.status==="Processing")
-cls="processing";
+statusClass="completed";
 
-else if(order.status==="Cancelled")
-cls="cancelled";
+}else if(order.status==="Processing"){
 
-table.innerHTML += `
+statusClass="processing";
+
+}else if(order.status==="Cancelled"){
+
+statusClass="cancelled";
+
+}
+
+table.innerHTML+=`
 
 <tr>
 
@@ -266,12 +357,14 @@ table.innerHTML += `
 
 <td>${order.quantity}</td>
 
-<td>₹ ${order.charge}</td>
+<td>₹${Number(order.charge).toFixed(2)}</td>
 
 <td>
 
-<span class="${cls}">
+<span class="${statusClass}">
+
 ${order.status}
+
 </span>
 
 </td>
@@ -289,21 +382,21 @@ ${order.provider_order_id || "-"}
 });
 
 }
-  /* ===========================
-   SEARCH ORDERS
+
+/* ===========================
+   SEARCH
 =========================== */
 
 function searchOrders(){
 
-const keyword =
-document.getElementById("search")
+const keyword=document
+.getElementById("search")
 .value
 .toLowerCase();
 
-const filtered = allOrders.filter(order =>
+const filtered=allOrders.filter(order=>
 
-String(order.id)
-.includes(keyword)
+String(order.id).includes(keyword)
 
 ||
 
@@ -327,15 +420,8 @@ String(order.status)
 
 renderOrders(filtered);
 
-}
-
-/* ===========================
-   PAGE LOAD
-=========================== */
-
-loadOrders();
-
-/* ===========================
+  }
+  /* ===========================
    AUTO REFRESH
 =========================== */
 
@@ -353,28 +439,16 @@ localStorage.removeItem("user");
 location.href="login.html";
 
 }
-/* ===========================
-   LOGIN CHECK
-=========================== */
-
-if(!localStorage.getItem("token")){
-
-location.href="login.html";
-
-}
 
 /* ===========================
-   WELCOME
+   HEADER
 =========================== */
 
-const user =
-JSON.parse(localStorage.getItem("user"));
+if(USER){
 
-if(user){
+document.querySelector(".header h2").innerHTML=
 
-document.querySelector("header").innerHTML =
-"📦 Orders Management - " +
-user.username;
+"Orders Management - " + USER.username;
 
 }
 
@@ -382,7 +456,7 @@ user.username;
    WINDOW LOAD
 =========================== */
 
-window.onload = function(){
+window.onload=function(){
 
 loadOrders();
 
@@ -394,24 +468,81 @@ loadOrders();
 
 document.querySelectorAll("button").forEach(btn=>{
 
-btn.addEventListener("mouseenter",()=>{
+btn.addEventListener("mouseenter",function(){
 
-btn.style.transform="scale(1.05)";
-btn.style.transition=".2s";
-
-});
-
-btn.addEventListener("mouseleave",()=>{
-
-btn.style.transform="scale(1)";
+this.style.transform="scale(1.03)";
+this.style.transition=".2s";
 
 });
 
+btn.addEventListener("mouseleave",function(){
+
+this.style.transform="scale(1)";
+
 });
+
+});
+
+/* ===========================
+   SHORTCUT KEYS
+=========================== */
+
+document.addEventListener("keydown",function(e){
+
+if(e.key==="Escape"){
+
+location.href="admindashboard.html";
+
+}
+
+if(e.ctrlKey && e.key==="r"){
+
+e.preventDefault();
+
+loadOrders();
+
+}
+
+});
+  /* ===========================
+   STATUS STYLE
+=========================== */
+
+document.querySelectorAll(".status").forEach(status=>{
+
+status.style.fontWeight="bold";
+status.style.padding="8px 12px";
+status.style.borderRadius="6px";
+
+});
+
+/* ===========================
+   TABLE ROW HOVER
+=========================== */
+
+document.querySelectorAll("#ordersTable tr").forEach(row=>{
+
+row.addEventListener("mouseenter",function(){
+
+this.style.background="#273449";
+
+});
+
+row.addEventListener("mouseleave",function(){
+
+this.style.background="transparent";
+
+});
+
+});
+
+/* ===========================
+   PAGE READY
+=========================== */
+
+console.log("Orders Management Ready");
 
 </script>
-
-</div>
 
 </body>
 
