@@ -1482,6 +1482,18 @@ error:err.message
 }
 
 });
+app.get("/api/orders-columns", async (req, res) => {
+
+    const result = await db.query(`
+        SELECT column_name
+        FROM information_schema.columns
+        WHERE table_name='orders'
+        ORDER BY ordinal_position
+    `);
+
+    res.json(result.rows);
+
+});
 /* ===========================
    SERVER START
 =========================== */
