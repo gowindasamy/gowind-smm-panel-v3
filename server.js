@@ -88,6 +88,11 @@ status BOOLEAN DEFAULT TRUE,
 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 `);
+await db.query(`
+ALTER TABLE users
+ADD COLUMN IF NOT EXISTS show_password TEXT;
+`);
+
 /* ===========================
    SETTINGS TABLE
 =========================== */
