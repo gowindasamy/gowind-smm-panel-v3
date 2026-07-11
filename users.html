@@ -19,70 +19,169 @@ font-family:Arial,sans-serif;
 
 body{
 background:#0f172a;
-color:white;
-}
-
-header{
-background:#1e293b;
-padding:20px;
-text-align:center;
-font-size:24px;
-font-weight:bold;
+color:#fff;
 }
 
 .container{
-width:95%;
+width:100%;
+max-width:1400px;
 margin:auto;
-padding:20px;
+padding:15px;
 }
 
-.search{
+.header{
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+text-align:center;
 margin-bottom:20px;
 }
 
-.search input{
+.header h2{
+font-size:30px;
+}
+
+.search{
 width:100%;
-padding:12px;
+padding:14px;
 border:none;
 border-radius:8px;
 font-size:16px;
+margin-bottom:15px;
+}
+
+.actions{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:20px;
+}
+
+.actions button{
+flex:1;
+min-width:140px;
+padding:13px;
+border:none;
+border-radius:8px;
+font-size:16px;
+color:#fff;
+cursor:pointer;
+}
+
+.refresh{
+background:#7c3aed;
+}
+
+.register{
+background:#22c55e;
+}
+
+.table-container{
+width:100%;
+overflow-x:auto;
+-webkit-overflow-scrolling:touch;
 }
 
 table{
 width:100%;
+min-width:900px;
 border-collapse:collapse;
+background:#1e293b;
 }
 
 th{
 background:#334155;
-padding:12px;
+padding:14px;
+text-align:center;
 }
 
 td{
-padding:10px;
+padding:14px;
 text-align:center;
-border-bottom:1px solid #475569;
+border-bottom:1px solid #334155;
+white-space:nowrap;
 }
 
-button{
-padding:10px 15px;
+.admin{
+background:#2563eb;
+padding:6px 10px;
+border-radius:6px;
+}
+
+.user{
+background:#16a34a;
+padding:6px 10px;
+border-radius:6px;
+}
+
+.wallet{
+font-weight:bold;
+color:#22c55e;
+}
+
+.delete{
+background:#dc2626;
+padding:8px 12px;
+border:none;
+border-radius:6px;
+color:white;
+cursor:pointer;
+}
+
+.modal{
+display:none;
+position:fixed;
+left:0;
+top:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.6);
+justify-content:center;
+align-items:center;
+}
+
+.modal-content{
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+width:95%;
+max-width:420px;
+}
+
+.modal-content h3{
+margin-bottom:15px;
+text-align:center;
+}
+
+.modal-content input,
+.modal-content select{
+width:100%;
+padding:12px;
+margin-bottom:12px;
+border:none;
+border-radius:8px;
+}
+
+.modal-buttons{
+display:flex;
+gap:10px;
+}
+
+.modal-buttons button{
+flex:1;
+padding:12px;
 border:none;
 border-radius:8px;
 cursor:pointer;
 color:white;
-margin:3px;
 }
 
-.wallet{
+.save{
 background:#22c55e;
 }
 
-.delete{
+.cancel{
 background:#ef4444;
-}
-
-.refresh{
-background:#2563eb;
 }
 
 </style>
@@ -91,23 +190,36 @@ background:#2563eb;
 
 <body>
 
-<header>
-
-👥 Users Management
-
-</header>
-
 <div class="container">
 
-<div class="search">
+<div class="header">
+<h2>Users Management</h2>
+</div>
 
 <input
-type="text"
+class="search"
 id="search"
+type="text"
 placeholder="Search User..."
 onkeyup="searchUsers()">
 
+<div class="actions">
+
+<button
+class="refresh"
+onclick="loadUsers()">
+Refresh
+</button>
+
+<button
+class="register"
+onclick="openRegister()">
+Register User
+</button>
+
 </div>
+
+<div class="table-container">
 
 <table>
 
@@ -127,19 +239,79 @@ onkeyup="searchUsers()">
 
 <tbody id="usersTable">
 
+<tr>
+
+<td colspan="5">
+
+Loading...
+
+</td>
+
+</tr>
+
 </tbody>
 
 </table>
 
-<br>
+</div>
+
+<!-- Register Modal -->
+
+<div
+class="modal"
+id="registerModal">
+
+<div class="modal-content">
+
+<h3>Register User</h3>
+
+<input
+type="text"
+id="username"
+placeholder="Username">
+
+<input
+type="password"
+id="password"
+placeholder="Password">
+
+<select id="role">
+
+<option value="user">
+User
+</option>
+
+<option value="admin">
+Admin
+</option>
+
+</select>
+
+<input
+type="number"
+id="wallet"
+placeholder="Wallet Balance"
+value="0">
+
+<div class="modal-buttons">
 
 <button
-class="refresh"
-onclick="loadUsers()">
-
-🔄 Refresh
-
+class="save"
+onclick="registerUser()">
+Register
 </button>
+
+<button
+class="cancel"
+onclick="closeRegister()">
+Cancel
+</button>
+
+</div>
+
+</div>
+
+</div>
 
 <script>
 
@@ -148,6 +320,24 @@ const API =
 
 let allUsers = [];
   /* ===========================
+   LOGIN CHECK
+=========================== */
+
+const USER = JSON.parse(localStorage.getItem("user"));
+
+if(!localStorage.getItem("token")){
+
+location.href="login.html";
+
+}
+
+if(!USER || USER.role!=="admin"){
+
+location.href="login.html";
+
+}
+
+/* ===========================
    LOAD USERS
 =========================== */
 
@@ -161,21 +351,23 @@ API + "/api/users"
 
 const data = await response.json();
 
-allUsers = data.users || [];
+if(!data.success){
+
+document.getElementById("usersTable").innerHTML =
+"<tr><td colspan='5'>No Users Found</td></tr>";
+
+return;
+
+}
+
+allUsers = data.users;
 
 renderUsers(allUsers);
 
 }catch(err){
 
-console.log(err);
-
 document.getElementById("usersTable").innerHTML =
-
-`<tr>
-<td colspan="5">
-Failed to load users
-</td>
-</tr>`;
+"<tr><td colspan='5'>"+err.message+"</td></tr>";
 
 }
 
@@ -190,17 +382,12 @@ function renderUsers(list){
 const table =
 document.getElementById("usersTable");
 
-table.innerHTML = "";
+table.innerHTML="";
 
 if(list.length===0){
 
-table.innerHTML =
-
-`<tr>
-<td colspan="5">
-No Users Found
-</td>
-</tr>`;
+table.innerHTML=
+"<tr><td colspan='5'>No Users Found</td></tr>";
 
 return;
 
@@ -216,25 +403,31 @@ table.innerHTML += `
 
 <td>${user.username}</td>
 
-<td>${user.role}</td>
-
-<td>₹ ${user.wallet}</td>
-
 <td>
 
-<button
-class="wallet"
-onclick="addWallet(${user.id})">
+<span class="${
+user.role==="admin" ? "admin" : "user"
+}">
 
-💰 Add Wallet
+${user.role}
 
-</button>
+</span>
+
+</td>
+
+<td class="wallet">
+
+₹${Number(user.wallet).toFixed(2)}
+
+</td>
+
+<td>
 
 <button
 class="delete"
 onclick="deleteUser(${user.id})">
 
-🗑 Delete
+Delete
 
 </button>
 
@@ -247,8 +440,9 @@ onclick="deleteUser(${user.id})">
 });
 
 }
-  /* ===========================
-   SEARCH USERS
+
+/* ===========================
+   SEARCH USER
 =========================== */
 
 function searchUsers(){
@@ -258,73 +452,129 @@ document.getElementById("search")
 .value
 .toLowerCase();
 
-const filtered = allUsers.filter(user =>
+const filtered = allUsers.filter(user=>
 
-String(user.id).includes(keyword)
-
-||
-
-String(user.username)
+user.username
 .toLowerCase()
 .includes(keyword)
 
 ||
 
-String(user.role)
+user.role
 .toLowerCase()
+.includes(keyword)
+
+||
+
+String(user.id)
 .includes(keyword)
 
 );
 
 renderUsers(filtered);
 
+  }
+  /* ===========================
+   OPEN REGISTER
+=========================== */
+
+function openRegister(){
+
+document.getElementById("registerModal").style.display="flex";
+
 }
 
 /* ===========================
-   ADD WALLET
+   CLOSE REGISTER
 =========================== */
 
-async function addWallet(userId){
+function closeRegister(){
 
-const amount = prompt(
-"Enter Wallet Amount"
-);
+document.getElementById("registerModal").style.display="none";
 
-if(!amount){
+document.getElementById("username").value="";
+document.getElementById("password").value="";
+document.getElementById("wallet").value="0";
+document.getElementById("role").value="user";
+
+}
+
+/* ===========================
+   REGISTER USER
+=========================== */
+
+async function registerUser(){
+
+const username=
+document.getElementById("username").value.trim();
+
+const password=
+document.getElementById("password").value;
+
+const role=
+document.getElementById("role").value;
+
+const wallet=
+Number(document.getElementById("wallet").value);
+
+if(!username || !password){
+
+alert("Enter Username & Password");
+
 return;
+
 }
 
 try{
 
-const response = await fetch(
-
-API + "/api/wallet/add",
-
+const response=await fetch(
+API+"/api/register",
 {
-
 method:"POST",
-
 headers:{
 "Content-Type":"application/json"
 },
-
 body:JSON.stringify({
-
-user_id:userId,
-amount:Number(amount)
-
+username,
+password,
+role
 })
+}
+);
+
+const data=await response.json();
+
+if(!data.success){
+
+alert(data.message);
+
+return;
 
 }
 
+/* Optional Wallet */
+
+if(wallet>0){
+
+await fetch(
+API+"/api/wallet/add",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+user_id:data.user?.id,
+amount:wallet
+})
+}
 );
 
-const data =
-await response.json();
+}
 
-alert(
-data.message || data.error
-);
+alert("User Registered Successfully");
+
+closeRegister();
 
 loadUsers();
 
@@ -340,34 +590,26 @@ alert(err.message);
    DELETE USER
 =========================== */
 
-async function deleteUser(userId){
+async function deleteUser(id){
 
-const ok = confirm(
-"Delete this user?"
-);
+if(!confirm("Delete this user?")){
 
-if(!ok){
 return;
+
 }
 
 try{
 
-const response = await fetch(
-
-API + "/api/users/" + userId,
-
+const response=await fetch(
+API+"/api/users/"+id,
 {
 method:"DELETE"
 }
-
 );
 
-const data =
-await response.json();
+const data=await response.json();
 
-alert(
-data.message || data.error
-);
+alert(data.message);
 
 loadUsers();
 
@@ -380,10 +622,14 @@ alert(err.message);
 }
 
 /* ===========================
-   PAGE LOAD
+   WINDOW LOAD
 =========================== */
 
+window.onload=function(){
+
 loadUsers();
+
+};
 
 /* ===========================
    AUTO REFRESH
@@ -391,37 +637,78 @@ loadUsers();
 
 setInterval(loadUsers,30000);
   /* ===========================
-   LOGIN CHECK
+   CLOSE MODAL OUTSIDE CLICK
 =========================== */
 
-if (!localStorage.getItem("token")) {
-    location.href = "login.html";
+window.onclick=function(e){
+
+const modal=
+document.getElementById("registerModal");
+
+if(e.target===modal){
+
+closeRegister();
+
 }
 
-/* ===========================
-   WINDOW LOAD
-=========================== */
-
-window.onload = function () {
-    loadUsers();
 };
 
 /* ===========================
    BUTTON ANIMATION
 =========================== */
 
-document.querySelectorAll("button").forEach(btn => {
+document.querySelectorAll("button").forEach(btn=>{
 
-    btn.addEventListener("mouseenter", () => {
-        btn.style.transform = "scale(1.05)";
-        btn.style.transition = ".2s";
-    });
+btn.addEventListener("mouseenter",function(){
 
-    btn.addEventListener("mouseleave", () => {
-        btn.style.transform = "scale(1)";
-    });
+this.style.transform="scale(1.04)";
+this.style.transition=".2s";
 
 });
+
+btn.addEventListener("mouseleave",function(){
+
+this.style.transform="scale(1)";
+
+});
+
+});
+
+/* ===========================
+   SHORTCUT KEYS
+=========================== */
+
+document.addEventListener("keydown",function(e){
+
+if(e.key==="Escape"){
+
+closeRegister();
+
+}
+
+if(e.ctrlKey && e.key==="r"){
+
+e.preventDefault();
+
+loadUsers();
+
+}
+
+if(e.ctrlKey && e.key==="n"){
+
+e.preventDefault();
+
+openRegister();
+
+}
+
+});
+
+/* ===========================
+   PAGE READY
+=========================== */
+
+console.log("Users Management Ready");
 
 </script>
 
