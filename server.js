@@ -1440,6 +1440,37 @@ app.post("/api/settings", async (req, res) => {
 
 });
 /* ===========================
+   DELETE ALL SERVICES
+=========================== */
+
+app.delete("/api/services", async(req,res)=>{
+
+try{
+
+await db.query("DELETE FROM services");
+
+res.json({
+
+success:true,
+
+message:"All Services Deleted Successfully"
+
+});
+
+}catch(err){
+
+res.status(500).json({
+
+success:false,
+
+error:err.message
+
+});
+
+}
+
+});
+/* ===========================
    SERVER START
 =========================== */
 
