@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Add Service</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0f172a;
+color:white;
+}
+
+.container{
+
+width:420px;
+max-width:95%;
+margin:40px auto;
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+
+}
+
+h2{
+
+text-align:center;
+margin-bottom:20px;
+
+}
+
+select,
+input{
+
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border:none;
+border-radius:6px;
+
+}
+
+button{
+
+width:100%;
+padding:12px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+font-size:16px;
+margin-top:10px;
+
+}
+
+.save{
+
+background:#22c55e;
+color:white;
+
+}
+
+.back{
+
+background:#3b82f6;
+color:white;
+
+}
+
+#result{
+
+margin-top:15px;
+text-align:center;
+font-weight:bold;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>➕ Add Service</h2>
+
+<select id="provider">
+
+<option value="">
+Loading Providers...
+</option>
+
+</select>
+
+<input
+type="number"
+id="provider_service_id"
+placeholder="Provider Service ID">
+
+<input
+type="number"
+id="service_id"
+placeholder="Service ID">
+
+<input
+type="text"
+id="name"
+placeholder="Service Name">
+
+<input
+type="text"
+id="category"
+placeholder="Category">
+
+<input
+type="number"
+id="rate"
+placeholder="Rate">
+
+<input
+type="number"
+id="min"
+placeholder="Minimum">
+
+<input
+type="number"
+id="max"
+placeholder="Maximum">
+
+<button
+class="save"
+onclick="addService()">
+
+💾 Save Service
+
+</button>
+
+<button
+class="back"
+onclick="history.back()">
+
+⬅ Back
+
+</button>
+
+<div id="result"></div>
+
+<script>
+
+const API =
+"https://gowind-smm-panel-v3.onrender.com";
+  /* ===========================
+   LOAD PROVIDERS
+=========================== */
+
+async function loadProviders(){
+
+try{
+
+const response = await fetch(
+API + "/api/providers"
+);
+
+const data = await response.json();
+
+const provider =
+document.getElementById("provider");
+
+provider.innerHTML = "";
+
+if(data.providers.length===0){
+
+provider.innerHTML =
+"<option value=''>No Providers Found</option>";
+
+return;
+
+}
+
+data.providers.forEach(item=>{
+
+provider.innerHTML +=
+
+`<option value="${item.id}">
+${item.name}
+</option>`;
+
+});
+
+}catch(err){
+
+document.getElementById("result").innerHTML =
+err.message;
+
+}
+
+}
+
+/* ===========================
+   PAGE LOAD
+=========================== */
+
+loadProviders();
+  /* ===========================
+   ADD SERVICE
+=========================== */
+
+async function addService(){
+
+try{
+
+const response = await fetch(
+
+API + "/api/services",
+
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+provider_id:
+Number(document.getElementById("provider").value),
+
+provider_service_id:
+Number(document.getElementById("provider_service_id").value),
+
+service_id:
+Number(document.getElementById("service_id").value),
+
+name:
+document.getElementById("name").value,
+
+category:
+document.getElementById("category").value,
+
+rate:
+Number(document.getElementById("rate").value),
+
+min:
+Number(document.getElementById("min").value),
+
+max:
+Number(document.getElementById("max").value)
+
+})
+
+}
+
+);
+
+const data = await response.json();
+
+document.getElementById("result").innerHTML =
+data.message || data.error;
+
+if(data.success){
+
+setTimeout(()=>{
+
+location.href="services.html";
+
+},1000);
+
+}
+
+}catch(err){
+
+document.getElementById("result").innerHTML =
+err.message;
+
+}
+
+}
+  /* ===========================
+   LOGIN CHECK
+=========================== */
+
+if (!localStorage.getItem("token")) {
+
+    location.href = "login.html";
+
+}
+
+/* ===========================
+   WINDOW LOAD
+=========================== */
+
+window.onload = function(){
+
+    loadProviders();
+
+};
+
+/* ===========================
+   BUTTON ANIMATION
+=========================== */
+
+document.querySelectorAll("button").forEach(btn=>{
+
+    btn.addEventListener("mouseenter",()=>{
+
+        btn.style.transform="scale(1.05)";
+        btn.style.transition=".2s";
+
+    });
+
+    btn.addEventListener("mouseleave",()=>{
+
+        btn.style.transform="scale(1)";
+
+    });
+
+});
+
+</script>
+
+</body>
+
+</html>
