@@ -542,18 +542,13 @@ app.get("/api/transactions/:userId", async (req, res) => {
 /* ===========================
    PLACE ORDER
 =========================== */
-
 app.post("/api/orders", async (req, res) => {
 
     try {
 
-        const {
-            user_id,
-            service_id,
-            link,
-            quantity
-        } = req.body;
+        const { user_id, service_id, link, quantity } = req.body;
 
+        // Service
         const serviceResult = await db.query(
             "SELECT * FROM services WHERE id=$1",
             [service_id]
@@ -561,45 +556,91 @@ app.post("/api/orders", async (req, res) => {
 
         if (serviceResult.rows.length === 0) {
             return res.status(404).json({
-                success:false,
-                message:"Service not found"
+                success: false,
+                message: "Service not found"
             });
         }
 
         const service = serviceResult.rows[0];
 
-        const charge =
-        (Number(service.rate) * Number(quantity)) / 1000;
+        // Provider
+        const providerResult = await db.query(
+            "SELECT * FROM providers WHERE id=$1",
+            [service.provider_id]
+        );
 
-        const userResult = await db.query(
+        if (providerResult.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Provider not found"
+            });
+        }
+
+        const provider = providerResult.rows[0];
+
+        // Charge
+        const charge =
+            (Number(service.rate) * Number(quantity)) / 1000;
+
+        // Wallet
+        const walletResult = await db.query(
             "SELECT wallet FROM users WHERE id=$1",
             [user_id]
         );
 
-        if (userResult.rows.length === 0) {
-            return res.status(404).json({
-                success:false,
-                message:"User not found"
-            });
-        }
-
         const wallet =
-        Number(userResult.rows[0].wallet);
+            Number(walletResult.rows[0].wallet);
 
         if (wallet < charge) {
+            return res.status(400).json({
+                success: false,
+                message: "Insufficient Wallet Balance"
+            });
+        }
+
+        // Send Order to Provider
+        const providerResponse = await axios.post(
+
+            provider.api_url,
+
+            new URLSearchParams({
+
+                key: provider.api_key,
+                action: "add",
+                service: service.provider_service_id,
+                link: link,
+                quantity: quantity
+
+            }),
+
+            {
+                headers: {
+                    "Content-Type":
+                    "application/x-www-form-urlencoded"
+                }
+            }
+
+        );
+
+        if (!providerResponse.data.order) {
 
             return res.status(400).json({
-                success:false,
-                message:"Insufficient Wallet Balance"
+                success: false,
+                provider: providerResponse.data
             });
 
         }
 
+        const providerOrderId =
+            providerResponse.data.order;
+
+        // Wallet Deduct
         await db.query(
             "UPDATE users SET wallet=wallet-$1 WHERE id=$2",
-            [charge,user_id]
+            [charge, user_id]
         );
 
+        // Transaction
         await db.query(
             `INSERT INTO transactions
             (user_id,amount,type)
@@ -611,46 +652,55 @@ app.post("/api/orders", async (req, res) => {
             ]
         );
 
+        // Save Order
         await db.query(
+
             `INSERT INTO orders
             (
                 user_id,
-                service_id,
                 provider_id,
+                provider_order_id,
+                service_id,
                 link,
                 quantity,
                 charge,
                 status
             )
-            VALUES($1,$2,$3,$4,$5,$6,$7)`,
+            VALUES($1,$2,$3,$4,$5,$6,$7,$8)`,
+
             [
                 user_id,
-                service_id,
-                service.provider_id,
+                provider.id,
+                providerOrderId,
+                service.id,
                 link,
                 quantity,
                 charge,
                 "Pending"
             ]
+
         );
 
         res.json({
-            success:true,
-            message:"Order Placed Successfully",
+
+            success: true,
+            provider_order_id: providerOrderId,
             charge
+
         });
 
-    } catch(err){
+    } catch (err) {
 
         res.status(500).json({
-            success:false,
-            error:err.message
+
+            success: false,
+            error: err.message
+
         });
 
     }
 
 });
-
 /* ===========================
    GET ORDERS
 =========================== */
