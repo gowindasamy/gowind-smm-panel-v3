@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>New Order</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0f172a;
+color:white;
+}
+
+.container{
+
+width:450px;
+max-width:95%;
+margin:40px auto;
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+
+}
+
+h2{
+text-align:center;
+margin-bottom:20px;
+}
+
+select,
+input{
+
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border:none;
+border-radius:6px;
+
+}
+
+button{
+
+width:100%;
+padding:12px;
+background:#22c55e;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
+font-size:16px;
+
+}
+
+#result{
+
+margin-top:15px;
+text-align:center;
+font-weight:bold;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🛒 Place New Order</h2>
+
+<select id="service">
+
+<option>
+Loading Services...
+</option>
+
+</select>
+
+<input
+type="text"
+id="link"
+placeholder="Instagram / YouTube Link">
+
+<input
+type="number"
+id="quantity"
+placeholder="Quantity">
+
+<button
+onclick="placeOrder()">
+
+🚀 Place Order
+
+</button>
+
+<div id="result"></div>
+
+<script>
+
+const API =
+"https://gowind-smm-panel-v3.onrender.com";
+
+const USER =
+JSON.parse(localStorage.getItem("user"));
+  /* ===========================
+   LOAD SERVICES
+=========================== */
+
+async function loadServices(){
+
+try{
+
+const response = await fetch(
+API + "/api/services"
+);
+
+const data = await response.json();
+
+const service =
+document.getElementById("service");
+
+service.innerHTML = "";
+
+if(data.services.length===0){
+
+service.innerHTML =
+"<option>No Services Available</option>";
+
+return;
+
+}
+
+data.services.forEach(item=>{
+
+service.innerHTML +=
+
+`<option value="${item.id}">
+
+${item.name}
+(Rate ₹${item.rate}/1000)
+
+</option>`;
+
+});
+
+}catch(err){
+
+document.getElementById("result").innerHTML =
+err.message;
+
+}
+
+}
+
+/* ===========================
+   PAGE LOAD
+=========================== */
+
+loadServices();
+  /* ===========================
+   PLACE ORDER
+=========================== */
+
+async function placeOrder(){
+
+try{
+
+if(!USER){
+
+document.getElementById("result").innerHTML =
+"Please Login First";
+
+return;
+
+}
+
+const response = await fetch(
+
+API + "/api/orders",
+
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+user_id:USER.id,
+
+service_id:Number(
+document.getElementById("service").value
+),
+
+link:
+document.getElementById("link").value,
+
+quantity:Number(
+document.getElementById("quantity").value
+)
+
+})
+
+}
+
+);
+
+const data = await response.json();
+
+document.getElementById("result").innerHTML =
+
+data.message ||
+
+(data.success
+? "✅ Order Placed Successfully"
+: data.error);
+
+if(data.success){
+
+document.getElementById("link").value="";
+
+document.getElementById("quantity").value="";
+
+}
+
+}catch(err){
+
+document.getElementById("result").innerHTML =
+err.message;
+
+}
+
+}
+  /* ===========================
+   LOGIN CHECK
+=========================== */
+
+if (!localStorage.getItem("token")) {
+
+    location.href = "login.html";
+
+}
+
+/* ===========================
+   WINDOW LOAD
+=========================== */
+
+window.onload = function(){
+
+    loadServices();
+
+};
+
+/* ===========================
+   BUTTON ANIMATION
+=========================== */
+
+document.querySelector("button").addEventListener("mouseenter",function(){
+
+    this.style.transform="scale(1.05)";
+    this.style.transition=".2s";
+
+});
+
+document.querySelector("button").addEventListener("mouseleave",function(){
+
+    this.style.transform="scale(1)";
+
+});
+
+/* ===========================
+   ENTER KEY
+=========================== */
+
+document.addEventListener("keydown",function(e){
+
+    if(e.key==="Enter"){
+
+        placeOrder();
+
+    }
+
+});
+
+</script>
+
+</body>
+
+</html>
