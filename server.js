@@ -253,7 +253,29 @@ message:"Invalid Username"
 }
 
 const user=result.rows[0];
+/* ===========================
+   MAINTENANCE CHECK
+=========================== */
 
+const setting = await db.query(
+"SELECT maintenance FROM settings LIMIT 1"
+);
+
+if(
+setting.rows.length > 0 &&
+setting.rows[0].maintenance === true &&
+user.role !== "admin"
+){
+
+return res.status(503).json({
+
+success:false,
+
+message:"🚧 Panel is under maintenance"
+
+});
+
+}
 const match=await bcrypt.compare(
 password,
 user.password
