@@ -353,3 +353,66 @@ localStorage.removeItem("user");
 location.href="login.html";
 
 }
+/* ===========================
+   LOGIN CHECK
+=========================== */
+
+if(!localStorage.getItem("token")){
+
+location.href="login.html";
+
+}
+
+/* ===========================
+   WELCOME
+=========================== */
+
+const user =
+JSON.parse(localStorage.getItem("user"));
+
+if(user){
+
+document.querySelector("header").innerHTML =
+"📦 Orders Management - " +
+user.username;
+
+}
+
+/* ===========================
+   WINDOW LOAD
+=========================== */
+
+window.onload = function(){
+
+loadOrders();
+
+};
+
+/* ===========================
+   BUTTON ANIMATION
+=========================== */
+
+document.querySelectorAll("button").forEach(btn=>{
+
+btn.addEventListener("mouseenter",()=>{
+
+btn.style.transform="scale(1.05)";
+btn.style.transition=".2s";
+
+});
+
+btn.addEventListener("mouseleave",()=>{
+
+btn.style.transform="scale(1)";
+
+});
+
+});
+
+</script>
+
+</div>
+
+</body>
+
+</html>
