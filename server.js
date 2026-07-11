@@ -135,7 +135,15 @@ status VARCHAR(30) DEFAULT 'Pending',
 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 `);
+await db.query(`
+ALTER TABLE orders
+ADD COLUMN IF NOT EXISTS provider_id INT;
+`);
 
+await db.query(`
+ALTER TABLE services
+ADD COLUMN IF NOT EXISTS provider_service_id INT;
+`);
 await db.query(`
 CREATE TABLE IF NOT EXISTS transactions(
 id SERIAL PRIMARY KEY,
