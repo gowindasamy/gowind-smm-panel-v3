@@ -172,7 +172,13 @@ onclick="location.href='add-service.html'">
 ➕ Add Service
 
 </button>
+<button
+onclick="deleteAllServices()"
+style="background:#dc2626;color:white;">
 
+Delete All Services
+
+</button>
 <script>
 
 const API =
@@ -338,7 +344,33 @@ location.href =
 /* ===========================
    DELETE SERVICE
 =========================== */
+async function deleteAllServices(){
 
+if(!confirm("Delete ALL Services?")){
+
+return;
+
+}
+
+const response=await fetch(
+
+API+"/api/services",
+
+{
+
+method:"DELETE"
+
+}
+
+);
+
+const data=await response.json();
+
+alert(data.message);
+
+loadServices();
+
+}
 async function deleteService(serviceId){
 
 const ok = confirm(
