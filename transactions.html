@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Transactions</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0f172a;
+color:white;
+}
+
+header{
+
+background:#1e293b;
+padding:20px;
+text-align:center;
+font-size:24px;
+font-weight:bold;
+
+}
+
+.container{
+
+width:95%;
+margin:auto;
+padding:20px;
+
+}
+
+input{
+
+width:100%;
+padding:12px;
+margin-bottom:20px;
+border:none;
+border-radius:6px;
+
+}
+
+table{
+
+width:100%;
+border-collapse:collapse;
+
+}
+
+th{
+
+background:#334155;
+padding:12px;
+
+}
+
+td{
+
+padding:10px;
+text-align:center;
+border-bottom:1px solid #475569;
+
+}
+
+.credit{
+
+background:#22c55e;
+padding:5px 10px;
+border-radius:5px;
+
+}
+
+.debit{
+
+background:#ef4444;
+padding:5px 10px;
+border-radius:5px;
+
+}
+
+button{
+
+padding:12px 20px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
+margin-top:20px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+💳 Transaction History
+
+</header>
+
+<div class="container">
+
+<input
+type="text"
+id="search"
+placeholder="Search Transaction..."
+onkeyup="searchTransactions()">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+<th>Type</th>
+<th>Amount</th>
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+<tbody id="transactionTable">
+
+</tbody>
+
+</table>
+
+<br>
+
+<button onclick="loadTransactions()">
+
+🔄 Refresh
+
+</button>
+
+<script>
+
+const API =
+"https://gowind-smm-panel-v3.onrender.com";
+
+const USER =
+JSON.parse(localStorage.getItem("user"));
+
+let allTransactions = [];
+  /* ===========================
+   LOAD TRANSACTIONS
+=========================== */
+
+async function loadTransactions(){
+
+try{
+
+const response = await fetch(
+API + "/api/transactions/" + USER.id
+);
+
+const data = await response.json();
+
+if(!data.success){
+
+document.getElementById("transactionTable").innerHTML =
+"<tr><td colspan='4'>No Transactions Found</td></tr>";
+
+return;
+
+}
+
+allTransactions = data.transactions;
+
+renderTransactions(allTransactions);
+
+}catch(err){
+
+document.getElementById("transactionTable").innerHTML =
+"<tr><td colspan='4'>"+err.message+"</td></tr>";
+
+}
+
+}
+
+/* ===========================
+   RENDER TRANSACTIONS
+=========================== */
+
+function renderTransactions(list){
+
+const table =
+document.getElementById("transactionTable");
+
+table.innerHTML = "";
+
+if(list.length===0){
+
+table.innerHTML =
+"<tr><td colspan='4'>No Transactions Found</td></tr>";
+
+return;
+
+}
+
+list.forEach(item=>{
+
+const badge =
+item.type==="Credit"
+? "credit"
+: "debit";
+
+table.innerHTML += `
+
+<tr>
+
+<td>${item.id}</td>
+
+<td>
+
+<span class="${badge}">
+${item.type}
+</span>
+
+</td>
+
+<td>₹${item.amount}</td>
+
+<td>
+
+${new Date(item.created_at)
+.toLocaleString()}
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+}
+  /* ===========================
+   SEARCH TRANSACTIONS
+=========================== */
+
+function searchTransactions(){
+
+const keyword =
+document.getElementById("search")
+.value.toLowerCase();
+
+const filtered = allTransactions.filter(item=>
+
+String(item.id).includes(keyword) ||
+
+String(item.type)
+.toLowerCase()
+.includes(keyword) ||
+
+String(item.amount)
+.includes(keyword)
+
+);
+
+renderTransactions(filtered);
+
+}
+
+/* ===========================
+   LOGIN CHECK
+=========================== */
+
+if(!localStorage.getItem("token")){
+
+location.href="login.html";
+
+}
+
+/* ===========================
+   AUTO REFRESH
+=========================== */
+
+setInterval(loadTransactions,30000);
+
+/* ===========================
+   WINDOW LOAD
+=========================== */
+
+window.onload=function(){
+
+loadTransactions();
+
+};
+  /* ===========================
+   BUTTON ANIMATION
+=========================== */
+
+document.querySelector("button").addEventListener("mouseenter",function(){
+
+    this.style.transform="scale(1.05)";
+    this.style.transition=".2s";
+
+});
+
+document.querySelector("button").addEventListener("mouseleave",function(){
+
+    this.style.transform="scale(1)";
+
+});
+
+/* ===========================
+   PAGE READY
+=========================== */
+
+console.log("Transactions Page Loaded");
+
+</script>
+
+</body>
+
+</html>
