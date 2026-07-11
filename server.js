@@ -1806,6 +1806,34 @@ app.post("/api/settings", async (req, res) => {
 
 });
 /* ===========================
+   DELETE ORDER
+=========================== */
+
+app.delete("/api/orders/:id", async (req, res) => {
+
+    try {
+
+        await db.query(
+            "DELETE FROM orders WHERE id = $1",
+            [req.params.id]
+        );
+
+        res.json({
+            success: true,
+            message: "Order Deleted Successfully"
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
+/* ===========================
    SERVER START
 =========================== */
 
