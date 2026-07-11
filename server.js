@@ -315,7 +315,6 @@ app.post("/api/services", async (req, res) => {
         const {
             provider_id,
             provider_service_id,
-            service_id,
             name,
             category,
             rate,
