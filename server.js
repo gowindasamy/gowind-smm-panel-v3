@@ -426,7 +426,59 @@ app.get("/api/services/:id", async (req, res) => {
     }
 
 });
+/* ===========================
+   UPDATE SERVICE
+=========================== */
 
+app.put("/api/services/:id", async (req, res) => {
+
+    try {
+
+        const {
+            name,
+            category,
+            rate,
+            min,
+            max,
+            status
+        } = req.body;
+
+        await db.query(
+            `UPDATE services
+             SET
+                name = $1,
+                category = $2,
+                rate = $3,
+                min = $4,
+                max = $5,
+                status = $6
+             WHERE id = $7`,
+            [
+                name,
+                category,
+                rate,
+                min,
+                max,
+                status,
+                req.params.id
+            ]
+        );
+
+        res.json({
+            success: true,
+            message: "Service Updated Successfully"
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
 /* ===========================
    WALLET BALANCE
 =========================== */
