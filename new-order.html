@@ -32,8 +32,8 @@ width:450px;
 max-width:95%;
 margin:35px auto;
 background:#1e293b;
-padding:20px;
-border-radius:10px;
+padding:25px;
+border-radius:12px;
 
 }
 
@@ -41,35 +41,32 @@ h2{
 
 text-align:center;
 margin-bottom:20px;
+font-size:30px;
 
 }
 
-#walletBox{
-
-background:#22c55e;
-padding:12px;
-border-radius:8px;
-text-align:center;
-font-size:18px;
-font-weight:bold;
-margin-bottom:15px;
-
-}
-
-#serviceInfo{
+.info{
 
 background:#111827;
-padding:12px;
-border-radius:8px;
-margin-bottom:15px;
-line-height:1.8;
+border-radius:10px;
+padding:15px;
+margin-bottom:18px;
+line-height:2;
 
 }
 
-#serviceInfo span{
+.info span{
 
 color:#22c55e;
 font-weight:bold;
+
+}
+
+label{
+
+display:block;
+margin-bottom:6px;
+font-size:15px;
 
 }
 
@@ -77,24 +74,25 @@ select,
 input{
 
 width:100%;
-padding:12px;
+padding:13px;
 margin-bottom:15px;
 border:none;
-border-radius:6px;
+border-radius:8px;
 font-size:16px;
+outline:none;
 
 }
 
 button{
 
 width:100%;
-padding:12px;
+padding:14px;
 background:#22c55e;
 color:white;
 border:none;
-border-radius:6px;
+border-radius:8px;
+font-size:17px;
 cursor:pointer;
-font-size:16px;
 
 }
 
@@ -122,82 +120,74 @@ font-weight:bold;
 
 <h2>
 
-🛒 Place New Order
+Place New Order
 
 </h2>
 
-<div id="walletBox">
+<div class="info">
 
-💰 Wallet Balance :
-<span id="walletBalance">
-
-₹0.00
-
-</span>
-
-</div>
-
-<div id="serviceInfo">
-
-📏 Min :
-<span id="min">
-
-0
-
-</span>
+Min :
+<span id="min">0</span>
 
 &nbsp;&nbsp;|&nbsp;&nbsp;
 
-📈 Max :
-<span id="max">
+Max :
+<span id="max">0</span>
 
-0
+<br>
 
-</span>
+Rate :
+₹<span id="rate">0</span>/1000
 
-<br><br>
+<br>
 
-💵 Rate :
-₹<span id="rate">
-
-0
-
-</span>/1000
-
-<br><br>
-
-🧮 Charge :
-₹<span id="charge">
-
-0.00
-
-</span>
+Charge :
+₹<span id="charge">0.00</span>
 
 </div>
+
+<label>
+
+Service
+
+</label>
 
 <select id="service">
 
 <option>
 
-Loading Services...
+Loading...
 
 </option>
 
 </select>
 
+<label>
+
+Link
+
+</label>
+
 <input
 type="text"
 id="link"
-placeholder="Enter Link">
+placeholder="Enter Service Link">
+
+<label>
+
+Quantity
+
+</label>
 
 <input
 type="number"
 id="quantity"
-placeholder="Quantity">
+placeholder="Enter Quantity">
 
-<button onclick="placeOrder()">
+<button
+onclick="placeOrder()">
 
-🚀 Place Order
+Place Order
 
 </button>
 
@@ -223,35 +213,6 @@ location.href="login.html";
 }
 
 /* ===========================
-   LOAD WALLET
-=========================== */
-
-async function loadWallet(){
-
-try{
-
-const response=await fetch(
-API+"/api/wallet/"+USER.id
-);
-
-const data=await response.json();
-
-if(data.success){
-
-document.getElementById("walletBalance").innerHTML=
-"₹"+Number(data.wallet).toFixed(2);
-
-}
-
-}catch(err){
-
-console.log(err);
-
-}
-
-}
-
-/* ===========================
    LOAD SERVICES
 =========================== */
 
@@ -267,10 +228,17 @@ const data=await response.json();
 
 SERVICES=data.services;
 
-const service=
-document.getElementById("service");
+const service=document.getElementById("service");
 
 service.innerHTML="";
+
+if(SERVICES.length===0){
+
+service.innerHTML="<option>No Services Available</option>";
+
+return;
+
+}
 
 SERVICES.forEach(item=>{
 
@@ -303,22 +271,21 @@ err.message;
 
 function updateServiceInfo(){
 
-const id=
-Number(document.getElementById("service").value);
+const id=Number(
+document.getElementById("service").value
+);
 
-const item=
-SERVICES.find(x=>x.id===id);
+const item=SERVICES.find(
+x=>x.id===id
+);
 
 if(!item)return;
 
-document.getElementById("min").innerHTML=
-item.min;
+document.getElementById("min").innerHTML=item.min;
 
-document.getElementById("max").innerHTML=
-item.max;
+document.getElementById("max").innerHTML=item.max;
 
-document.getElementById("rate").innerHTML=
-item.rate;
+document.getElementById("rate").innerHTML=item.rate;
 
 if(item.name.toLowerCase().includes("instagram")){
 
@@ -328,7 +295,12 @@ document.getElementById("link").placeholder=
 }else if(item.name.toLowerCase().includes("youtube")){
 
 document.getElementById("link").placeholder=
-"Enter YouTube Link";
+"Enter YouTube Video Link";
+
+}else if(item.name.toLowerCase().includes("telegram")){
+
+document.getElementById("link").placeholder=
+"Enter Telegram Link";
 
 }else{
 
@@ -347,16 +319,19 @@ calculateCharge();
 
 function calculateCharge(){
 
-const id=
-Number(document.getElementById("service").value);
+const id=Number(
+document.getElementById("service").value
+);
 
-const qty=
-Number(document.getElementById("quantity").value);
+const qty=Number(
+document.getElementById("quantity").value
+);
 
-const item=
-SERVICES.find(x=>x.id===id);
+const item=SERVICES.find(
+x=>x.id===id
+);
 
-if(!item||!qty){
+if(!item || qty<=0){
 
 document.getElementById("charge").innerHTML="0.00";
 
@@ -394,6 +369,45 @@ return;
 
 }
 
+const id=Number(
+document.getElementById("service").value
+);
+
+const qty=Number(
+document.getElementById("quantity").value
+);
+
+const item=SERVICES.find(
+x=>x.id===id
+);
+
+if(!item){
+
+document.getElementById("result").innerHTML=
+"Please Select Service";
+
+return;
+
+}
+
+if(qty<item.min){
+
+document.getElementById("result").innerHTML=
+"Minimum Quantity : "+item.min;
+
+return;
+
+}
+
+if(qty>item.max){
+
+document.getElementById("result").innerHTML=
+"Maximum Quantity : "+item.max;
+
+return;
+
+}
+
 const response=await fetch(
 
 API+"/api/orders",
@@ -410,16 +424,12 @@ body:JSON.stringify({
 
 user_id:USER.id,
 
-service_id:Number(
-document.getElementById("service").value
-),
+service_id:id,
 
 link:
 document.getElementById("link").value,
 
-quantity:Number(
-document.getElementById("quantity").value
-)
+quantity:qty
 
 })
 
@@ -431,11 +441,9 @@ const data=await response.json();
 
 document.getElementById("result").innerHTML=
 
-data.message ||
-
-(data.success
-? "✅ Order Placed Successfully"
-: data.error);
+data.success
+? "Order Placed Successfully"
+: (data.message || data.error);
 
 if(data.success){
 
@@ -444,8 +452,6 @@ document.getElementById("link").value="";
 document.getElementById("quantity").value="";
 
 calculateCharge();
-
-loadWallet();
 
 }
 
@@ -459,18 +465,10 @@ err.message;
 }
 
 /* ===========================
-   AUTO REFRESH
-=========================== */
-
-setInterval(loadWallet,30000);
-
-/* ===========================
-   WINDOW LOAD
+   PAGE LOAD
 =========================== */
 
 window.onload=function(){
-
-loadWallet();
 
 loadServices();
 
@@ -483,7 +481,7 @@ loadServices();
 document.querySelector("button")
 .addEventListener("mouseenter",function(){
 
-this.style.transform="scale(1.05)";
+this.style.transform="scale(1.03)";
 this.style.transition=".2s";
 
 });
@@ -509,7 +507,7 @@ placeOrder();
 
 });
 
-console.log("New Order Page Ready");
+console.log("New Order Ready");
 
 </script>
 
