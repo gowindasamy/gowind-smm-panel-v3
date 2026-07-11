@@ -1,74 +1,430 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>User Management</title>
-<link rel="stylesheet" href="style.css">
+
+<title>Users Management</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0f172a;
+color:white;
+}
+
+header{
+background:#1e293b;
+padding:20px;
+text-align:center;
+font-size:24px;
+font-weight:bold;
+}
+
+.container{
+width:95%;
+margin:auto;
+padding:20px;
+}
+
+.search{
+margin-bottom:20px;
+}
+
+.search input{
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+font-size:16px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th{
+background:#334155;
+padding:12px;
+}
+
+td{
+padding:10px;
+text-align:center;
+border-bottom:1px solid #475569;
+}
+
+button{
+padding:10px 15px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+color:white;
+margin:3px;
+}
+
+.wallet{
+background:#22c55e;
+}
+
+.delete{
+background:#ef4444;
+}
+
+.refresh{
+background:#2563eb;
+}
+
+</style>
+
 </head>
 
 <body>
 
 <header>
-<h1>👤 User Management</h1>
+
+👥 Users Management
+
 </header>
 
-<main>
+<div class="container">
 
-<div class="card">
-<h3>Add New User</h3>
+<div class="search">
 
-<input type="text" placeholder="Username">
-
-<input type="password" placeholder="Password">
-
-<select>
-<option>User</option>
-<option>Admin</option>
-</select>
-
-<br><br>
-
-<button>Add User</button>
+<input
+type="text"
+id="search"
+placeholder="Search User..."
+onkeyup="searchUsers()">
 
 </div>
 
-<div class="card">
-<h3>Users List</h3>
+<table>
 
-<table border="1" width="100%">
+<thead>
 
 <tr>
-<th>User</th>
+
+<th>ID</th>
+<th>Username</th>
 <th>Role</th>
-<th>Status</th>
+<th>Wallet</th>
+<th>Action</th>
+
 </tr>
 
-<tr>
-<td>admin</td>
-<td>Admin</td>
-<td>✅ Active</td>
-</tr>
+</thead>
 
-<tr>
-<td>demo</td>
-<td>User</td>
-<td>✅ Active</td>
-</tr>
+<tbody id="usersTable">
+
+</tbody>
 
 </table>
 
-</div>
-
 <br>
 
-<button onclick="location.href='dashboard.html'">
-🏠 Dashboard
+<button
+class="refresh"
+onclick="loadUsers()">
+
+🔄 Refresh
+
 </button>
 
-</main>
+<script>
 
-<script src="script.js"></script>
+const API =
+"https://gowind-smm-panel-v3.onrender.com";
+
+let allUsers = [];
+  /* ===========================
+   LOAD USERS
+=========================== */
+
+async function loadUsers(){
+
+try{
+
+const response = await fetch(
+API + "/api/users"
+);
+
+const data = await response.json();
+
+allUsers = data.users || [];
+
+renderUsers(allUsers);
+
+}catch(err){
+
+console.log(err);
+
+document.getElementById("usersTable").innerHTML =
+
+`<tr>
+<td colspan="5">
+Failed to load users
+</td>
+</tr>`;
+
+}
+
+}
+
+/* ===========================
+   RENDER USERS
+=========================== */
+
+function renderUsers(list){
+
+const table =
+document.getElementById("usersTable");
+
+table.innerHTML = "";
+
+if(list.length===0){
+
+table.innerHTML =
+
+`<tr>
+<td colspan="5">
+No Users Found
+</td>
+</tr>`;
+
+return;
+
+}
+
+list.forEach(user=>{
+
+table.innerHTML += `
+
+<tr>
+
+<td>${user.id}</td>
+
+<td>${user.username}</td>
+
+<td>${user.role}</td>
+
+<td>₹ ${user.wallet}</td>
+
+<td>
+
+<button
+class="wallet"
+onclick="addWallet(${user.id})">
+
+💰 Add Wallet
+
+</button>
+
+<button
+class="delete"
+onclick="deleteUser(${user.id})">
+
+🗑 Delete
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+}
+  /* ===========================
+   SEARCH USERS
+=========================== */
+
+function searchUsers(){
+
+const keyword =
+document.getElementById("search")
+.value
+.toLowerCase();
+
+const filtered = allUsers.filter(user =>
+
+String(user.id).includes(keyword)
+
+||
+
+String(user.username)
+.toLowerCase()
+.includes(keyword)
+
+||
+
+String(user.role)
+.toLowerCase()
+.includes(keyword)
+
+);
+
+renderUsers(filtered);
+
+}
+
+/* ===========================
+   ADD WALLET
+=========================== */
+
+async function addWallet(userId){
+
+const amount = prompt(
+"Enter Wallet Amount"
+);
+
+if(!amount){
+return;
+}
+
+try{
+
+const response = await fetch(
+
+API + "/api/wallet/add",
+
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+user_id:userId,
+amount:Number(amount)
+
+})
+
+}
+
+);
+
+const data =
+await response.json();
+
+alert(
+data.message || data.error
+);
+
+loadUsers();
+
+}catch(err){
+
+alert(err.message);
+
+}
+
+}
+
+/* ===========================
+   DELETE USER
+=========================== */
+
+async function deleteUser(userId){
+
+const ok = confirm(
+"Delete this user?"
+);
+
+if(!ok){
+return;
+}
+
+try{
+
+const response = await fetch(
+
+API + "/api/users/" + userId,
+
+{
+method:"DELETE"
+}
+
+);
+
+const data =
+await response.json();
+
+alert(
+data.message || data.error
+);
+
+loadUsers();
+
+}catch(err){
+
+alert(err.message);
+
+}
+
+}
+
+/* ===========================
+   PAGE LOAD
+=========================== */
+
+loadUsers();
+
+/* ===========================
+   AUTO REFRESH
+=========================== */
+
+setInterval(loadUsers,30000);
+  /* ===========================
+   LOGIN CHECK
+=========================== */
+
+if (!localStorage.getItem("token")) {
+    location.href = "login.html";
+}
+
+/* ===========================
+   WINDOW LOAD
+=========================== */
+
+window.onload = function () {
+    loadUsers();
+};
+
+/* ===========================
+   BUTTON ANIMATION
+=========================== */
+
+document.querySelectorAll("button").forEach(btn => {
+
+    btn.addEventListener("mouseenter", () => {
+        btn.style.transform = "scale(1.05)";
+        btn.style.transition = ".2s";
+    });
+
+    btn.addEventListener("mouseleave", () => {
+        btn.style.transform = "scale(1)";
+    });
+
+});
+
+</script>
 
 </body>
+
 </html>
