@@ -1182,6 +1182,34 @@ app.get("/api/admin/dashboard", async (req, res) => {
     }
 
 });
+/* ===========================
+   DELETE SERVICE
+=========================== */
+
+app.delete("/api/services/:id", async (req, res) => {
+
+    try {
+
+        await db.query(
+            "DELETE FROM services WHERE id = $1",
+            [req.params.id]
+        );
+
+        res.json({
+            success: true,
+            message: "Service Deleted Successfully"
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
 app.delete("/api/providers/:id", async (req, res) => {
 
     try {
