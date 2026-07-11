@@ -4,7 +4,8 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Settings</title>
 
@@ -19,68 +20,87 @@ font-family:Arial,sans-serif;
 
 body{
 background:#0f172a;
-color:white;
+color:#fff;
 }
 
 .container{
-
-width:420px;
-max-width:95%;
-margin:40px auto;
-background:#1e293b;
+width:100%;
+max-width:700px;
+margin:30px auto;
 padding:20px;
-border-radius:10px;
-
 }
 
-h2{
+.card{
+background:#1e293b;
+padding:25px;
+border-radius:12px;
+box-shadow:0 5px 15px rgba(0,0,0,.3);
+}
 
+.card h2{
 text-align:center;
-margin-bottom:20px;
-
+margin-bottom:25px;
+font-size:28px;
 }
 
 label{
-
 display:block;
-margin-bottom:5px;
+margin-top:15px;
+margin-bottom:8px;
 font-weight:bold;
-
 }
 
-input,select{
+input,
+select{
 
 width:100%;
 padding:12px;
-margin-bottom:15px;
 border:none;
-border-radius:6px;
+border-radius:8px;
+font-size:15px;
+outline:none;
 
 }
 
 button{
 
 width:100%;
-padding:12px;
+margin-top:25px;
+padding:14px;
 border:none;
-border-radius:6px;
-cursor:pointer;
-font-size:16px;
-
-}
-
-.save{
-
+border-radius:8px;
 background:#22c55e;
-color:white;
+color:#fff;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
 
 }
 
-#result{
+button:hover{
 
-margin-top:15px;
+background:#16a34a;
+
+}
+
+.status{
+
+margin-top:20px;
 text-align:center;
 font-weight:bold;
+
+}
+
+.logo-preview{
+
+display:block;
+margin:15px auto;
+width:80px;
+height:80px;
+object-fit:contain;
+border-radius:10px;
+background:#334155;
+padding:8px;
 
 }
 
@@ -92,44 +112,135 @@ font-weight:bold;
 
 <div class="container">
 
-<h2>⚙️ Panel Settings</h2>
+<div class="card">
 
-<label>Site Name</label>
+<h2>
+
+⚙️ Panel Settings
+
+</h2>
+
+<label>
+
+🏷️ Site Name
+
+</label>
 
 <input
-type="text"
 id="site_name"
-placeholder="Enter Site Name">
+type="text"
+placeholder="Site Name">
 
-<label>Maintenance Mode</label>
+<label>
+
+🖼️ Logo URL
+
+</label>
+
+<input
+id="logo_url"
+type="text"
+placeholder="https://example.com/logo.png">
+
+<img
+id="logoPreview"
+class="logo-preview"
+src=""
+alt="Logo Preview">
+
+<label>
+
+🔧 Maintenance Mode
+
+</label>
 
 <select id="maintenance">
 
 <option value="false">
+
 OFF
+
 </option>
 
 <option value="true">
+
 ON
+
+</option>
+
+</select>
+
+<label>
+
+⏱️ Auto Sync Interval
+
+</label>
+
+<select id="sync_interval">
+
+<option value="30">
+
+30 Seconds
+
+</option>
+
+<option value="60">
+
+1 Minute
+
+</option>
+
+<option value="300">
+
+5 Minutes
+
 </option>
 
 </select>
 
 <button
-class="save"
 onclick="saveSettings()">
 
 💾 Save Settings
 
 </button>
 
-<div id="result"></div>
+<div
+class="status"
+id="status">
+
+Ready...
+
+</div>
+
+</div>
+
+</div>
 
 <script>
 
 const API =
 "https://gowind-smm-panel-v3.onrender.com";
     /* ===========================
+   LOGIN CHECK
+=========================== */
+
+const USER =
+JSON.parse(localStorage.getItem("user"));
+
+if(!localStorage.getItem("token")){
+
+location.href="login.html";
+
+}
+
+if(!USER || USER.role!=="admin"){
+
+location.href="login.html";
+
+}
+
+/* ===========================
    LOAD SETTINGS
 =========================== */
 
@@ -137,48 +248,136 @@ async function loadSettings(){
 
 try{
 
-const response = await fetch(
-API + "/api/settings"
+const response=await fetch(
+
+API+"/api/settings"
+
 );
 
-const data = await response.json();
+const data=await response.json();
 
 if(!data.success){
 
-document.getElementById("result").innerHTML =
-data.message || "Settings not found";
+document.getElementById("status").innerHTML=
+
+"❌ Failed to Load Settings";
 
 return;
 
 }
 
-const settings = data.settings;
+const s=data.settings;
 
-document.getElementById("site_name").value =
-settings.site_name || "";
+document.getElementById("site_name").value=
 
-document.getElementById("maintenance").value =
-String(settings.maintenance);
+s.site_name || "";
+
+document.getElementById("logo_url").value=
+
+s.logo_url || "";
+
+document.getElementById("maintenance").value=
+
+String(s.maintenance);
+
+document.getElementById("sync_interval").value=
+
+String(s.sync_interval);
+
+updateLogoPreview();
+
+document.getElementById("status").innerHTML=
+
+"✅ Settings Loaded";
 
 }catch(err){
 
-document.getElementById("result").innerHTML =
+document.getElementById("status").innerHTML=
+
 err.message;
 
 }
 
 }
+
+/* ===========================
+   LOGO PREVIEW
+=========================== */
+
+function updateLogoPreview(){
+
+const url=
+
+document.getElementById("logo_url").value.trim();
+
+const img=
+
+document.getElementById("logoPreview");
+
+if(url===""){
+
+img.src="";
+
+return;
+
+}
+
+img.src=url;
+
+img.onerror=function(){
+
+this.src="";
+
+};
+
+}
+
+/* ===========================
+   LOGO URL CHANGE
+=========================== */
+
+document.getElementById("logo_url")
+
+.addEventListener(
+
+"input",
+
+updateLogoPreview
+
+);
     /* ===========================
    SAVE SETTINGS
 =========================== */
 
 async function saveSettings(){
 
+const site_name=
+document.getElementById("site_name").value.trim();
+
+const logo_url=
+document.getElementById("logo_url").value.trim();
+
+const maintenance=
+
+document.getElementById("maintenance").value==="true";
+
+const sync_interval=
+
+Number(
+
+document.getElementById("sync_interval").value
+
+);
+
+document.getElementById("status").innerHTML=
+
+"⏳ Saving...";
+
 try{
 
-const response = await fetch(
+const response=await fetch(
 
-API + "/api/settings",
+API+"/api/settings",
 
 {
 
@@ -190,11 +389,13 @@ headers:{
 
 body:JSON.stringify({
 
-site_name:
-document.getElementById("site_name").value,
+site_name,
 
-maintenance:
-document.getElementById("maintenance").value === "true"
+logo_url,
+
+maintenance,
+
+sync_interval
 
 })
 
@@ -202,32 +403,29 @@ document.getElementById("maintenance").value === "true"
 
 );
 
-const data = await response.json();
+const data=await response.json();
 
-document.getElementById("result").innerHTML =
-data.message || data.error;
+if(data.success){
+
+document.getElementById("status").innerHTML=
+
+"✅ Settings Saved Successfully";
+
+}else{
+
+document.getElementById("status").innerHTML=
+
+"❌ "+(data.message || data.error);
+
+}
 
 }catch(err){
 
-document.getElementById("result").innerHTML =
-err.message;
+document.getElementById("status").innerHTML=
+
+"❌ "+err.message;
 
 }
-
-}
-
-/* ===========================
-   PAGE LOAD
-=========================== */
-
-loadSettings();
-    /* ===========================
-   LOGIN CHECK
-=========================== */
-
-if (!localStorage.getItem("token")) {
-
-    location.href = "login.html";
 
 }
 
@@ -235,32 +433,73 @@ if (!localStorage.getItem("token")) {
    WINDOW LOAD
 =========================== */
 
-window.onload = function(){
+window.onload=function(){
 
-    loadSettings();
+loadSettings();
 
 };
 
 /* ===========================
+   AUTO REFRESH PREVIEW
+=========================== */
+
+setInterval(updateLogoPreview,5000);
+    /* ===========================
    BUTTON ANIMATION
 =========================== */
 
 document.querySelectorAll("button").forEach(btn=>{
 
-    btn.addEventListener("mouseenter",()=>{
+btn.addEventListener("mouseenter",function(){
 
-        btn.style.transform="scale(1.05)";
-        btn.style.transition=".2s";
-
-    });
-
-    btn.addEventListener("mouseleave",()=>{
-
-        btn.style.transform="scale(1)";
-
-    });
+this.style.transform="scale(1.03)";
+this.style.transition=".2s";
 
 });
+
+btn.addEventListener("mouseleave",function(){
+
+this.style.transform="scale(1)";
+
+});
+
+});
+
+/* ===========================
+   SHORTCUT KEYS
+=========================== */
+
+document.addEventListener("keydown",function(e){
+
+if(e.ctrlKey && e.key==="s"){
+
+e.preventDefault();
+
+saveSettings();
+
+}
+
+if(e.ctrlKey && e.key==="r"){
+
+e.preventDefault();
+
+loadSettings();
+
+}
+
+if(e.key==="Escape"){
+
+location.href="admindashboard.html";
+
+}
+
+});
+
+/* ===========================
+   PAGE READY
+=========================== */
+
+console.log("Settings Ready");
 
 </script>
 
