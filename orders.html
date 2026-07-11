@@ -327,7 +327,7 @@ if(list.length===0){
 
 table.innerHTML=
 
-"<tr><td colspan='7' style='text-align:center;'>No Orders Found</td></tr>";
+"<tr><td colspan='11' style='text-align:center;'>No Orders Found</td></tr>";
 
 return;
 
@@ -357,13 +357,21 @@ table.innerHTML+=`
 
 <td>${order.id}</td>
 
-<td>${order.user_id}</td>
+<td>${order.username || "-"}</td>
 
-<td>${order.service_id}</td>
+<td>${order.service_name || "-"}</td>
+
+<td style="max-width:220px;word-break:break-all;">
+${order.link || "-"}
+</td>
 
 <td>${order.quantity}</td>
 
 <td>₹${Number(order.charge).toFixed(2)}</td>
+
+<td>${order.provider_name || "-"}</td>
+
+<td>${order.provider_order_id || "-"}</td>
 
 <td>
 
@@ -377,7 +385,18 @@ ${order.status}
 
 <td>
 
-${order.provider_order_id || "-"}
+${new Date(order.created_at).toLocaleString()}
+
+</td>
+
+<td>
+
+<button
+onclick="syncOrder(${order.provider_id}, ${order.provider_order_id})"
+
+🔄
+
+</button>
 
 </td>
 
@@ -531,6 +550,59 @@ this.style.background="transparent";
 });
 
 });
+  /* ===========================
+   SYNC SINGLE ORDER
+=========================== */
+
+async function syncOrder(providerId, providerOrderId){
+
+try{
+
+const response = await fetch(
+
+API + "/api/providers/status",
+
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+provider_id:providerId,
+
+order:providerOrderId
+
+})
+
+}
+
+);
+
+const data = await response.json();
+
+if(data.status){
+
+alert("Current Status : " + data.status);
+
+loadOrders();
+
+}else{
+
+alert(data.error || data.message || "Unable to fetch status");
+
+}
+
+}catch(err){
+
+alert(err.message);
+
+}
+
+} 
 
 /* ===========================
    PAGE READY
