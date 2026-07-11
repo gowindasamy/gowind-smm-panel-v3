@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Edit Service</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0f172a;
+color:white;
+}
+
+.container{
+
+width:400px;
+max-width:95%;
+margin:40px auto;
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+
+}
+
+h2{
+
+text-align:center;
+margin-bottom:20px;
+
+}
+
+input{
+
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border:none;
+border-radius:6px;
+
+}
+
+select{
+
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border:none;
+border-radius:6px;
+
+}
+
+button{
+
+width:100%;
+padding:12px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+font-size:16px;
+
+}
+
+.save{
+
+background:#22c55e;
+color:white;
+
+}
+
+.back{
+
+background:#3b82f6;
+color:white;
+margin-top:10px;
+
+}
+
+#result{
+
+margin-top:15px;
+text-align:center;
+font-weight:bold;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>✏ Edit Service</h2>
+
+<input
+type="text"
+id="name"
+placeholder="Service Name">
+
+<input
+type="text"
+id="category"
+placeholder="Category">
+
+<input
+type="number"
+id="rate"
+placeholder="Rate">
+
+<input
+type="number"
+id="min"
+placeholder="Minimum">
+
+<input
+type="number"
+id="max"
+placeholder="Maximum">
+
+<select id="status">
+
+<option value="true">
+Enabled
+</option>
+
+<option value="false">
+Disabled
+</option>
+
+</select>
+
+<button
+class="save"
+onclick="updateService()">
+
+💾 Save Changes
+
+</button>
+
+<button
+class="back"
+onclick="history.back()">
+
+⬅ Back
+
+</button>
+
+<div id="result"></div>
+
+<script>
+
+const API =
+"https://gowind-smm-panel-v3.onrender.com";
+
+const params =
+new URLSearchParams(location.search);
+
+const serviceId =
+params.get("id");
+  /* ===========================
+   LOAD SERVICE
+=========================== */
+
+async function loadService(){
+
+try{
+
+const response = await fetch(
+API + "/api/services/" + serviceId
+);
+
+const data = await response.json();
+
+if(!data.success){
+
+document.getElementById("result").innerHTML =
+"Service Not Found";
+
+return;
+
+}
+
+const service = data.service;
+
+document.getElementById("name").value =
+service.name;
+
+document.getElementById("category").value =
+service.category;
+
+document.getElementById("rate").value =
+service.rate;
+
+document.getElementById("min").value =
+service.min;
+
+document.getElementById("max").value =
+service.max;
+
+document.getElementById("status").value =
+String(service.status);
+
+}catch(err){
+
+document.getElementById("result").innerHTML =
+err.message;
+
+}
+
+  }
+  /* ===========================
+   UPDATE SERVICE
+=========================== */
+
+async function updateService(){
+
+try{
+
+const response = await fetch(
+
+API + "/api/services/" + serviceId,
+
+{
+
+method:"PUT",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+name:document.getElementById("name").value,
+
+category:document.getElementById("category").value,
+
+rate:Number(document.getElementById("rate").value),
+
+min:Number(document.getElementById("min").value),
+
+max:Number(document.getElementById("max").value),
+
+status:
+document.getElementById("status").value === "true"
+
+})
+
+}
+
+);
+
+const data = await response.json();
+
+document.getElementById("result").innerHTML =
+data.message || data.error;
+
+if(data.success){
+
+setTimeout(()=>{
+
+location.href="services.html";
+
+},1000);
+
+}
+
+}catch(err){
+
+document.getElementById("result").innerHTML =
+err.message;
+
+}
+
+}
+
+/* ===========================
+   PAGE LOAD
+=========================== */
+
+loadService();
+  /* ===========================
+   LOGIN CHECK
+=========================== */
+
+if (!localStorage.getItem("token")) {
+
+    location.href = "login.html";
+
+}
+
+/* ===========================
+   WINDOW LOAD
+=========================== */
+
+window.onload = function () {
+
+    loadService();
+
+};
+
+/* ===========================
+   BUTTON ANIMATION
+=========================== */
+
+document.querySelectorAll("button").forEach(btn => {
+
+    btn.addEventListener("mouseenter", () => {
+
+        btn.style.transform = "scale(1.05)";
+        btn.style.transition = ".2s";
+
+    });
+
+    btn.addEventListener("mouseleave", () => {
+
+        btn.style.transform = "scale(1)";
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>
