@@ -1,56 +1,269 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Settings</title>
-<link rel="stylesheet" href="style.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0f172a;
+color:white;
+}
+
+.container{
+
+width:420px;
+max-width:95%;
+margin:40px auto;
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+
+}
+
+h2{
+
+text-align:center;
+margin-bottom:20px;
+
+}
+
+label{
+
+display:block;
+margin-bottom:5px;
+font-weight:bold;
+
+}
+
+input,select{
+
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border:none;
+border-radius:6px;
+
+}
+
+button{
+
+width:100%;
+padding:12px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+font-size:16px;
+
+}
+
+.save{
+
+background:#22c55e;
+color:white;
+
+}
+
+#result{
+
+margin-top:15px;
+text-align:center;
+font-weight:bold;
+
+}
+
+</style>
+
 </head>
 
 <body>
 
-<header>
-    <h1>⚙ Settings</h1>
-</header>
+<div class="container">
 
-<main>
+<h2>⚙️ Panel Settings</h2>
 
-<div class="card">
+<label>Site Name</label>
 
-<h3>Panel Settings</h3>
+<input
+type="text"
+id="site_name"
+placeholder="Enter Site Name">
 
-<input type="text" placeholder="Site Name" value="Gowind SMM Panel">
+<label>Maintenance Mode</label>
 
-<br><br>
+<select id="maintenance">
 
-<select>
-    <option>INR (₹)</option>
-    <option>USD ($)</option>
-    <option>EUR (€)</option>
+<option value="false">
+OFF
+</option>
+
+<option value="true">
+ON
+</option>
+
 </select>
 
-<br><br>
+<button
+class="save"
+onclick="saveSettings()">
 
-<label>
-    <input type="checkbox">
-    Maintenance Mode
-</label>
+💾 Save Settings
 
-<br><br>
-
-<button>💾 Save Settings</button>
-
-</div>
-
-<br>
-
-<button onclick="location.href='dashboard.html'">
-🏠 Dashboard
 </button>
 
-</main>
+<div id="result"></div>
 
-<script src="script.js"></script>
+<script>
+
+const API =
+"https://gowind-smm-panel-v3.onrender.com";
+    /* ===========================
+   LOAD SETTINGS
+=========================== */
+
+async function loadSettings(){
+
+try{
+
+const response = await fetch(
+API + "/api/settings"
+);
+
+const data = await response.json();
+
+if(!data.success){
+
+document.getElementById("result").innerHTML =
+data.message || "Settings not found";
+
+return;
+
+}
+
+const settings = data.settings;
+
+document.getElementById("site_name").value =
+settings.site_name || "";
+
+document.getElementById("maintenance").value =
+String(settings.maintenance);
+
+}catch(err){
+
+document.getElementById("result").innerHTML =
+err.message;
+
+}
+
+}
+    /* ===========================
+   SAVE SETTINGS
+=========================== */
+
+async function saveSettings(){
+
+try{
+
+const response = await fetch(
+
+API + "/api/settings",
+
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+site_name:
+document.getElementById("site_name").value,
+
+maintenance:
+document.getElementById("maintenance").value === "true"
+
+})
+
+}
+
+);
+
+const data = await response.json();
+
+document.getElementById("result").innerHTML =
+data.message || data.error;
+
+}catch(err){
+
+document.getElementById("result").innerHTML =
+err.message;
+
+}
+
+}
+
+/* ===========================
+   PAGE LOAD
+=========================== */
+
+loadSettings();
+    /* ===========================
+   LOGIN CHECK
+=========================== */
+
+if (!localStorage.getItem("token")) {
+
+    location.href = "login.html";
+
+}
+
+/* ===========================
+   WINDOW LOAD
+=========================== */
+
+window.onload = function(){
+
+    loadSettings();
+
+};
+
+/* ===========================
+   BUTTON ANIMATION
+=========================== */
+
+document.querySelectorAll("button").forEach(btn=>{
+
+    btn.addEventListener("mouseenter",()=>{
+
+        btn.style.transform="scale(1.05)";
+        btn.style.transition=".2s";
+
+    });
+
+    btn.addEventListener("mouseleave",()=>{
+
+        btn.style.transform="scale(1)";
+
+    });
+
+});
+
+</script>
 
 </body>
+
 </html>
