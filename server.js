@@ -88,7 +88,34 @@ status BOOLEAN DEFAULT TRUE,
 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 `);
+/* ===========================
+   SETTINGS TABLE
+=========================== */
 
+await db.query(`
+CREATE TABLE IF NOT EXISTS settings(
+id SERIAL PRIMARY KEY,
+site_name TEXT,
+logo_url TEXT,
+maintenance BOOLEAN DEFAULT FALSE,
+sync_interval INTEGER DEFAULT 60
+);
+`);
+
+await db.query(`
+INSERT INTO settings
+(site_name,logo_url,maintenance,sync_interval)
+
+SELECT
+'Gowind SMM Panel',
+'',
+FALSE,
+60
+
+WHERE NOT EXISTS(
+SELECT 1 FROM settings
+);
+`);
 await db.query(`
 CREATE TABLE IF NOT EXISTS providers(
 id SERIAL PRIMARY KEY,
