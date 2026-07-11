@@ -1660,6 +1660,59 @@ app.get("/api/settings", async (req, res) => {
 
 });
 /* ===========================
+   SAVE SETTINGS
+=========================== */
+
+app.post("/api/settings", async (req, res) => {
+
+    try {
+
+        const {
+            site_name,
+            logo_url,
+            maintenance,
+            sync_interval
+        } = req.body;
+
+        await db.query(
+
+            `UPDATE settings
+             SET
+                site_name = $1,
+                logo_url = $2,
+                maintenance = $3,
+                sync_interval = $4
+             WHERE id = 1`,
+
+            [
+                site_name,
+                logo_url,
+                maintenance,
+                sync_interval
+            ]
+
+        );
+
+        res.json({
+
+            success: true,
+            message: "Settings Saved Successfully"
+
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+
+            success: false,
+            error: err.message
+
+        });
+
+    }
+
+});
+/* ===========================
    SERVER START
 =========================== */
 
