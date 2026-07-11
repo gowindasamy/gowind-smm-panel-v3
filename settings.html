@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+content="width=device-width,initial-scale=1.0">
 
 <title>Panel Settings</title>
 
@@ -35,7 +35,7 @@ overflow-x:hidden;
 
 }
 
-/* Floating Glow */
+/* Glow Background */
 
 body::before{
 
@@ -70,7 +70,7 @@ height:320px;
 
 background:#06b6d4;
 
-filter:blur(150px);
+filter:blur(160px);
 
 bottom:-100px;
 right:-100px;
@@ -86,9 +86,9 @@ z-index:-1;
 width:95%;
 max-width:700px;
 
-margin:40px auto;
+margin:35px auto;
 
-padding:30px;
+padding:28px;
 
 background:rgba(255,255,255,.04);
 
@@ -100,9 +100,9 @@ border-radius:22px;
 
 box-shadow:
 
-0 0 35px rgba(124,58,237,.20),
+0 0 40px rgba(124,58,237,.20),
 
-0 0 80px rgba(37,99,235,.15);
+0 0 70px rgba(37,99,235,.18);
 
 animation:fadeUp .5s ease;
 
@@ -114,7 +114,7 @@ from{
 
 opacity:0;
 
-transform:translateY(25px);
+transform:translateY(20px);
 
 }
 
@@ -172,7 +172,9 @@ margin-bottom:8px;
 
 font-weight:bold;
 
-color:#e2e8f0;
+font-size:18px;
+
+color:#fff;
 
 }
 
@@ -181,9 +183,9 @@ select{
 
 width:100%;
 
-padding:14px;
+padding:15px;
 
-border-radius:12px;
+border-radius:14px;
 
 background:#16213a;
 
@@ -191,7 +193,7 @@ border:1px solid #334155;
 
 color:#fff;
 
-font-size:15px;
+font-size:16px;
 
 outline:none;
 
@@ -204,34 +206,33 @@ select:focus{
 
 border-color:#3b82f6;
 
-box-shadow:
-
-0 0 18px rgba(59,130,246,.35);
+box-shadow:0 0 18px rgba(59,130,246,.35);
 
 }
-    .logo-preview{
 
-width:120px;
-height:120px;
+.logo-preview{
 
-margin:20px auto;
+width:170px;
+height:170px;
 
-border-radius:18px;
+margin:25px auto;
 
-background:rgba(255,255,255,.05);
+border-radius:24px;
 
-border:1px solid rgba(255,255,255,.08);
+background:#111827;
 
 display:flex;
 
 justify-content:center;
 align-items:center;
 
+border:2px solid rgba(255,255,255,.08);
+
+box-shadow:
+
+0 0 25px rgba(59,130,246,.25);
+
 overflow:hidden;
-
-font-size:42px;
-
-color:#94a3b8;
 
 }
 
@@ -242,27 +243,28 @@ height:100%;
 
 object-fit:contain;
 
-display:none;
-
 }
 
-.logo-preview span{
+.info{
+
+margin-top:15px;
 
 text-align:center;
 
-font-size:13px;
+color:#cbd5e1;
 
-line-height:1.5;
+font-size:15px;
+
+line-height:1.8;
 
 }
-
-button{
+    button{
 
 width:100%;
 
 margin-top:25px;
 
-padding:15px;
+padding:16px;
 
 border:none;
 
@@ -272,26 +274,20 @@ font-size:17px;
 
 font-weight:bold;
 
-color:#fff;
-
 cursor:pointer;
 
+color:#fff;
+
 background:linear-gradient(
-
 90deg,
-
 #2563eb,
-
 #7c3aed,
-
 #06b6d4
-
 );
 
 transition:.3s;
 
 box-shadow:
-
 0 0 20px rgba(59,130,246,.35);
 
 }
@@ -301,7 +297,6 @@ button:hover{
 transform:translateY(-3px);
 
 box-shadow:
-
 0 0 35px rgba(124,58,237,.45);
 
 }
@@ -313,9 +308,9 @@ position:fixed;
 top:20px;
 right:20px;
 
-background:#22c55e;
+padding:14px 20px;
 
-padding:15px 22px;
+background:#22c55e;
 
 border-radius:12px;
 
@@ -324,6 +319,8 @@ display:none;
 font-weight:bold;
 
 box-shadow:0 0 20px rgba(34,197,94,.4);
+
+z-index:9999;
 
 }
 
@@ -343,15 +340,11 @@ box-shadow:0 0 20px rgba(34,197,94,.4);
 
 <div class="header">
 
-<h1>
-
-⚙️ Panel Settings
-
-</h1>
+<h1>⚙️ Panel Settings</h1>
 
 <p>
 
-Manage your SMM Panel configuration
+Manage your Private SMM Panel
 
 </p>
 
@@ -367,51 +360,32 @@ Manage your SMM Panel configuration
 type="text"
 id="siteName">
 
-<label>🖼 Current Logo</label>
+<label>
+
+🖼 Current Logo
+
+</label>
 
 <div class="logo-preview">
 
 <img
 src="assets/logo.png?v=1"
-id="logoImage"
-style="
-width:100%;
-height:100%;
-object-fit:contain;
-display:block;
-">
+alt="Logo">
 
 </div>
 
-<p style="
-margin-top:15px;
-font-size:14px;
-color:#94a3b8;
-text-align:center;
-line-height:1.6;
-">
+<div class="info">
 
 📂 Current Logo:
 <b>assets/logo.png</b>
 
 <br><br>
 
-💡 Replace
+💡 To change the logo,
+replace
 <b>assets/logo.png</b>
-in your GitHub repository to update the logo.
-
-</p>
-oninput="previewLogo()">
-
-<div class="logo-preview">
-
-<img id="logoImage">
-
-<span id="logoText">
-
-No Logo Uploaded
-
-</span>
+in your GitHub repository
+and commit the changes.
 
 </div>
 
@@ -461,18 +435,16 @@ onclick="saveSettings()">
 
 const API =
 "https://gowind-smm-panel-v3.onrender.com";
-    
-
-/* ===========================
+    /* ===========================
    TOAST
 =========================== */
 
-function showToast(msg){
+function showToast(message){
 
 const toast =
 document.getElementById("toast");
 
-toast.innerHTML="✅ "+msg;
+toast.innerHTML="✅ "+message;
 
 toast.style.display="block";
 
@@ -492,41 +464,50 @@ async function loadSettings(){
 
 try{
 
-const response = await fetch(
+const response=await fetch(
 
-API + "/api/settings"
+API+"/api/settings"
 
 );
 
-const data = await response.json();
+const data=await response.json();
 
 if(!data.success){
+
+alert("Failed to load settings");
 
 return;
 
 }
 
-document.getElementById("siteName").value =
+document.getElementById("siteName").value=
 data.settings.site_name || "";
 
-document.getElementById("logoUrl").value =
-data.settings.logo_url || "";
-
-document.getElementById("maintenance").value =
+document.getElementById("maintenance").value=
 String(data.settings.maintenance);
 
-document.getElementById("syncInterval").value =
+document.getElementById("syncInterval").value=
 data.settings.sync_interval || 60;
-
-previewLogo();
 
 }catch(err){
 
 console.log(err);
 
+alert("Server Error");
+
 }
 
-    }
+}
+
+/* ===========================
+   WINDOW LOAD
+=========================== */
+
+window.onload=function(){
+
+loadSettings();
+
+};
     /* ===========================
    SAVE SETTINGS
 =========================== */
@@ -552,9 +533,6 @@ body:JSON.stringify({
 site_name:
 document.getElementById("siteName").value.trim(),
 
-logo_url:
-document.getElementById("logoUrl").value.trim(),
-
 maintenance:
 document.getElementById("maintenance").value==="true",
 
@@ -577,7 +555,11 @@ showToast("Settings Saved Successfully");
 
 }else{
 
-alert(data.message || data.error || "Save Failed");
+alert(
+data.message ||
+data.error ||
+"Failed to Save Settings"
+);
 
 }
 
@@ -587,19 +569,8 @@ alert(err.message);
 
 }
 
-    }
+}
     /* ===========================
-   WINDOW LOAD
-=========================== */
-
-window.onload=function(){
-
-loadSettings();
-
-};
-
-
-/* ===========================
    CTRL + S
 =========================== */
 
@@ -624,6 +595,7 @@ document.querySelectorAll("input,select").forEach(el=>{
 el.addEventListener("focus",function(){
 
 this.style.transform="scale(1.01)";
+this.style.transition=".2s";
 
 });
 
