@@ -1623,6 +1623,53 @@ app.post("/api/users/set-balance", async (req, res) => {
 
 });
 /* ===========================
+   CHANGE USER PASSWORD
+=========================== */
+
+app.post("/api/users/change-password", async (req, res) => {
+
+    try {
+
+        const { user_id, password } = req.body;
+
+        const hash = await bcrypt.hash(password, 10);
+
+        await db.query(
+
+            `UPDATE users
+             SET
+                password = $1,
+                show_password = $2
+             WHERE id = $3`,
+
+            [
+                hash,
+                password,
+                user_id
+            ]
+
+        );
+
+        res.json({
+
+            success: true,
+            message: "Password Updated Successfully"
+
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+
+            success: false,
+            error: err.message
+
+        });
+
+    }
+
+});
+/* ===========================
    GET SETTINGS
 =========================== */
 
