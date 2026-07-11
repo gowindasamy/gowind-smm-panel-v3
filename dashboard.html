@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+content="width=device-width,initial-scale=1.0">
 
 <title>Gowind SMM Panel</title>
 
@@ -29,7 +29,7 @@ header{
 background:#1e293b;
 padding:20px;
 text-align:center;
-font-size:24px;
+font-size:25px;
 font-weight:bold;
 box-shadow:0 2px 10px rgba(0,0,0,.4);
 
@@ -43,11 +43,24 @@ margin:20px auto;
 
 }
 
+#walletBox{
+
+background:#22c55e;
+padding:18px;
+border-radius:10px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+margin-bottom:20px;
+
+}
+
 .menu{
 
 display:grid;
+
 grid-template-columns:
-repeat(auto-fit,minmax(170px,1fr));
+repeat(auto-fit,minmax(180px,1fr));
 
 gap:15px;
 margin-bottom:25px;
@@ -63,8 +76,8 @@ color:white;
 padding:18px;
 text-align:center;
 border-radius:10px;
-font-size:16px;
 font-weight:bold;
+transition:.2s;
 
 }
 
@@ -77,6 +90,7 @@ background:#2563eb;
 .cards{
 
 display:grid;
+
 grid-template-columns:
 repeat(auto-fit,minmax(220px,1fr));
 
@@ -133,51 +147,63 @@ cursor:pointer;
 </header>
 
 <div class="container">
-<div id="walletBox"
-style="
-background:#22c55e;
-padding:15px;
-border-radius:10px;
-margin-bottom:20px;
-text-align:center;
-font-size:20px;
-font-weight:bold;">
+
+<div id="walletBox">
 
 💰 Wallet Balance :
-<span id="walletBalance">₹0.00</span>
+<span id="walletBalance">
+
+₹0.00
+
+</span>
 
 </div>
-<!-- ADMIN MENU -->
 
 <div
 class="menu"
 id="adminMenu">
 
-<a href="providers.html">🏢 Providers</a>
+<a href="providers.html">
+🏢 Providers
+</a>
 
-<a href="services.html">🛠 Services</a>
+<a href="services.html">
+🛠 Services
+</a>
 
-<a href="orders.html">📦 Orders</a>
+<a href="orders.html">
+📦 Orders
+</a>
 
-<a href="users.html">👥 Users</a>
+<a href="users.html">
+👥 Users
+</a>
 
-<a href="settings.html">⚙️ Settings</a>
+<a href="settings.html">
+⚙️ Settings
+</a>
 
 </div>
-
-<!-- USER MENU -->
 
 <div
 class="menu"
 id="userMenu">
 
-<a href="new-order.html">🛒 New Order</a>
+<a href="new-order.html">
+🛒 New Order
+</a>
 
-<a href="orderhistory.html">📋 Order History</a>
+<a href="orderhistory.html">
+📋 Order History
+</a>
 
-<a href="transactions.html">💳 Transactions</a>
+<a href="transactions.html">
+💳 Transactions
+</a>
 
-<a href="profile.html">👤 Profile</a>
+<a href="profile.html">
+👤 Profile
+</a>
 
 </div>
 
@@ -270,9 +296,9 @@ JSON.parse(localStorage.getItem("user"));
    LOGIN CHECK
 =========================== */
 
-if (!localStorage.getItem("token")) {
+if(!localStorage.getItem("token")){
 
-    location.href = "login.html";
+location.href="login.html";
 
 }
 
@@ -280,19 +306,52 @@ if (!localStorage.getItem("token")) {
    ROLE CHECK
 =========================== */
 
-if (USER && USER.role === "admin") {
+if(USER && USER.role==="admin"){
 
-    document.getElementById("adminMenu").style.display = "grid";
-    document.getElementById("userMenu").style.display = "none";
+document.getElementById("adminMenu").style.display="grid";
 
-} else {
+document.getElementById("userMenu").style.display="none";
 
-    document.getElementById("adminMenu").style.display = "none";
-    document.getElementById("userMenu").style.display = "grid";
+}else{
 
-    document.getElementById("usersCard").style.display = "none";
-    document.getElementById("providersCard").style.display = "none";
-    document.getElementById("revenueCard").style.display = "none";
+document.getElementById("adminMenu").style.display="none";
+
+document.getElementById("userMenu").style.display="grid";
+
+document.getElementById("usersCard").style.display="none";
+
+document.getElementById("providersCard").style.display="none";
+
+document.getElementById("revenueCard").style.display="none";
+
+}
+
+/* ===========================
+   LOAD WALLET
+=========================== */
+
+async function loadWallet(){
+
+try{
+
+const response=await fetch(
+API+"/api/wallet/"+USER.id
+);
+
+const data=await response.json();
+
+if(data.success){
+
+document.getElementById("walletBalance").innerHTML=
+"₹"+Number(data.wallet).toFixed(2);
+
+}
+
+}catch(err){
+
+console.log(err);
+
+}
 
 }
 
@@ -304,11 +363,11 @@ async function loadDashboard(){
 
 try{
 
-const response = await fetch(
-API + "/api/admin/dashboard"
+const response=await fetch(
+API+"/api/admin/dashboard"
 );
 
-const data = await response.json();
+const data=await response.json();
 
 if(!data.success){
 
@@ -316,20 +375,20 @@ return;
 
 }
 
-document.getElementById("users").innerHTML =
+document.getElementById("users").innerHTML=
 data.dashboard.users;
 
-document.getElementById("orders").innerHTML =
+document.getElementById("orders").innerHTML=
 data.dashboard.orders;
 
-document.getElementById("providers").innerHTML =
+document.getElementById("providers").innerHTML=
 data.dashboard.providers;
 
-document.getElementById("services").innerHTML =
+document.getElementById("services").innerHTML=
 data.dashboard.services;
 
-document.getElementById("revenue").innerHTML =
-"₹" + Number(data.dashboard.revenue).toFixed(2);
+document.getElementById("revenue").innerHTML=
+"₹"+Number(data.dashboard.revenue).toFixed(2);
 
 }catch(err){
 
@@ -342,7 +401,13 @@ console.log(err);
    AUTO REFRESH
 =========================== */
 
-setInterval(loadDashboard,30000);
+setInterval(function(){
+
+loadDashboard();
+
+loadWallet();
+
+},30000);
 
 /* ===========================
    LOGOUT
@@ -364,6 +429,8 @@ location.href="login.html";
 window.onload=function(){
 
 loadDashboard();
+
+loadWallet();
 
 };
 
@@ -392,19 +459,21 @@ this.style.transform="scale(1)";
    LOGOUT BUTTON
 =========================== */
 
-document.querySelector(".logout").addEventListener("mouseenter",function(){
+document.querySelector(".logout")
+.addEventListener("mouseenter",function(){
 
 this.style.transform="scale(1.03)";
 
 });
 
-document.querySelector(".logout").addEventListener("mouseleave",function(){
+document.querySelector(".logout")
+.addEventListener("mouseleave",function(){
 
 this.style.transform="scale(1)";
 
 });
 
-console.log("Dashboard Loaded Successfully");
+console.log("Dashboard Loaded");
 
 </script>
 
