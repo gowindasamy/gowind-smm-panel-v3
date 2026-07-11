@@ -1202,6 +1202,27 @@ app.get("/api/providers/sync", async (req, res) => {
 
 });
 /* ===========================
+   AUTO SYNC EVERY 1 MINUTE
+=========================== */
+
+setInterval(async () => {
+
+    try {
+
+        await axios.get(
+            "https://gowind-smm-panel-v3.onrender.com/api/providers/sync"
+        );
+
+        console.log("Orders Synced");
+
+    } catch (err) {
+
+        console.log(err.message);
+
+    }
+
+}, 60000);
+/* ===========================
    ADMIN DASHBOARD
 =========================== */
 
