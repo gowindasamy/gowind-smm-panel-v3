@@ -122,11 +122,7 @@ cursor:pointer;
 
 <body>
 
-<header>
-
-User Dashboard
-
-</header>
+<h2 id="siteName">Loading...</h2>
 
 <div class="container">
 
@@ -278,12 +274,26 @@ location.href="login.html";
 
 }
 
+async function loadSiteName(){
+
+const response = await fetch(API + "/api/settings");
+
+const data = await response.json();
+
+if(data.success){
+
+document.getElementById("siteName").innerHTML =
+data.settings.site_name;
+
+}
+
+  }
 /* ===========================
    WINDOW LOAD
 =========================== */
 
 window.onload=function(){
-
+loadSiteName();
 loadWallet();
 
 };
