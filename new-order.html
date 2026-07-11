@@ -4,7 +4,9 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0">
 
 <title>New Order</title>
 
@@ -18,15 +20,17 @@ font-family:Arial,sans-serif;
 }
 
 body{
+
 background:#0f172a;
 color:white;
+
 }
 
 .container{
 
 width:450px;
 max-width:95%;
-margin:40px auto;
+margin:35px auto;
 background:#1e293b;
 padding:20px;
 border-radius:10px;
@@ -34,8 +38,39 @@ border-radius:10px;
 }
 
 h2{
+
 text-align:center;
 margin-bottom:20px;
+
+}
+
+#walletBox{
+
+background:#22c55e;
+padding:12px;
+border-radius:8px;
+text-align:center;
+font-size:18px;
+font-weight:bold;
+margin-bottom:15px;
+
+}
+
+#serviceInfo{
+
+background:#111827;
+padding:12px;
+border-radius:8px;
+margin-bottom:15px;
+line-height:1.8;
+
+}
+
+#serviceInfo span{
+
+color:#22c55e;
+font-weight:bold;
+
 }
 
 select,
@@ -46,6 +81,7 @@ padding:12px;
 margin-bottom:15px;
 border:none;
 border-radius:6px;
+font-size:16px;
 
 }
 
@@ -59,6 +95,12 @@ border:none;
 border-radius:6px;
 cursor:pointer;
 font-size:16px;
+
+}
+
+button:hover{
+
+background:#16a34a;
 
 }
 
@@ -78,12 +120,67 @@ font-weight:bold;
 
 <div class="container">
 
-<h2>🛒 Place New Order</h2>
+<h2>
+
+🛒 Place New Order
+
+</h2>
+
+<div id="walletBox">
+
+💰 Wallet Balance :
+<span id="walletBalance">
+
+₹0.00
+
+</span>
+
+</div>
+
+<div id="serviceInfo">
+
+📏 Min :
+<span id="min">
+
+0
+
+</span>
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+📈 Max :
+<span id="max">
+
+0
+
+</span>
+
+<br><br>
+
+💵 Rate :
+₹<span id="rate">
+
+0
+
+</span>/1000
+
+<br><br>
+
+🧮 Charge :
+₹<span id="charge">
+
+0.00
+
+</span>
+
+</div>
 
 <select id="service">
 
 <option>
+
 Loading Services...
+
 </option>
 
 </select>
@@ -91,15 +188,14 @@ Loading Services...
 <input
 type="text"
 id="link"
-placeholder="Instagram / YouTube Link">
+placeholder="Enter Link">
 
 <input
 type="number"
 id="quantity"
 placeholder="Quantity">
 
-<button
-onclick="placeOrder()">
+<button onclick="placeOrder()">
 
 🚀 Place Order
 
@@ -114,7 +210,48 @@ const API =
 
 const USER =
 JSON.parse(localStorage.getItem("user"));
+
+let SERVICES = [];
   /* ===========================
+   LOGIN CHECK
+=========================== */
+
+if(!localStorage.getItem("token")){
+
+location.href="login.html";
+
+}
+
+/* ===========================
+   LOAD WALLET
+=========================== */
+
+async function loadWallet(){
+
+try{
+
+const response=await fetch(
+API+"/api/wallet/"+USER.id
+);
+
+const data=await response.json();
+
+if(data.success){
+
+document.getElementById("walletBalance").innerHTML=
+"₹"+Number(data.wallet).toFixed(2);
+
+}
+
+}catch(err){
+
+console.log(err);
+
+}
+
+}
+
+/* ===========================
    LOAD SERVICES
 =========================== */
 
@@ -122,42 +259,38 @@ async function loadServices(){
 
 try{
 
-const response = await fetch(
-API + "/api/services"
+const response=await fetch(
+API+"/api/services"
 );
 
-const data = await response.json();
+const data=await response.json();
 
-const service =
+SERVICES=data.services;
+
+const service=
 document.getElementById("service");
 
-service.innerHTML = "";
+service.innerHTML="";
 
-if(data.services.length===0){
+SERVICES.forEach(item=>{
 
-service.innerHTML =
-"<option>No Services Available</option>";
+service.innerHTML+=`
 
-return;
-
-}
-
-data.services.forEach(item=>{
-
-service.innerHTML +=
-
-`<option value="${item.id}">
+<option value="${item.id}">
 
 ${item.name}
-(Rate ₹${item.rate}/1000)
 
-</option>`;
+</option>
+
+`;
 
 });
 
+updateServiceInfo();
+
 }catch(err){
 
-document.getElementById("result").innerHTML =
+document.getElementById("result").innerHTML=
 err.message;
 
 }
@@ -165,10 +298,85 @@ err.message;
 }
 
 /* ===========================
-   PAGE LOAD
+   UPDATE SERVICE INFO
 =========================== */
 
-loadServices();
+function updateServiceInfo(){
+
+const id=
+Number(document.getElementById("service").value);
+
+const item=
+SERVICES.find(x=>x.id===id);
+
+if(!item)return;
+
+document.getElementById("min").innerHTML=
+item.min;
+
+document.getElementById("max").innerHTML=
+item.max;
+
+document.getElementById("rate").innerHTML=
+item.rate;
+
+if(item.name.toLowerCase().includes("instagram")){
+
+document.getElementById("link").placeholder=
+"Enter Instagram Link";
+
+}else if(item.name.toLowerCase().includes("youtube")){
+
+document.getElementById("link").placeholder=
+"Enter YouTube Link";
+
+}else{
+
+document.getElementById("link").placeholder=
+"Enter Service Link";
+
+}
+
+calculateCharge();
+
+}
+
+/* ===========================
+   CALCULATE CHARGE
+=========================== */
+
+function calculateCharge(){
+
+const id=
+Number(document.getElementById("service").value);
+
+const qty=
+Number(document.getElementById("quantity").value);
+
+const item=
+SERVICES.find(x=>x.id===id);
+
+if(!item||!qty){
+
+document.getElementById("charge").innerHTML="0.00";
+
+return;
+
+}
+
+const charge=
+(Number(item.rate)*qty)/1000;
+
+document.getElementById("charge").innerHTML=
+charge.toFixed(2);
+
+}
+
+document.getElementById("service")
+.addEventListener("change",updateServiceInfo);
+
+document.getElementById("quantity")
+.addEventListener("input",calculateCharge);
   /* ===========================
    PLACE ORDER
 =========================== */
@@ -179,16 +387,16 @@ try{
 
 if(!USER){
 
-document.getElementById("result").innerHTML =
+document.getElementById("result").innerHTML=
 "Please Login First";
 
 return;
 
 }
 
-const response = await fetch(
+const response=await fetch(
 
-API + "/api/orders",
+API+"/api/orders",
 
 {
 
@@ -219,9 +427,9 @@ document.getElementById("quantity").value
 
 );
 
-const data = await response.json();
+const data=await response.json();
 
-document.getElementById("result").innerHTML =
+document.getElementById("result").innerHTML=
 
 data.message ||
 
@@ -235,33 +443,36 @@ document.getElementById("link").value="";
 
 document.getElementById("quantity").value="";
 
+calculateCharge();
+
+loadWallet();
+
 }
 
 }catch(err){
 
-document.getElementById("result").innerHTML =
+document.getElementById("result").innerHTML=
 err.message;
 
 }
 
 }
-  /* ===========================
-   LOGIN CHECK
+
+/* ===========================
+   AUTO REFRESH
 =========================== */
 
-if (!localStorage.getItem("token")) {
-
-    location.href = "login.html";
-
-}
+setInterval(loadWallet,30000);
 
 /* ===========================
    WINDOW LOAD
 =========================== */
 
-window.onload = function(){
+window.onload=function(){
 
-    loadServices();
+loadWallet();
+
+loadServices();
 
 };
 
@@ -269,16 +480,18 @@ window.onload = function(){
    BUTTON ANIMATION
 =========================== */
 
-document.querySelector("button").addEventListener("mouseenter",function(){
+document.querySelector("button")
+.addEventListener("mouseenter",function(){
 
-    this.style.transform="scale(1.05)";
-    this.style.transition=".2s";
+this.style.transform="scale(1.05)";
+this.style.transition=".2s";
 
 });
 
-document.querySelector("button").addEventListener("mouseleave",function(){
+document.querySelector("button")
+.addEventListener("mouseleave",function(){
 
-    this.style.transform="scale(1)";
+this.style.transform="scale(1)";
 
 });
 
@@ -288,13 +501,15 @@ document.querySelector("button").addEventListener("mouseleave",function(){
 
 document.addEventListener("keydown",function(e){
 
-    if(e.key==="Enter"){
+if(e.key==="Enter"){
 
-        placeOrder();
+placeOrder();
 
-    }
+}
 
 });
+
+console.log("New Order Page Ready");
 
 </script>
 
