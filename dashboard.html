@@ -1,55 +1,340 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Gowind SMM Panel</title>
-    <link rel="stylesheet" href="style.css">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Dashboard</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0f172a;
+color:#fff;
+}
+
+header{
+background:#1e293b;
+padding:20px;
+text-align:center;
+font-size:24px;
+font-weight:bold;
+}
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:20px;
+}
+
+.cards{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+
+}
+
+.card{
+
+background:#1e293b;
+padding:20px;
+border-radius:12px;
+text-align:center;
+box-shadow:0 5px 10px rgba(0,0,0,.3);
+
+}
+
+.card h2{
+
+font-size:16px;
+margin-bottom:10px;
+
+}
+
+.card h1{
+
+font-size:34px;
+color:#22c55e;
+
+}
+
+.menu{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:15px;
+margin-top:30px;
+
+}
+
+.menu button{
+
+padding:15px;
+font-size:16px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+color:#fff;
+
+}
+
+.orders{
+background:#2563eb;
+}
+
+.services{
+background:#16a34a;
+}
+
+.providers{
+background:#9333ea;
+}
+
+.users{
+background:#f59e0b;
+}
+
+.wallet{
+background:#dc2626;
+}
+
+.settings{
+background:#475569;
+}
+
+</style>
+
 </head>
+
 <body>
 
 <header>
-    <h1>📊 Dashboard</h1>
-    <p>Welcome, Admin</p>
+
+📊 Gowind SMM Panel Dashboard
+
 </header>
 
-<main>
+<div class="container">
 
-    <h2>Overview</h2>
+<div class="cards">
 
-    <div class="card">
-        <h3>💰 Wallet</h3>
-        <p>₹0.00</p>
-    </div>
+<div class="card">
+<h2>Total Users</h2>
+<h1 id="users">0</h1>
+</div>
 
-    <div class="card">
-        <h3>📦 Total Orders</h3>
-        <p>0</p>
-    </div>
+<div class="card">
+<h2>Total Orders</h2>
+<h1 id="orders">0</h1>
+</div>
 
-    <div class="card">
-        <h3>⏳ Pending</h3>
-        <p>0</p>
-    </div>
+<div class="card">
+<h2>Total Providers</h2>
+<h1 id="providers">0</h1>
+</div>
 
-    <div class="card">
-        <h3>✅ Completed</h3>
-        <p>0</p>
-    </div>
+<div class="card">
+<h2>Total Services</h2>
+<h1 id="services">0</h1>
+</div>
 
-    <br>
+<div class="card">
+<h2>Total Revenue</h2>
+<h1 id="revenue">₹0</h1>
+</div>
 
-    <button onclick="location.href='orders.html'">New Order</button>
-    <button onclick="location.href='services.html'">Services</button>
-    <button onclick="location.href='settings.html'">Settings</button>
+</div>
 
-    <br><br>
+<div class="menu">
 
-    <button onclick="location.href='login.html'">Logout</button>
+<button class="orders"
+onclick="location.href='orders.html'">
+📦 Orders
+</button>
 
-</main>
+<button class="services"
+onclick="location.href='services.html'">
+🛒 Services
+</button>
 
-<script src="script.js"></script>
+<button class="providers"
+onclick="location.href='providers.html'">
+🌐 Providers
+</button>
+
+<button class="users"
+onclick="location.href='users.html'">
+👥 Users
+</button>
+
+<button class="wallet"
+onclick="location.href='wallet.html'">
+💰 Wallet
+</button>
+
+<button class="settings"
+onclick="location.href='settings.html'">
+⚙ Settings
+</button>
+<button
+style="background:#ef4444"
+onclick="logout()">
+
+🚪 Logout
+
+</button>
+</div>
+
+<script>
+
+const API =
+"https://gowind-smm-panel-v3.onrender.com";
+   /* ===========================
+   LOAD DASHBOARD
+=========================== */
+
+async function loadDashboard(){
+
+try{
+
+const response = await fetch(
+API + "/api/admin/dashboard"
+);
+
+const data = await response.json();
+
+if(!data.success){
+
+document.getElementById("users").innerHTML="-";
+document.getElementById("orders").innerHTML="-";
+document.getElementById("providers").innerHTML="-";
+document.getElementById("services").innerHTML="-";
+document.getElementById("revenue").innerHTML="-";
+
+return;
+
+}
+
+document.getElementById("users").innerHTML =
+data.dashboard.users;
+
+document.getElementById("orders").innerHTML =
+data.dashboard.orders;
+
+document.getElementById("providers").innerHTML =
+data.dashboard.providers;
+
+document.getElementById("services").innerHTML =
+data.dashboard.services;
+
+document.getElementById("revenue").innerHTML =
+"₹ " + data.dashboard.revenue;
+
+}catch(err){
+
+console.log(err);
+
+document.getElementById("users").innerHTML="Error";
+
+}
+
+    }
+    /* ===========================
+   PAGE LOAD
+=========================== */
+
+loadDashboard();
+
+/* ===========================
+   AUTO REFRESH
+=========================== */
+
+setInterval(loadDashboard,30000);
+
+/* ===========================
+   LOGOUT
+=========================== */
+
+function logout(){
+
+localStorage.removeItem("token");
+localStorage.removeItem("user");
+
+location.href="login.html";
+
+}
+
+/* ===========================
+   WELCOME
+=========================== */
+
+const user =
+JSON.parse(localStorage.getItem("user"));
+
+if(user){
+
+const title =
+document.querySelector("header");
+
+title.innerHTML =
+"📊 Welcome " +
+user.username +
+" - Gowind SMM Panel Dashboard";
+
+    }
+ /* ===========================
+   AUTH CHECK
+=========================== */
+
+if(!localStorage.getItem("token")){
+
+location.href="login.html";
+
+}
+
+/* ===========================
+   BUTTON ANIMATION
+=========================== */
+
+document.querySelectorAll("button").forEach(btn=>{
+
+btn.addEventListener("mouseenter",()=>{
+
+btn.style.transform="scale(1.05)";
+btn.style.transition="0.2s";
+
+});
+
+btn.addEventListener("mouseleave",()=>{
+
+btn.style.transform="scale(1)";
+
+});
+
+});
+
+/* ===========================
+   WINDOW LOAD
+=========================== */
+
+window.onload=function(){
+
+loadDashboard();
+
+};
+
+</script>
 
 </body>
-</html>
+
+</html>   
