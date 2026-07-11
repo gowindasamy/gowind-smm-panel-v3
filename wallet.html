@@ -1,45 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wallet - Gowind SMM Panel</title>
-    <link rel="stylesheet" href="style.css">
+
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Wallet</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0f172a;
+color:white;
+}
+
+.container{
+
+width:420px;
+max-width:95%;
+margin:40px auto;
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+
+}
+
+h2{
+
+text-align:center;
+margin-bottom:20px;
+
+}
+
+.card{
+
+background:#334155;
+padding:25px;
+border-radius:10px;
+text-align:center;
+margin-bottom:20px;
+
+}
+
+.card p{
+
+font-size:18px;
+margin-bottom:10px;
+
+}
+
+.balance{
+
+font-size:36px;
+font-weight:bold;
+color:#22c55e;
+
+}
+
+button{
+
+width:100%;
+padding:12px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+font-size:16px;
+background:#2563eb;
+color:white;
+
+}
+
+#result{
+
+margin-top:15px;
+text-align:center;
+font-weight:bold;
+
+}
+
+</style>
+
 </head>
+
 <body>
 
-<header>
-    <h1>💰 Wallet</h1>
-</header>
+<div class="container">
 
-<main>
+<h2>💰 My Wallet</h2>
 
 <div class="card">
-    <h3>Current Balance</h3>
-    <h2>₹0.00</h2>
+
+<p>Current Balance</p>
+
+<div
+class="balance"
+id="balance">
+
+₹0.00
+
 </div>
 
-<div class="card">
-    <h3>Recent Transactions</h3>
-
-    <p>+ ₹500.00 - Wallet Added</p>
-    <hr>
-
-    <p>- ₹120.00 - Instagram Followers</p>
-    <hr>
-
-    <p>- ₹80.00 - YouTube Views</p>
 </div>
 
-<br>
+<button
+onclick="location.href='transactions.html'">
 
-<button onclick="location.href='dashboard.html'">
-🏠 Dashboard
+📜 Transaction History
+
 </button>
 
-</main>
+<div id="result"></div>
 
-<script src="script.js"></script>
+<script>
+
+const API =
+"https://gowind-smm-panel-v3.onrender.com";
+
+const USER =
+JSON.parse(localStorage.getItem("user"));
+    /* ===========================
+   LOAD WALLET
+=========================== */
+
+async function loadWallet(){
+
+try{
+
+if(!USER){
+
+location.href="login.html";
+return;
+
+}
+
+const response = await fetch(
+API + "/api/wallet/" + USER.id
+);
+
+const data = await response.json();
+
+if(data.success){
+
+document.getElementById("balance").innerHTML =
+"₹" + Number(data.wallet).toFixed(2);
+
+}else{
+
+document.getElementById("result").innerHTML =
+data.message || "Unable to load wallet";
+
+}
+
+}catch(err){
+
+document.getElementById("result").innerHTML =
+err.message;
+
+}
+
+}
+    /* ===========================
+   LOGIN CHECK
+=========================== */
+
+if(!localStorage.getItem("token")){
+
+location.href="login.html";
+
+}
+
+/* ===========================
+   AUTO REFRESH
+=========================== */
+
+setInterval(loadWallet,30000);
+
+/* ===========================
+   WINDOW LOAD
+=========================== */
+
+window.onload=function(){
+
+loadWallet();
+
+};
+    /* ===========================
+   BUTTON ANIMATION
+=========================== */
+
+document.querySelector("button").addEventListener("mouseenter",function(){
+
+    this.style.transform="scale(1.05)";
+    this.style.transition=".2s";
+
+});
+
+document.querySelector("button").addEventListener("mouseleave",function(){
+
+    this.style.transform="scale(1)";
+
+});
+
+/* ===========================
+   PAGE READY
+=========================== */
+
+console.log("Wallet Page Loaded");
+
+</script>
 
 </body>
+
 </html>
