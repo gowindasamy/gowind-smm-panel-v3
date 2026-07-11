@@ -420,29 +420,35 @@ const keyword=document
 .toLowerCase();
 
 const filtered=allOrders.filter(order=>
+const filtered = allOrders.filter(order =>
 
 String(order.id).includes(keyword)
 
 ||
 
-String(order.user_id)
+String(order.username || "")
 .toLowerCase()
 .includes(keyword)
 
 ||
 
-String(order.service_id)
+String(order.service_name || "")
 .toLowerCase()
 .includes(keyword)
 
 ||
 
-String(order.status)
+String(order.provider_name || "")
+.toLowerCase()
+.includes(keyword)
+
+||
+
+String(order.status || "")
 .toLowerCase()
 .includes(keyword)
 
 );
-
 renderOrders(filtered);
 
   }
