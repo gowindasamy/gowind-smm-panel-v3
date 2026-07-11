@@ -99,7 +99,10 @@ status BOOLEAN DEFAULT TRUE,
 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 `);
-
+await db.query(`
+ALTER TABLE orders
+ADD COLUMN IF NOT EXISTS provider_order_id BIGINT;
+`);
 await db.query(`
 CREATE TABLE IF NOT EXISTS services(
 id SERIAL PRIMARY KEY,
