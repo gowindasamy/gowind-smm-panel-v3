@@ -4,8 +4,9 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport"
-content="width=device-width,initial-scale=1.0">
+content="width=device-width, initial-scale=1.0">
 
 <title>Login</title>
 
@@ -28,43 +29,62 @@ height:100vh;
 
 }
 
-.box{
+.container{
 
+width:400px;
+max-width:95%;
 background:#1e293b;
 padding:30px;
-width:350px;
-border-radius:10px;
-color:white;
+border-radius:12px;
+box-shadow:0 0 20px rgba(0,0,0,.4);
 
 }
 
 h2{
 
 text-align:center;
-margin-bottom:20px;
+color:white;
+margin-bottom:25px;
+
+}
+
+label{
+
+display:block;
+color:white;
+margin-bottom:8px;
+font-weight:bold;
 
 }
 
 input{
 
 width:100%;
-padding:12px;
-margin-bottom:15px;
+padding:13px;
+margin-bottom:18px;
 border:none;
-border-radius:6px;
+border-radius:8px;
+font-size:16px;
+outline:none;
 
 }
 
 button{
 
 width:100%;
-padding:12px;
-background:#2563eb;
-border:none;
-border-radius:6px;
+padding:14px;
+background:#22c55e;
 color:white;
-font-size:16px;
+border:none;
+border-radius:8px;
+font-size:17px;
 cursor:pointer;
+
+}
+
+button:hover{
+
+background:#16a34a;
 
 }
 
@@ -72,6 +92,17 @@ cursor:pointer;
 
 margin-top:15px;
 text-align:center;
+font-weight:bold;
+color:#ef4444;
+
+}
+
+.version{
+
+text-align:center;
+margin-top:20px;
+color:#94a3b8;
+font-size:14px;
 
 }
 
@@ -81,19 +112,35 @@ text-align:center;
 
 <body>
 
-<div class="box">
+<div class="container">
 
-<h2>🔐 Admin Login</h2>
+<h2>
+
+Login
+
+</h2>
+
+<label>
+
+Username
+
+</label>
 
 <input
 type="text"
 id="username"
-placeholder="Username">
+placeholder="Enter Username">
+
+<label>
+
+Password
+
+</label>
 
 <input
 type="password"
 id="password"
-placeholder="Password">
+placeholder="Enter Password">
 
 <button
 onclick="login()">
@@ -103,6 +150,12 @@ Login
 </button>
 
 <div id="result"></div>
+
+<div class="version">
+
+Gowind SMM Panel v3.1
+
+</div>
 
 <script>
 
@@ -116,24 +169,24 @@ async function login(){
 
 try{
 
-const username =
-document.getElementById("username").value;
+const username=
+document.getElementById("username").value.trim();
 
-const password =
+const password=
 document.getElementById("password").value;
 
-if(!username || !password){
+if(username==="" || password===""){
 
-document.getElementById("result").innerHTML =
+document.getElementById("result").innerHTML=
 "Please enter username and password";
 
 return;
 
 }
 
-const response = await fetch(
+const response=await fetch(
 
-API + "/api/login",
+API+"/api/login",
 
 {
 
@@ -145,8 +198,9 @@ headers:{
 
 body:JSON.stringify({
 
-username,
-password
+username:username,
+
+password:password
 
 })
 
@@ -154,44 +208,77 @@ password
 
 );
 
-const data = await response.json();
+const data=await response.json();
 
-if(data.success){
+if(!data.success){
+
+document.getElementById("result").innerHTML=
+data.message || data.error || "Login Failed";
+
+return;
+
+}
+
+/* SAVE LOGIN */
 
 localStorage.setItem(
+
 "token",
+
 data.token
+
 );
 
 localStorage.setItem(
+
 "user",
+
 JSON.stringify(data.user)
+
 );
 
-document.getElementById("result").innerHTML =
-"✅ Login Successful";
+/* REDIRECT */
 
-setTimeout(()=>{
+if(data.user.role==="admin"){
 
-location.href="dashboard.html";
-
-},1000);
+location.href="admindashboard.html";
 
 }else{
 
-document.getElementById("result").innerHTML =
-JSON.stringify(data);
+location.href="userdashboard.html";
+
 }
 
 }catch(err){
 
-document.getElementById("result").innerHTML =
+document.getElementById("result").innerHTML=
 err.message;
 
 }
 
-    }
-    /* ===========================
+   }
+   /* ===========================
+   ALREADY LOGGED IN
+=========================== */
+
+const savedUser =
+JSON.parse(localStorage.getItem("user"));
+
+if(localStorage.getItem("token") && savedUser){
+
+if(savedUser.role==="admin"){
+
+location.href="admindashboard.html";
+
+}else{
+
+location.href="userdashboard.html";
+
+}
+
+}
+
+/* ===========================
    ENTER KEY LOGIN
 =========================== */
 
@@ -206,44 +293,25 @@ login();
 });
 
 /* ===========================
-   AUTO LOGIN CHECK
-=========================== */
-
-if(localStorage.getItem("token")){
-
-location.href="dashboard.html";
-
-}
-
-/* ===========================
-   AUTO FOCUS
-=========================== */
-
-window.onload=function(){
-
-document.getElementById("username").focus();
-
-};
-
-/* ===========================
    BUTTON ANIMATION
 =========================== */
 
-document.querySelector("button")
-.addEventListener("mouseenter",function(){
+const btn=document.querySelector("button");
 
-this.style.transform="scale(1.05)";
-this.style.transition=".2s";
+btn.addEventListener("mouseenter",function(){
+
+btn.style.transform="scale(1.03)";
+btn.style.transition=".2s";
+
+});
+
+btn.addEventListener("mouseleave",function(){
+
+btn.style.transform="scale(1)";
 
 });
 
-document.querySelector("button")
-.addEventListener("mouseleave",function(){
-
-this.style.transform="scale(1)";
-
-});
-    /* ===========================
+/* ===========================
    PAGE READY
 =========================== */
 
