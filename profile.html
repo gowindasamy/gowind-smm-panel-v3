@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Profile</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0f172a;
+color:white;
+}
+
+.container{
+
+width:420px;
+max-width:95%;
+margin:40px auto;
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+
+}
+
+h2{
+
+text-align:center;
+margin-bottom:20px;
+
+}
+
+.card{
+
+background:#334155;
+padding:20px;
+border-radius:8px;
+
+}
+
+.row{
+
+margin-bottom:15px;
+
+}
+
+.label{
+
+font-weight:bold;
+color:#cbd5e1;
+
+}
+
+.value{
+
+font-size:18px;
+margin-top:5px;
+
+}
+
+button{
+
+width:100%;
+padding:12px;
+margin-top:20px;
+background:#ef4444;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
+font-size:16px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>👤 My Profile</h2>
+
+<div class="card">
+
+<div class="row">
+
+<div class="label">
+
+Username
+
+</div>
+
+<div
+class="value"
+id="username">
+
+Loading...
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="label">
+
+Role
+
+</div>
+
+<div
+class="value"
+id="role">
+
+Loading...
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="label">
+
+Wallet Balance
+
+</div>
+
+<div
+class="value"
+id="wallet">
+
+₹0.00
+
+</div>
+
+</div>
+
+</div>
+
+<button onclick="logout()">
+
+🚪 Logout
+
+</button>
+
+<script>
+
+const API =
+"https://gowind-smm-panel-v3.onrender.com";
+
+const USER =
+JSON.parse(localStorage.getItem("user"));
+  /* ===========================
+   LOAD PROFILE
+=========================== */
+
+async function loadProfile(){
+
+try{
+
+if(!USER){
+
+location.href="login.html";
+return;
+
+}
+
+document.getElementById("username").innerHTML =
+USER.username;
+
+document.getElementById("role").innerHTML =
+USER.role;
+
+const response = await fetch(
+API + "/api/wallet/" + USER.id
+);
+
+const data = await response.json();
+
+if(data.success){
+
+document.getElementById("wallet").innerHTML =
+"₹" + Number(data.wallet).toFixed(2);
+
+}else{
+
+document.getElementById("wallet").innerHTML =
+"₹0.00";
+
+}
+
+}catch(err){
+
+console.log(err.message);
+
+}
+
+  }
+  /* ===========================
+   LOGOUT
+=========================== */
+
+function logout(){
+
+localStorage.removeItem("token");
+localStorage.removeItem("user");
+
+location.href="login.html";
+
+}
+
+/* ===========================
+   LOGIN CHECK
+=========================== */
+
+if(!localStorage.getItem("token")){
+
+location.href="login.html";
+
+}
+
+/* ===========================
+   AUTO REFRESH
+=========================== */
+
+setInterval(loadProfile,30000);
+
+/* ===========================
+   WINDOW LOAD
+=========================== */
+
+window.onload=function(){
+
+loadProfile();
+
+};
+  /* ===========================
+   BUTTON ANIMATION
+=========================== */
+
+document.querySelector("button").addEventListener("mouseenter",function(){
+
+    this.style.transform="scale(1.05)";
+    this.style.transition=".2s";
+
+});
+
+document.querySelector("button").addEventListener("mouseleave",function(){
+
+    this.style.transform="scale(1)";
+
+});
+
+/* ===========================
+   PAGE READY
+=========================== */
+
+console.log("Profile Page Loaded");
+
+</script>
+
+</body>
+
+</html>
