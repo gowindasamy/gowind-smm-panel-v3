@@ -10,8 +10,6 @@ content="width=device-width, initial-scale=1.0">
 
 <title>Gowind SMM Panel</title>
 
-<link rel="stylesheet" href="style.css">
-
 <style>
 
 *{
@@ -38,16 +36,16 @@ width:420px;
 max-width:95%;
 background:#1e293b;
 padding:35px;
-border-radius:12px;
+border-radius:15px;
 text-align:center;
-box-shadow:0 0 20px rgba(0,0,0,.4);
+box-shadow:0 10px 25px rgba(0,0,0,.35);
 
 }
 
 .logo{
 
 font-size:60px;
-margin-bottom:10px;
+margin-bottom:15px;
 
 }
 
@@ -66,8 +64,8 @@ margin-bottom:20px;
 
 p{
 
-margin-bottom:25px;
 line-height:1.6;
+margin-bottom:25px;
 
 }
 
@@ -75,18 +73,21 @@ button{
 
 width:100%;
 padding:14px;
+border:none;
+border-radius:10px;
+font-size:18px;
+font-weight:bold;
 background:#2563eb;
 color:white;
-border:none;
-border-radius:8px;
-font-size:18px;
 cursor:pointer;
+transition:.2s;
 
 }
 
 button:hover{
 
 background:#1d4ed8;
+transform:scale(1.03);
 
 }
 
@@ -112,7 +113,7 @@ color:#94a3b8;
 
 </div>
 
-<h1>
+<h1 id="siteName">
 
 Gowind SMM Panel
 
@@ -148,17 +149,84 @@ Social Media Marketing Panel
 
 <script>
 
+const API =
+"https://gowind-smm-panel-v3.onrender.com";
+
+/* ===========================
+   LOAD SITE NAME
+=========================== */
+
+async function loadSiteName(){
+
+try{
+
+const response=await fetch(
+API+"/api/settings"
+);
+
+const data=await response.json();
+
+if(data.success){
+
+document.getElementById("siteName").innerHTML=
+
+data.settings.site_name || "Gowind SMM Panel";
+
+}
+
+}catch(err){
+
+console.log(err);
+
+}
+
+}
+
+/* ===========================
+   LOGIN BUTTON
+=========================== */
+
 function openPanel(){
 
 location.href="login.html";
 
 }
 
-if(localStorage.getItem("token")){
+/* ===========================
+   AUTO LOGIN
+=========================== */
 
-location.href="dashboard.html";
+const token=
+
+localStorage.getItem("token");
+
+const user=
+
+JSON.parse(localStorage.getItem("user"));
+
+if(token && user){
+
+if(user.role==="admin"){
+
+location.href="admindashboard.html";
+
+}else{
+
+location.href="userdashboard.html";
 
 }
+
+}
+
+/* ===========================
+   WINDOW LOAD
+=========================== */
+
+window.onload=function(){
+
+loadSiteName();
+
+};
 
 </script>
 
