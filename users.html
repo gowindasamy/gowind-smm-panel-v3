@@ -214,11 +214,7 @@ background:#ef4444;
 
 <div class="header">
 
-<h2>
-
-👥 Users Management
-
-</h2>
+<h2 id="siteName">Loading...</h2>
 
 </div>
 
@@ -751,6 +747,22 @@ selectedUserId=null;
 
 }
 
+async function loadSiteName(){
+
+const response=await fetch(
+API+"/api/settings"
+);
+
+const data=await response.json();
+
+if(data.success){
+
+document.getElementById("siteName").innerHTML=
+data.settings.site_name;
+
+}
+
+  }
 /* ===========================
    SAVE BALANCE
 =========================== */
@@ -875,7 +887,7 @@ closeBalanceModal();
 =========================== */
 
 window.onload=function(){
-
+loadSiteName();
 loadUsers();
 
 };
