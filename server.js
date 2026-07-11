@@ -324,17 +324,16 @@ app.post("/api/services", async (req, res) => {
 
         await db.query(
             `INSERT INTO services
-            (
-                provider_id,
-                provider_service_id,
-                service_id,
-                name,
-                category,
-                rate,
-                min,
-                max
-            )
-            VALUES($1,$2,$3,$4,$5,$6,$7,$8)`,
+(
+provider_id,
+provider_service_id,
+name,
+category,
+rate,
+min,
+max
+)
+VALUES($1,$2,$3,$4,$5,$6,$7)`,
             [
                 provider_id,
                 provider_service_id,
