@@ -369,16 +369,16 @@ app.get("/api/services", async (req, res) => {
 
     try {
 
-        const result = await db.query(
-            "SELECT
-s.*,
-p.name AS provider_name
+        const result = await db.query(`
+SELECT
+    s.*,
+    p.name AS provider_name
 FROM services s
 LEFT JOIN providers p
 ON s.provider_id = p.id
 WHERE s.status = TRUE
-ORDER BY s.id ASC"
-        );
+ORDER BY s.id ASC
+`);
 
         res.json({
             success: true,
