@@ -4,7 +4,8 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>My Orders</title>
 
@@ -19,88 +20,126 @@ font-family:Arial,sans-serif;
 
 body{
 background:#0f172a;
-color:white;
+color:#fff;
 }
 
 header{
+
 background:#1e293b;
 padding:20px;
 text-align:center;
 font-size:24px;
 font-weight:bold;
+box-shadow:0 2px 10px rgba(0,0,0,.4);
+
 }
 
 .container{
-width:95%;
+
+width:100%;
+max-width:100%;
+padding:15px;
 margin:auto;
-padding:20px;
+
 }
 
 input{
 
 width:100%;
 padding:12px;
-margin-bottom:20px;
 border:none;
-border-radius:6px;
+border-radius:8px;
+font-size:16px;
+margin-bottom:15px;
+
+}
+
+.table-container{
+
+width:100%;
+overflow-x:auto;
+-webkit-overflow-scrolling:touch;
+margin-top:10px;
 
 }
 
 table{
 
 width:100%;
+min-width:750px;
 border-collapse:collapse;
+background:#1e293b;
+border-radius:8px;
+overflow:hidden;
 
 }
 
 th{
 
 background:#334155;
-padding:12px;
+padding:14px;
+text-align:center;
 
 }
 
 td{
 
-padding:10px;
+padding:12px;
 text-align:center;
 border-bottom:1px solid #475569;
+white-space:nowrap;
 
 }
 
 .pending{
+
 background:#f59e0b;
 padding:5px 10px;
 border-radius:5px;
+color:#000;
+
 }
 
 .processing{
+
 background:#3b82f6;
 padding:5px 10px;
 border-radius:5px;
+
 }
 
 .completed{
+
 background:#22c55e;
 padding:5px 10px;
 border-radius:5px;
+
 }
 
 .cancelled{
+
 background:#ef4444;
 padding:5px 10px;
 border-radius:5px;
+
 }
 
 button{
 
+margin-top:15px;
 padding:12px 20px;
 background:#2563eb;
 color:white;
 border:none;
-border-radius:6px;
+border-radius:8px;
 cursor:pointer;
-margin-top:20px;
+font-size:15px;
+
+}
+
+button:hover{
+
+background:#1d4ed8;
 
 }
 
@@ -124,6 +163,8 @@ id="search"
 placeholder="Search Order..."
 onkeyup="searchOrders()">
 
+<div class="table-container">
+
 <table>
 
 <thead>
@@ -143,15 +184,25 @@ onkeyup="searchOrders()">
 
 <tbody id="ordersTable">
 
+<tr>
+
+<td colspan="6">
+
+Loading...
+
+</td>
+
+</tr>
+
 </tbody>
 
 </table>
 
-<br>
+</div>
 
 <button onclick="loadOrders()">
 
-🔄 Refresh
+Refresh
 
 </button>
 
@@ -178,9 +229,12 @@ API + "/api/orders"
 
 const data = await response.json();
 
+const table =
+document.getElementById("ordersTable");
+
 if(!data.success){
 
-document.getElementById("ordersTable").innerHTML =
+table.innerHTML =
 "<tr><td colspan='6'>No Orders Found</td></tr>";
 
 return;
@@ -189,7 +243,7 @@ return;
 
 allOrders = data.orders.filter(order=>
 
-order.user_id === USER.id
+order.user_id == USER.id
 
 );
 
@@ -197,7 +251,7 @@ renderOrders(allOrders);
 
 }catch(err){
 
-document.getElementById("ordersTable").innerHTML =
+document.getElementById("ordersTable").innerHTML=
 
 "<tr><td colspan='6'>"+err.message+"</td></tr>";
 
@@ -218,7 +272,8 @@ table.innerHTML = "";
 
 if(list.length===0){
 
-table.innerHTML =
+table.innerHTML=
+
 "<tr><td colspan='6'>No Orders Found</td></tr>";
 
 return;
@@ -227,23 +282,18 @@ return;
 
 list.forEach(order=>{
 
-let statusClass = "";
+let statusClass="pending";
 
-switch(order.status){
+if(order.status==="Processing"){
 
-case "Pending":
-statusClass="pending";
-break;
-
-case "Processing":
 statusClass="processing";
-break;
 
-case "Completed":
+}else if(order.status==="Completed"){
+
 statusClass="completed";
-break;
 
-default:
+}else if(order.status==="Cancelled"){
+
 statusClass="cancelled";
 
 }
@@ -258,12 +308,14 @@ table.innerHTML += `
 
 <td>${order.quantity}</td>
 
-<td>₹${order.charge}</td>
+<td>₹${Number(order.charge).toFixed(2)}</td>
 
 <td>
 
 <span class="${statusClass}">
+
 ${order.status}
+
 </span>
 
 </td>
@@ -282,23 +334,30 @@ ${new Date(order.created_at)
 });
 
 }
-    /* ===========================
-   SEARCH ORDERS
+
+/* ===========================
+   SEARCH
 =========================== */
 
 function searchOrders(){
 
 const keyword =
+
 document.getElementById("search")
-.value.toLowerCase();
+.value
+.toLowerCase();
 
 const filtered = allOrders.filter(order=>
 
-String(order.id).includes(keyword) ||
+String(order.id).includes(keyword)
+
+||
 
 String(order.service_id)
 .toLowerCase()
-.includes(keyword) ||
+.includes(keyword)
+
+||
 
 String(order.status)
 .toLowerCase()
@@ -308,9 +367,8 @@ String(order.status)
 
 renderOrders(filtered);
 
-}
-
-/* ===========================
+    }
+    /* ===========================
    LOGIN CHECK
 =========================== */
 
@@ -335,20 +393,45 @@ window.onload=function(){
 loadOrders();
 
 };
-    /* ===========================
+
+/* ===========================
    BUTTON ANIMATION
 =========================== */
 
-document.querySelector("button").addEventListener("mouseenter",function(){
+const btn=document.querySelector("button");
 
-    this.style.transform="scale(1.05)";
-    this.style.transition=".2s";
+btn.addEventListener("mouseenter",function(){
+
+this.style.transform="scale(1.05)";
+this.style.transition=".2s";
 
 });
 
-document.querySelector("button").addEventListener("mouseleave",function(){
+btn.addEventListener("mouseleave",function(){
 
-    this.style.transform="scale(1)";
+this.style.transform="scale(1)";
+
+});
+
+/* ===========================
+   SHORTCUT KEYS
+=========================== */
+
+document.addEventListener("keydown",function(e){
+
+if(e.ctrlKey && e.key==="r"){
+
+e.preventDefault();
+
+loadOrders();
+
+}
+
+if(e.key==="Escape"){
+
+history.back();
+
+}
 
 });
 
@@ -356,7 +439,7 @@ document.querySelector("button").addEventListener("mouseleave",function(){
    PAGE READY
 =========================== */
 
-console.log("Order History Loaded");
+console.log("Order History Ready");
 
 </script>
 
