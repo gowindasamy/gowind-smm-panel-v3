@@ -4,8 +4,9 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+content="width=device-width,initial-scale=1.0">
 
 <title>Users Management</title>
 
@@ -19,189 +20,332 @@ font-family:Arial,sans-serif;
 }
 
 body{
-background:#0f172a;
+background:#0b1120;
 color:#fff;
 }
 
 .container{
-width:100%;
-max-width:1400px;
-margin:auto;
-padding:15px;
+width:95%;
+max-width:1500px;
+margin:20px auto;
 }
 
 .header{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
 background:#1e293b;
+
 padding:20px;
-border-radius:12px;
-text-align:center;
+
+border-radius:18px;
+
 margin-bottom:20px;
-box-shadow:0 5px 15px rgba(0,0,0,.3);
+
+box-shadow:0 10px 25px rgba(0,0,0,.35);
+
 }
 
-.header h2{
+.brand{
+
+display:flex;
+align-items:center;
+gap:15px;
+
+}
+
+.logo{
+
+width:55px;
+height:55px;
+
+border-radius:14px;
+
+background:linear-gradient(135deg,#7c3aed,#2563eb);
+
+display:flex;
+justify-content:center;
+align-items:center;
+
 font-size:30px;
+
 }
 
-.search{
-width:100%;
-padding:14px;
-border:none;
-border-radius:10px;
-font-size:16px;
-margin-bottom:15px;
-outline:none;
+.brand h2{
+
+font-size:28px;
+
 }
 
 .actions{
+
 display:flex;
+
 gap:10px;
-flex-wrap:wrap;
-margin-bottom:20px;
+
 }
 
 .actions button{
-flex:1;
-min-width:150px;
-padding:13px;
+
+padding:12px 18px;
+
 border:none;
+
 border-radius:10px;
-font-size:16px;
+
 cursor:pointer;
-color:#fff;
+
+font-size:15px;
+
 font-weight:bold;
+
+color:white;
+
+transition:.2s;
+
 }
 
 .refresh{
+
 background:#7c3aed;
+
 }
 
 .register{
-background:#22c55e;
+
+background:#16a34a;
+
 }
 
-.table-container{
+.search-box{
+
+margin-bottom:20px;
+
+}
+
+.search-box input{
+
 width:100%;
-overflow-x:auto;
--webkit-overflow-scrolling:touch;
-border-radius:10px;
+
+padding:14px;
+
+border:none;
+
+border-radius:12px;
+
+font-size:16px;
+
+outline:none;
+
+background:#1e293b;
+
+color:white;
+
+}
+
+.table-box{
+
+background:#1e293b;
+
+border-radius:18px;
+
+overflow:auto;
+
+box-shadow:0 10px 25px rgba(0,0,0,.35);
+
 }
 
 table{
+
 width:100%;
-min-width:950px;
+
+min-width:1300px;
+
 border-collapse:collapse;
-background:#1e293b;
+
 }
 
 th{
+
 background:#334155;
-padding:14px;
-text-align:center;
+
+padding:16px;
+
 }
 
 td{
-padding:14px;
+
+padding:16px;
+
 text-align:center;
+
 border-bottom:1px solid #334155;
-white-space:nowrap;
+
 }
 
-.admin{
+.role-admin{
+
 background:#2563eb;
+
 padding:6px 12px;
+
 border-radius:6px;
+
 }
 
-.user{
+.role-user{
+
 background:#16a34a;
+
 padding:6px 12px;
+
 border-radius:6px;
+
 }
 
 .wallet{
-font-weight:bold;
+
 color:#22c55e;
+
+font-weight:bold;
+
+}
+
+.btn{
+
+padding:8px 12px;
+
+border:none;
+
+border-radius:8px;
+
+cursor:pointer;
+
+font-weight:bold;
+
+color:white;
+
+margin:2px;
+
 }
 
 .balance{
+
 background:#f59e0b;
-color:#fff;
-padding:8px 12px;
-border:none;
-border-radius:6px;
-cursor:pointer;
-margin-right:5px;
-font-weight:bold;
+
+}
+
+.password{
+
+background:#3b82f6;
+
 }
 
 .delete{
+
 background:#dc2626;
-color:#fff;
-padding:8px 12px;
-border:none;
-border-radius:6px;
-cursor:pointer;
-font-weight:bold;
+
 }
 
 .modal{
+
 display:none;
+
 position:fixed;
+
 left:0;
 top:0;
+
 width:100%;
 height:100%;
+
 background:rgba(0,0,0,.6);
+
 justify-content:center;
 align-items:center;
+
 z-index:999;
+
 }
 
 .modal-content{
+
 background:#1e293b;
-padding:20px;
-border-radius:10px;
+
+padding:25px;
+
+border-radius:15px;
+
 width:95%;
-max-width:420px;
+max-width:430px;
+
 }
 
 .modal-content h3{
+
 text-align:center;
-margin-bottom:15px;
+
+margin-bottom:20px;
+
 }
 
 .modal-content input,
 .modal-content select{
+
 width:100%;
-padding:12px;
+
+padding:13px;
+
 margin-bottom:12px;
+
 border:none;
-border-radius:8px;
+
+border-radius:10px;
+
 outline:none;
+
+font-size:15px;
+
 }
 
 .modal-buttons{
+
 display:flex;
+
 gap:10px;
+
 }
 
 .modal-buttons button{
+
 flex:1;
+
 padding:12px;
+
 border:none;
-border-radius:8px;
+
+border-radius:10px;
+
 cursor:pointer;
-color:#fff;
+
 font-weight:bold;
+
+color:white;
+
 }
 
 .save{
-background:#22c55e;
+
+background:#16a34a;
+
 }
 
 .cancel{
-background:#ef4444;
+
+background:#dc2626;
+
 }
 
 </style>
@@ -214,21 +358,21 @@ background:#ef4444;
 
 <div class="header">
 
-<h2 id="siteName">Loading...</h2>
+<div class="brand">
+
+<div class="logo">
+
+👥
 
 </div>
 
-<input
+<h2 id="siteName">
 
-class="search"
+Loading...
 
-id="search"
+</h2>
 
-type="text"
-
-placeholder="Search User..."
-
-onkeyup="searchUsers()">
+</div>
 
 <div class="actions">
 
@@ -244,13 +388,29 @@ onclick="loadUsers()">
 class="register"
 onclick="openRegister()">
 
-➕ Register User
+➕ Register
 
 </button>
 
 </div>
 
-<div class="table-container">
+</div>
+
+<div class="search-box">
+
+<input
+
+id="search"
+
+type="text"
+
+placeholder="Search Username / Role"
+
+onkeyup="searchUsers()">
+
+</div>
+
+<div class="table-box">
 
 <table>
 
@@ -259,10 +419,15 @@ onclick="openRegister()">
 <tr>
 
 <th>ID</th>
+
 <th>Username</th>
+
 <th>Password</th>
+
 <th>Role</th>
+
 <th>Wallet</th>
+
 <th>Action</th>
 
 </tr>
@@ -285,9 +450,10 @@ Loading...
 
 </table>
 
-</div>
-
-<!-- Register Modal -->
+  </div>
+  <!-- ===========================
+     REGISTER MODAL
+=========================== -->
 
 <div
 class="modal"
@@ -297,12 +463,13 @@ id="registerModal">
 
 <h3>
 
-Register User
+➕ Register User
 
 </h3>
 
 <input
 id="username"
+type="text"
 placeholder="Username">
 
 <input
@@ -312,9 +479,17 @@ placeholder="Password">
 
 <select id="role">
 
-<option value="user">User</option>
+<option value="user">
 
-<option value="admin">Admin</option>
+User
+
+</option>
+
+<option value="admin">
+
+Admin
+
+</option>
 
 </select>
 
@@ -330,7 +505,7 @@ placeholder="Wallet Balance">
 class="save"
 onclick="registerUser()">
 
-Register
+✅ Register
 
 </button>
 
@@ -338,7 +513,7 @@ Register
 class="cancel"
 onclick="closeRegister()">
 
-Cancel
+❌ Cancel
 
 </button>
 
@@ -348,7 +523,9 @@ Cancel
 
 </div>
 
-<!-- Balance Modal -->
+<!-- ===========================
+     BALANCE MODAL
+=========================== -->
 
 <div
 class="modal"
@@ -358,7 +535,7 @@ id="balanceModal">
 
 <h3>
 
-✏️ Set Wallet Balance
+💰 Set Wallet Balance
 
 </h3>
 
@@ -377,7 +554,7 @@ Current Balance :
 <input
 id="newBalance"
 type="number"
-placeholder="New Balance">
+placeholder="Enter Balance">
 
 <div class="modal-buttons">
 
@@ -385,7 +562,7 @@ placeholder="New Balance">
 class="save"
 onclick="saveBalance()">
 
-Save
+💾 Save
 
 </button>
 
@@ -393,7 +570,64 @@ Save
 class="cancel"
 onclick="closeBalanceModal()">
 
-Cancel
+❌ Cancel
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ===========================
+     PASSWORD MODAL
+=========================== -->
+
+<div
+class="modal"
+id="passwordModal">
+
+<div class="modal-content">
+
+<h3>
+
+🔑 Change Password
+
+</h3>
+
+<p>
+
+User ID :
+
+<b id="passwordUserId">
+
+0
+
+</b>
+
+</p>
+
+<input
+id="newPassword"
+type="text"
+placeholder="Enter New Password">
+
+<div class="modal-buttons">
+
+<button
+class="save"
+onclick="changePassword()">
+
+💾 Save
+
+</button>
+
+<button
+class="cancel"
+onclick="closePasswordModal()">
+
+❌ Cancel
 
 </button>
 
@@ -411,10 +645,13 @@ const API =
 const USER =
 JSON.parse(localStorage.getItem("user"));
 
-let allUsers=[];
+let allUsers = [];
 
-let selectedUserId=null;
-  /* ===========================
+let selectedUserId = null;
+
+let passwordUserId = null;
+
+/* ===========================
    LOGIN CHECK
 =========================== */
 
@@ -429,6 +666,34 @@ if(!USER || USER.role!=="admin"){
 location.href="login.html";
 
 }
+  /* ===========================
+   LOAD SITE NAME
+=========================== */
+
+async function loadSiteName(){
+
+try{
+
+const response = await fetch(
+API + "/api/settings"
+);
+
+const data = await response.json();
+
+if(data.success){
+
+document.getElementById("siteName").innerHTML =
+data.settings.site_name;
+
+}
+
+}catch(err){
+
+console.log(err);
+
+}
+
+}
 
 /* ===========================
    LOAD USERS
@@ -438,36 +703,35 @@ async function loadUsers(){
 
 try{
 
-const response=await fetch(
-API+"/api/users"
+const response = await fetch(
+API + "/api/users"
 );
 
-const data=await response.json();
+const data = await response.json();
 
-const table=
+const table =
 document.getElementById("usersTable");
 
-table.innerHTML="";
+table.innerHTML = "";
 
 if(!data.success){
 
-table.innerHTML=
-
-"<tr><td colspan='5'>No Users Found</td></tr>";
+table.innerHTML =
+"<tr><td colspan='6'>No Users Found</td></tr>";
 
 return;
 
 }
 
-allUsers=data.users;
+allUsers = data.users;
 
 renderUsers(allUsers);
 
 }catch(err){
 
-document.getElementById("usersTable").innerHTML=
+document.getElementById("usersTable").innerHTML =
 
-"<tr><td colspan='5'>"+err.message+"</td></tr>";
+"<tr><td colspan='6'>"+err.message+"</td></tr>";
 
 }
 
@@ -479,16 +743,15 @@ document.getElementById("usersTable").innerHTML=
 
 function renderUsers(list){
 
-const table=
+const table =
 document.getElementById("usersTable");
 
-table.innerHTML="";
+table.innerHTML = "";
 
 if(list.length===0){
 
-table.innerHTML=
-
-"<tr><td colspan='5'>No Users Found</td></tr>";
+table.innerHTML =
+"<tr><td colspan='6'>No Users Found</td></tr>";
 
 return;
 
@@ -496,7 +759,7 @@ return;
 
 list.forEach(user=>{
 
-table.innerHTML+=`
+table.innerHTML += `
 
 <tr>
 
@@ -514,8 +777,8 @@ ${user.show_password || "-"}
 
 <span class="${
 user.role==="admin"
-? "admin"
-: "user"
+? "role-admin"
+: "role-user"
 }">
 
 ${user.role}
@@ -533,15 +796,23 @@ ${user.role}
 <td>
 
 <button
-class="balance"
+class="btn balance"
 onclick="openBalanceModal(${user.id},${user.wallet})">
 
-✏️ Balance
+💰 Balance
 
 </button>
 
 <button
-class="delete"
+class="btn password"
+onclick="openPasswordModal(${user.id})">
+
+🔑 Password
+
+</button>
+
+<button
+class="btn delete"
 onclick="deleteUser(${user.id})">
 
 🗑 Delete
@@ -564,15 +835,12 @@ onclick="deleteUser(${user.id})">
 
 function searchUsers(){
 
-const keyword=
-
+const keyword =
 document.getElementById("search")
 .value
 .toLowerCase();
 
-const filtered=
-
-allUsers.filter(user=>
+const filtered = allUsers.filter(user=>
 
 user.username
 .toLowerCase()
@@ -593,7 +861,7 @@ String(user.id)
 
 renderUsers(filtered);
 
-   }
+  }
   /* ===========================
    OPEN REGISTER
 =========================== */
@@ -708,7 +976,7 @@ amount:wallet
 
 }
 
-alert("User Created Successfully");
+alert("User Registered Successfully");
 
 closeRegister();
 
@@ -723,7 +991,7 @@ alert(err.message);
 }
 
 /* ===========================
-   OPEN BALANCE MODAL
+   BALANCE MODAL
 =========================== */
 
 function openBalanceModal(id,balance){
@@ -740,53 +1008,19 @@ document.getElementById("newBalance").value=balance;
 
 }
 
-/* ===========================
-   CLOSE BALANCE MODAL
-=========================== */
-
 function closeBalanceModal(){
 
 document.getElementById("balanceModal").style.display="none";
 
-document.getElementById("newBalance").value="";
-
 selectedUserId=null;
 
 }
-
-async function loadSiteName(){
-
-const response=await fetch(
-API+"/api/settings"
-);
-
-const data=await response.json();
-
-if(data.success){
-
-document.getElementById("siteName").innerHTML=
-data.settings.site_name;
-
-}
-
-  }
-/* ===========================
-   SAVE BALANCE
-=========================== */
 
 async function saveBalance(){
 
 const balance=
 
 Number(document.getElementById("newBalance").value);
-
-if(selectedUserId===null){
-
-return;
-
-}
-
-try{
 
 const response=await fetch(
 
@@ -804,7 +1038,7 @@ body:JSON.stringify({
 
 user_id:selectedUserId,
 
-balance:balance
+balance
 
 })
 
@@ -820,156 +1054,76 @@ closeBalanceModal();
 
 loadUsers();
 
-}catch(err){
+}
 
-alert(err.message);
+/* ===========================
+   PASSWORD MODAL
+=========================== */
+
+function openPasswordModal(id){
+
+passwordUserId=id;
+
+document.getElementById("passwordModal").style.display="flex";
+
+document.getElementById("passwordUserId").innerHTML=id;
+
+document.getElementById("newPassword").value="";
 
 }
 
-  }
- /* ===========================
-   DELETE USER
-=========================== */
+function closePasswordModal(){
 
-async function deleteUser(id){
+document.getElementById("passwordModal").style.display="none";
 
-const ok=confirm(
-"Delete this user?"
-);
+passwordUserId=null;
 
-if(!ok){
+}
+
+async function changePassword(){
+
+const password=
+
+document.getElementById("newPassword").value.trim();
+
+if(password===""){
+
+alert("Enter Password");
 
 return;
 
 }
 
-try{
-
 const response=await fetch(
 
-API+"/api/users/"+id,
+API+"/api/users/change-password",
 
 {
-method:"DELETE"
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+user_id:passwordUserId,
+
+password
+
+})
+
 }
 
 );
 
 const data=await response.json();
 
-alert(data.message || data.error);
+alert(data.message);
+
+closePasswordModal();
 
 loadUsers();
 
-}catch(err){
-
-alert(err.message);
-
-}
-
-}
-
-/* ===========================
-   CLOSE MODALS
-=========================== */
-
-window.onclick=function(e){
-
-if(e.target===document.getElementById("registerModal")){
-
-closeRegister();
-
-}
-
-if(e.target===document.getElementById("balanceModal")){
-
-closeBalanceModal();
-
-}
-
-};
-
-/* ===========================
-   WINDOW LOAD
-=========================== */
-
-window.onload=function(){
-loadSiteName();
-loadUsers();
-
-};
-
-/* ===========================
-   AUTO REFRESH
-=========================== */
-
-setInterval(loadUsers,30000);
-
-/* ===========================
-   BUTTON ANIMATION
-=========================== */
-
-document.addEventListener("mouseover",function(e){
-
-if(e.target.tagName==="BUTTON"){
-
-e.target.style.transform="scale(1.04)";
-e.target.style.transition=".2s";
-
-}
-
-});
-
-document.addEventListener("mouseout",function(e){
-
-if(e.target.tagName==="BUTTON"){
-
-e.target.style.transform="scale(1)";
-
-}
-
-});
-
-/* ===========================
-   SHORTCUT KEYS
-=========================== */
-
-document.addEventListener("keydown",function(e){
-
-if(e.key==="Escape"){
-
-closeRegister();
-
-closeBalanceModal();
-
-}
-
-if(e.ctrlKey && e.key==="r"){
-
-e.preventDefault();
-
-loadUsers();
-
-}
-
-if(e.ctrlKey && e.key==="n"){
-
-e.preventDefault();
-
-openRegister();
-
-}
-
-});
-
-/* ===========================
-   PAGE READY
-=========================== */
-
-console.log("Users Management Ready");
-
-</script>
-
-</body>
-
-</html> 
+  }
