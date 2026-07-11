@@ -754,13 +754,13 @@ app.post("/api/orders", async (req, res) => {
 
         res.json({
 
-            success: true,
-            provider_order_id: providerOrderId,
-            charge
+    success: true,
+    provider_order_id: providerOrderId,
+    charge
 
-        });
+});
 
-    catch (err) {
+} catch (err) {
 
     console.error(err);
 
