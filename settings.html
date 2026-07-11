@@ -367,15 +367,40 @@ Manage your SMM Panel configuration
 type="text"
 id="siteName">
 
-<label>
+<label>🖼 Current Logo</label>
 
-🖼️ Logo URL
+<div class="logo-preview">
 
-</label>
+<img
+src="assets/logo.png?v=1"
+id="logoImage"
+style="
+width:100%;
+height:100%;
+object-fit:contain;
+display:block;
+">
 
-<input
-type="text"
-id="logoUrl"
+</div>
+
+<p style="
+margin-top:15px;
+font-size:14px;
+color:#94a3b8;
+text-align:center;
+line-height:1.6;
+">
+
+📂 Current Logo:
+<b>assets/logo.png</b>
+
+<br><br>
+
+💡 Replace
+<b>assets/logo.png</b>
+in your GitHub repository to update the logo.
+
+</p>
 oninput="previewLogo()">
 
 <div class="logo-preview">
@@ -436,50 +461,7 @@ onclick="saveSettings()">
 
 const API =
 "https://gowind-smm-panel-v3.onrender.com";
-    /* ===========================
-   LOGO PREVIEW
-=========================== */
-
-function previewLogo(){
-
-const url =
-document.getElementById("logoUrl").value.trim();
-
-const img =
-document.getElementById("logoImage");
-
-const text =
-document.getElementById("logoText");
-
-if(url===""){
-
-img.style.display="none";
-
-text.style.display="block";
-
-return;
-
-}
-
-img.src=url;
-
-img.onload=function(){
-
-img.style.display="block";
-
-text.style.display="none";
-
-};
-
-img.onerror=function(){
-
-img.style.display="none";
-
-text.style.display="block";
-
-};
-
-}
+    
 
 /* ===========================
    TOAST
@@ -616,12 +598,6 @@ loadSettings();
 
 };
 
-/* ===========================
-   AUTO LOGO PREVIEW
-=========================== */
-
-document.getElementById("logoUrl")
-.addEventListener("keyup",previewLogo);
 
 /* ===========================
    CTRL + S
