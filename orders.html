@@ -392,9 +392,10 @@ ${new Date(order.created_at).toLocaleString()}
 <td>
 
 <button
-onclick="syncOrder(${order.provider_id}, ${order.provider_order_id})">
+style="background:#dc2626;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;"
+onclick="deleteOrder(${order.id})">
 
-🔄
+🗑 Delete
 
 </button>
 
@@ -555,6 +556,41 @@ this.style.background="transparent";
 });
 
 });
+/* ===========================
+   DELETE ORDER
+=========================== */
+
+async function deleteOrder(id){
+
+if(!confirm("Delete this order?")){
+return;
+}
+
+try{
+
+const response = await fetch(
+
+API + "/api/orders/" + id,
+
+{
+method:"DELETE"
+}
+
+);
+
+const data = await response.json();
+
+alert(data.message);
+
+loadOrders();
+
+}catch(err){
+
+alert(err.message);
+
+}
+
+}
   /* ===========================
    SYNC SINGLE ORDER
 =========================== */
