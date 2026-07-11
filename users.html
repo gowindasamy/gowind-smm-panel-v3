@@ -1127,3 +1127,161 @@ closePasswordModal();
 loadUsers();
 
   }
+/* ===========================
+   DELETE USER
+=========================== */
+
+async function deleteUser(id){
+
+const ok = confirm("Delete this user?");
+
+if(!ok){
+
+return;
+
+}
+
+try{
+
+const response = await fetch(
+
+API + "/api/users/" + id,
+
+{
+method:"DELETE"
+}
+
+);
+
+const data = await response.json();
+
+alert(data.message || data.error);
+
+loadUsers();
+
+}catch(err){
+
+alert(err.message);
+
+}
+
+}
+
+/* ===========================
+   CLOSE MODALS
+=========================== */
+
+window.onclick = function(e){
+
+if(e.target===document.getElementById("registerModal")){
+
+closeRegister();
+
+}
+
+if(e.target===document.getElementById("balanceModal")){
+
+closeBalanceModal();
+
+}
+
+if(e.target===document.getElementById("passwordModal")){
+
+closePasswordModal();
+
+}
+
+};
+
+/* ===========================
+   WINDOW LOAD
+=========================== */
+
+window.onload=function(){
+
+loadSiteName();
+
+loadUsers();
+
+};
+
+/* ===========================
+   AUTO REFRESH
+=========================== */
+
+setInterval(function(){
+
+loadUsers();
+
+},30000);
+
+/* ===========================
+   BUTTON ANIMATION
+=========================== */
+
+document.addEventListener("mouseover",function(e){
+
+if(e.target.tagName==="BUTTON"){
+
+e.target.style.transform="scale(1.05)";
+e.target.style.transition=".2s";
+
+}
+
+});
+
+document.addEventListener("mouseout",function(e){
+
+if(e.target.tagName==="BUTTON"){
+
+e.target.style.transform="scale(1)";
+
+}
+
+});
+
+/* ===========================
+   SHORTCUT KEYS
+=========================== */
+
+document.addEventListener("keydown",function(e){
+
+if(e.key==="Escape"){
+
+closeRegister();
+
+closeBalanceModal();
+
+closePasswordModal();
+
+}
+
+if(e.ctrlKey && e.key==="r"){
+
+e.preventDefault();
+
+loadUsers();
+
+}
+
+if(e.ctrlKey && e.key==="n"){
+
+e.preventDefault();
+
+openRegister();
+
+}
+
+});
+
+/* ===========================
+   PAGE READY
+=========================== */
+
+console.log("Users Management Ready");
+
+</script>
+
+</body>
+
+</html>
