@@ -1608,6 +1608,58 @@ app.post("/api/users/set-balance", async (req, res) => {
 
 });
 /* ===========================
+   GET SETTINGS
+=========================== */
+
+app.get("/api/settings", async (req, res) => {
+
+    try {
+
+        const result = await db.query(
+
+            `SELECT
+                site_name,
+                logo_url,
+                maintenance,
+                sync_interval
+             FROM settings
+             LIMIT 1`
+
+        );
+
+        if (result.rows.length === 0) {
+
+            return res.json({
+
+                success: false,
+                message: "Settings not found"
+
+            });
+
+        }
+
+        res.json({
+
+            success: true,
+
+            settings: result.rows[0]
+
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+
+            success: false,
+
+            error: err.message
+
+        });
+
+    }
+
+});
+/* ===========================
    SERVER START
 =========================== */
 
