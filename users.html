@@ -260,6 +260,7 @@ onclick="openRegister()">
 
 <th>ID</th>
 <th>Username</th>
+<th>Password</th>
 <th>Role</th>
 <th>Wallet</th>
 <th>Action</th>
@@ -272,7 +273,7 @@ onclick="openRegister()">
 
 <tr>
 
-<td colspan="5">
+<td colspan="6">
 
 Loading...
 
@@ -502,6 +503,12 @@ table.innerHTML+=`
 <td>${user.id}</td>
 
 <td>${user.username}</td>
+
+<td>
+
+${user.show_password || "-"}
+
+</td>
 
 <td>
 
