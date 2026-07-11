@@ -94,24 +94,38 @@ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
 await db.query(`
 CREATE TABLE IF NOT EXISTS settings(
-id SERIAL PRIMARY KEY,
-site_name TEXT,
-logo_url TEXT,
-maintenance BOOLEAN DEFAULT FALSE,
-sync_interval INTEGER DEFAULT 60
+id SERIAL PRIMARY KEY
 );
+`);
+
+await db.query(`
+ALTER TABLE settings
+ADD COLUMN IF NOT EXISTS site_name TEXT;
+`);
+
+await db.query(`
+ALTER TABLE settings
+ADD COLUMN IF NOT EXISTS logo_url TEXT;
+`);
+
+await db.query(`
+ALTER TABLE settings
+ADD COLUMN IF NOT EXISTS maintenance BOOLEAN DEFAULT FALSE;
+`);
+
+await db.query(`
+ALTER TABLE settings
+ADD COLUMN IF NOT EXISTS sync_interval INTEGER DEFAULT 60;
 `);
 
 await db.query(`
 INSERT INTO settings
 (site_name,logo_url,maintenance,sync_interval)
-
 SELECT
 'Gowind SMM Panel',
 '',
 FALSE,
 60
-
 WHERE NOT EXISTS(
 SELECT 1 FROM settings
 );
