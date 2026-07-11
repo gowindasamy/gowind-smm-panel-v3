@@ -210,14 +210,73 @@ password:password
 
 const data=await response.json();
 
-if(!data.success){
+if(
+data.message &&
+data.message.includes("maintenance")
+){
 
-document.getElementById("result").innerHTML=
-data.message || data.error || "Login Failed";
+document.body.innerHTML=`
+
+<div style="height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:#0f172a;
+font-family:Arial,sans-serif;">
+
+<div style="width:420px;
+max-width:95%;
+background:#1e293b;
+padding:35px;
+border-radius:15px;
+text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,.35);
+color:white;">
+
+<div style="font-size:70px;">
+🚧
+</div>
+
+<h1 style="margin:15px 0;">
+Panel Under Maintenance
+</h1>
+
+<p style="color:#94a3b8;
+line-height:1.8;
+margin-bottom:25px;">
+
+We are performing scheduled maintenance.<br>
+Please try again later.
+
+</p>
+
+<button
+onclick="location.reload()"
+style="width:100%;
+padding:14px;
+background:#2563eb;
+border:none;
+border-radius:10px;
+color:white;
+font-size:17px;
+cursor:pointer;">
+
+🔄 Refresh
+
+</button>
+
+</div>
+
+</div>
+
+`;
 
 return;
 
 }
+
+document.getElementById("result").innerHTML=
+data.message || data.error || "Login Failed";
 
 /* SAVE LOGIN */
 
