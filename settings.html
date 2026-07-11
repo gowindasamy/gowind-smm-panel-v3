@@ -4,10 +4,11 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>Settings</title>
+<title>Panel Settings</title>
 
 <style>
 
@@ -19,88 +20,310 @@ font-family:Arial,sans-serif;
 }
 
 body{
-background:#0f172a;
+
+min-height:100vh;
+
+background:
+radial-gradient(circle at top left,#7c3aed33,transparent 35%),
+radial-gradient(circle at top right,#06b6d433,transparent 35%),
+radial-gradient(circle at bottom,#2563eb33,transparent 40%),
+#0b1120;
+
 color:#fff;
+
+overflow-x:hidden;
+
+}
+
+/* Floating Glow */
+
+body::before{
+
+content:"";
+
+position:fixed;
+
+width:260px;
+height:260px;
+
+background:#7c3aed;
+
+filter:blur(140px);
+
+top:-80px;
+left:-80px;
+
+opacity:.35;
+
+z-index:-1;
+
+}
+
+body::after{
+
+content:"";
+
+position:fixed;
+
+width:320px;
+height:320px;
+
+background:#06b6d4;
+
+filter:blur(150px);
+
+bottom:-100px;
+right:-100px;
+
+opacity:.25;
+
+z-index:-1;
+
 }
 
 .container{
-width:100%;
+
+width:95%;
 max-width:700px;
-margin:30px auto;
-padding:20px;
+
+margin:40px auto;
+
+padding:30px;
+
+background:rgba(255,255,255,.04);
+
+backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:22px;
+
+box-shadow:
+
+0 0 35px rgba(124,58,237,.20),
+
+0 0 80px rgba(37,99,235,.15);
+
+animation:fadeUp .5s ease;
+
 }
 
-.card{
-background:#1e293b;
-padding:25px;
-border-radius:12px;
-box-shadow:0 5px 15px rgba(0,0,0,.3);
+@keyframes fadeUp{
+
+from{
+
+opacity:0;
+
+transform:translateY(25px);
+
 }
 
-.card h2{
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+.header{
+
 text-align:center;
+
 margin-bottom:25px;
-font-size:28px;
+
+}
+
+.header h1{
+
+font-size:34px;
+
+background:linear-gradient(
+90deg,
+#3b82f6,
+#06b6d4,
+#7c3aed
+);
+
+-webkit-background-clip:text;
+
+-webkit-text-fill-color:transparent;
+
+margin-bottom:8px;
+
+}
+
+.header p{
+
+color:#94a3b8;
+
+font-size:15px;
+
 }
 
 label{
+
 display:block;
-margin-top:15px;
+
+margin-top:18px;
 margin-bottom:8px;
+
 font-weight:bold;
+
+color:#e2e8f0;
+
 }
 
 input,
 select{
 
 width:100%;
-padding:12px;
-border:none;
-border-radius:8px;
+
+padding:14px;
+
+border-radius:12px;
+
+background:#16213a;
+
+border:1px solid #334155;
+
+color:#fff;
+
 font-size:15px;
+
 outline:none;
+
+transition:.3s;
+
+}
+
+input:focus,
+select:focus{
+
+border-color:#3b82f6;
+
+box-shadow:
+
+0 0 18px rgba(59,130,246,.35);
+
+}
+    .logo-preview{
+
+width:120px;
+height:120px;
+
+margin:20px auto;
+
+border-radius:18px;
+
+background:rgba(255,255,255,.05);
+
+border:1px solid rgba(255,255,255,.08);
+
+display:flex;
+
+justify-content:center;
+align-items:center;
+
+overflow:hidden;
+
+font-size:42px;
+
+color:#94a3b8;
+
+}
+
+.logo-preview img{
+
+width:100%;
+height:100%;
+
+object-fit:contain;
+
+display:none;
+
+}
+
+.logo-preview span{
+
+text-align:center;
+
+font-size:13px;
+
+line-height:1.5;
 
 }
 
 button{
 
 width:100%;
+
 margin-top:25px;
-padding:14px;
+
+padding:15px;
+
 border:none;
-border-radius:8px;
-background:#22c55e;
-color:#fff;
-font-size:16px;
+
+border-radius:14px;
+
+font-size:17px;
+
 font-weight:bold;
+
+color:#fff;
+
 cursor:pointer;
+
+background:linear-gradient(
+
+90deg,
+
+#2563eb,
+
+#7c3aed,
+
+#06b6d4
+
+);
+
+transition:.3s;
+
+box-shadow:
+
+0 0 20px rgba(59,130,246,.35);
 
 }
 
 button:hover{
 
-background:#16a34a;
+transform:translateY(-3px);
+
+box-shadow:
+
+0 0 35px rgba(124,58,237,.45);
 
 }
 
-.status{
+.toast{
 
-margin-top:20px;
-text-align:center;
+position:fixed;
+
+top:20px;
+right:20px;
+
+background:#22c55e;
+
+padding:15px 22px;
+
+border-radius:12px;
+
+display:none;
+
 font-weight:bold;
 
-}
-
-.logo-preview{
-
-display:block;
-margin:15px auto;
-width:80px;
-height:80px;
-object-fit:contain;
-border-radius:10px;
-background:#334155;
-padding:8px;
+box-shadow:0 0 20px rgba(34,197,94,.4);
 
 }
 
@@ -110,15 +333,29 @@ padding:8px;
 
 <body>
 
+<div class="toast" id="toast">
+
+✅ Settings Saved Successfully
+
+</div>
+
 <div class="container">
 
-<div class="card">
+<div class="header">
 
-<h2>
+<h1>
 
 ⚙️ Panel Settings
 
-</h2>
+</h1>
+
+<p>
+
+Manage your SMM Panel configuration
+
+</p>
+
+</div>
 
 <label>
 
@@ -127,9 +364,8 @@ padding:8px;
 </label>
 
 <input
-id="site_name"
 type="text"
-placeholder="Site Name">
+id="siteName">
 
 <label>
 
@@ -138,19 +374,25 @@ placeholder="Site Name">
 </label>
 
 <input
-id="logo_url"
 type="text"
-placeholder="https://example.com/logo.png">
+id="logoUrl"
+oninput="previewLogo()">
 
-<img
-id="logoPreview"
-class="logo-preview"
-src=""
-alt="Logo Preview">
+<div class="logo-preview">
+
+<img id="logoImage">
+
+<span id="logoText">
+
+No Logo Uploaded
+
+</span>
+
+</div>
 
 <label>
 
-🔧 Maintenance Mode
+🚧 Maintenance Mode
 
 </label>
 
@@ -172,31 +414,14 @@ ON
 
 <label>
 
-⏱️ Auto Sync Interval
+⏱️ Sync Interval (Seconds)
 
 </label>
 
-<select id="sync_interval">
-
-<option value="30">
-
-30 Seconds
-
-</option>
-
-<option value="60">
-
-1 Minute
-
-</option>
-
-<option value="300">
-
-5 Minutes
-
-</option>
-
-</select>
+<input
+type="number"
+id="syncInterval"
+min="10">
 
 <button
 onclick="saveSettings()">
@@ -205,16 +430,6 @@ onclick="saveSettings()">
 
 </button>
 
-<div
-class="status"
-id="status">
-
-Ready...
-
-</div>
-
-</div>
-
 </div>
 
 <script>
@@ -222,21 +437,68 @@ Ready...
 const API =
 "https://gowind-smm-panel-v3.onrender.com";
     /* ===========================
-   LOGIN CHECK
+   LOGO PREVIEW
 =========================== */
 
-const USER =
-JSON.parse(localStorage.getItem("user"));
+function previewLogo(){
 
-if(!localStorage.getItem("token")){
+const url =
+document.getElementById("logoUrl").value.trim();
 
-location.href="login.html";
+const img =
+document.getElementById("logoImage");
+
+const text =
+document.getElementById("logoText");
+
+if(url===""){
+
+img.style.display="none";
+
+text.style.display="block";
+
+return;
 
 }
 
-if(!USER || USER.role!=="admin"){
+img.src=url;
 
-location.href="login.html";
+img.onload=function(){
+
+img.style.display="block";
+
+text.style.display="none";
+
+};
+
+img.onerror=function(){
+
+img.style.display="none";
+
+text.style.display="block";
+
+};
+
+}
+
+/* ===========================
+   TOAST
+=========================== */
+
+function showToast(msg){
+
+const toast =
+document.getElementById("toast");
+
+toast.innerHTML="✅ "+msg;
+
+toast.style.display="block";
+
+setTimeout(function(){
+
+toast.style.display="none";
+
+},3000);
 
 }
 
@@ -248,136 +510,52 @@ async function loadSettings(){
 
 try{
 
-const response=await fetch(
+const response = await fetch(
 
-API+"/api/settings"
+API + "/api/settings"
 
 );
 
-const data=await response.json();
+const data = await response.json();
 
 if(!data.success){
 
-document.getElementById("status").innerHTML=
-
-"❌ Failed to Load Settings";
-
 return;
 
 }
 
-const s=data.settings;
+document.getElementById("siteName").value =
+data.settings.site_name || "";
 
-document.getElementById("site_name").value=
+document.getElementById("logoUrl").value =
+data.settings.logo_url || "";
 
-s.site_name || "";
+document.getElementById("maintenance").value =
+String(data.settings.maintenance);
 
-document.getElementById("logo_url").value=
+document.getElementById("syncInterval").value =
+data.settings.sync_interval || 60;
 
-s.logo_url || "";
-
-document.getElementById("maintenance").value=
-
-String(s.maintenance);
-
-document.getElementById("sync_interval").value=
-
-String(s.sync_interval);
-
-updateLogoPreview();
-
-document.getElementById("status").innerHTML=
-
-"✅ Settings Loaded";
+previewLogo();
 
 }catch(err){
 
-document.getElementById("status").innerHTML=
-
-err.message;
+console.log(err);
 
 }
 
-}
-
-/* ===========================
-   LOGO PREVIEW
-=========================== */
-
-function updateLogoPreview(){
-
-const url=
-
-document.getElementById("logo_url").value.trim();
-
-const img=
-
-document.getElementById("logoPreview");
-
-if(url===""){
-
-img.src="";
-
-return;
-
-}
-
-img.src=url;
-
-img.onerror=function(){
-
-this.src="";
-
-};
-
-}
-
-/* ===========================
-   LOGO URL CHANGE
-=========================== */
-
-document.getElementById("logo_url")
-
-.addEventListener(
-
-"input",
-
-updateLogoPreview
-
-);
+    }
     /* ===========================
    SAVE SETTINGS
 =========================== */
 
 async function saveSettings(){
 
-const site_name=
-document.getElementById("site_name").value.trim();
-
-const logo_url=
-document.getElementById("logo_url").value.trim();
-
-const maintenance=
-
-document.getElementById("maintenance").value==="true";
-
-const sync_interval=
-
-Number(
-
-document.getElementById("sync_interval").value
-
-);
-
-document.getElementById("status").innerHTML=
-
-"⏳ Saving...";
-
 try{
 
-const response=await fetch(
+const response = await fetch(
 
-API+"/api/settings",
+API + "/api/settings",
 
 {
 
@@ -389,13 +567,19 @@ headers:{
 
 body:JSON.stringify({
 
-site_name,
+site_name:
+document.getElementById("siteName").value.trim(),
 
-logo_url,
+logo_url:
+document.getElementById("logoUrl").value.trim(),
 
-maintenance,
+maintenance:
+document.getElementById("maintenance").value==="true",
 
-sync_interval
+sync_interval:
+Number(
+document.getElementById("syncInterval").value
+)
 
 })
 
@@ -403,33 +587,26 @@ sync_interval
 
 );
 
-const data=await response.json();
+const data = await response.json();
 
 if(data.success){
 
-document.getElementById("status").innerHTML=
-
-"✅ Settings Saved Successfully";
+showToast("Settings Saved Successfully");
 
 }else{
 
-document.getElementById("status").innerHTML=
-
-"❌ "+(data.message || data.error);
+alert(data.message || data.error || "Save Failed");
 
 }
 
 }catch(err){
 
-document.getElementById("status").innerHTML=
-
-"❌ "+err.message;
+alert(err.message);
 
 }
 
-}
-
-/* ===========================
+    }
+    /* ===========================
    WINDOW LOAD
 =========================== */
 
@@ -440,33 +617,14 @@ loadSettings();
 };
 
 /* ===========================
-   AUTO REFRESH PREVIEW
+   AUTO LOGO PREVIEW
 =========================== */
 
-setInterval(updateLogoPreview,5000);
-    /* ===========================
-   BUTTON ANIMATION
-=========================== */
-
-document.querySelectorAll("button").forEach(btn=>{
-
-btn.addEventListener("mouseenter",function(){
-
-this.style.transform="scale(1.03)";
-this.style.transition=".2s";
-
-});
-
-btn.addEventListener("mouseleave",function(){
-
-this.style.transform="scale(1)";
-
-});
-
-});
+document.getElementById("logoUrl")
+.addEventListener("keyup",previewLogo);
 
 /* ===========================
-   SHORTCUT KEYS
+   CTRL + S
 =========================== */
 
 document.addEventListener("keydown",function(e){
@@ -479,19 +637,43 @@ saveSettings();
 
 }
 
-if(e.ctrlKey && e.key==="r"){
+});
 
-e.preventDefault();
+/* ===========================
+   INPUT ANIMATION
+=========================== */
 
-loadSettings();
+document.querySelectorAll("input,select").forEach(el=>{
 
-}
+el.addEventListener("focus",function(){
 
-if(e.key==="Escape"){
+this.style.transform="scale(1.01)";
 
-location.href="admindashboard.html";
+});
 
-}
+el.addEventListener("blur",function(){
+
+this.style.transform="scale(1)";
+
+});
+
+});
+
+/* ===========================
+   BUTTON EFFECT
+=========================== */
+
+const btn=document.querySelector("button");
+
+btn.addEventListener("mouseenter",function(){
+
+this.style.transform="translateY(-3px)";
+
+});
+
+btn.addEventListener("mouseleave",function(){
+
+this.style.transform="translateY(0)";
 
 });
 
@@ -499,7 +681,7 @@ location.href="admindashboard.html";
    PAGE READY
 =========================== */
 
-console.log("Settings Ready");
+console.log("Premium Settings Ready");
 
 </script>
 
