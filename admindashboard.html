@@ -250,7 +250,22 @@ Logout
 
 const API =
 "https://gowind-smm-panel-v3.onrender.com";
+async function loadSiteName(){
 
+const response=await fetch(
+API+"/api/settings"
+);
+
+const data=await response.json();
+
+if(data.success){
+
+document.getElementById("siteName").innerHTML=
+data.settings.site_name;
+
+}
+
+}
 const USER =
 JSON.parse(localStorage.getItem("user"));
   /* ===========================
@@ -338,6 +353,7 @@ location.href="login.html";
 
 window.onload=function(){
 
+loadSiteName();
 loadDashboard();
 
 };
