@@ -1234,6 +1234,53 @@ app.delete("/api/providers/:id", async (req, res) => {
     }
 
 });
+app.get("/api/users", async (req, res) => {
+
+    try {
+
+        const result = await db.query(
+            "SELECT id, username, role, wallet FROM users ORDER BY id ASC"
+        );
+
+        res.json({
+            success: true,
+            users: result.rows
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
+app.delete("/api/users/:id", async (req, res) => {
+
+    try {
+
+        await db.query(
+            "DELETE FROM users WHERE id = $1",
+            [req.params.id]
+        );
+
+        res.json({
+            success: true,
+            message: "User Deleted Successfully"
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
 /* ===========================
    SERVER START
 =========================== */
