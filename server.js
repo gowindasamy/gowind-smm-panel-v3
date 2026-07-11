@@ -831,25 +831,55 @@ app.post("/api/orders", async (req, res) => {
    GET ORDERS
 =========================== */
 
-app.get("/api/orders", async(req,res)=>{
+app.get("/api/orders", async (req, res) => {
 
-    try{
+    try {
 
-        const result=await db.query(
-        "SELECT * FROM orders ORDER BY id DESC"
-        );
+        const result = await db.query(`
+
+SELECT
+
+o.id,
+u.username,
+s.name AS service_name,
+p.name AS provider_name,
+o.link,
+o.quantity,
+o.charge,
+o.provider_order_id,
+o.status,
+o.created_at
+
+FROM orders o
+
+LEFT JOIN users u
+ON o.user_id = u.id
+
+LEFT JOIN services s
+ON o.service_id = s.id
+
+LEFT JOIN providers p
+ON o.provider_id = p.id
+
+ORDER BY o.id DESC
+
+        `);
 
         res.json({
-            success:true,
-            total:result.rows.length,
-            orders:result.rows
+
+            success: true,
+            total: result.rows.length,
+            orders: result.rows
+
         });
 
-    }catch(err){
+    } catch (err) {
 
         res.status(500).json({
-            success:false,
-            error:err.message
+
+            success: false,
+            error: err.message
+
         });
 
     }
