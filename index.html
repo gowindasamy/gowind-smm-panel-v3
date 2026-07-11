@@ -1,31 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gowind SMM Panel V3.0</title>
-    <link rel="stylesheet" href="style.css">
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Gowind SMM Panel</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+
+background:#0f172a;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+
+}
+
+.container{
+
+width:420px;
+max-width:95%;
+background:#1e293b;
+padding:35px;
+border-radius:12px;
+text-align:center;
+box-shadow:0 0 20px rgba(0,0,0,.4);
+
+}
+
+.logo{
+
+font-size:60px;
+margin-bottom:10px;
+
+}
+
+h1{
+
+margin-bottom:10px;
+
+}
+
+.version{
+
+color:#94a3b8;
+margin-bottom:20px;
+
+}
+
+p{
+
+margin-bottom:25px;
+line-height:1.6;
+
+}
+
+button{
+
+width:100%;
+padding:14px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:8px;
+font-size:18px;
+cursor:pointer;
+
+}
+
+button:hover{
+
+background:#1d4ed8;
+
+}
+
+.footer{
+
+margin-top:25px;
+font-size:14px;
+color:#94a3b8;
+
+}
+
+</style>
+
 </head>
+
 <body>
 
-    <header>
-        <h1>🚀 Gowind SMM Panel</h1>
-        <p>Version 3.0.1</p>
-    </header>
+<div class="container">
 
-    <main>
-        <h2>Welcome</h2>
-        <p>Fast, Secure & Private SMM Panel</p>
+<div class="logo">
 
-        <a href="login.html">
-            <button>Login</button>
-        </a>
-    </main>
+🚀
 
-    <footer>
-        <p>© 2026 Gowind SMM Panel. All Rights Reserved.</p>
-    </footer>
+</div>
 
-    <script src="script.js"></script>
+<h1>
+
+Gowind SMM Panel
+
+</h1>
+
+<div class="version">
+
+Version 3.1.0
+
+</div>
+
+<p>
+
+Fast, Secure & Private<br>
+
+Social Media Marketing Panel
+
+</p>
+
+<button onclick="openPanel()">
+
+🔐 Login
+
+</button>
+
+<div class="footer">
+
+© 2026 Gowind SMM Panel
+
+</div>
+
+</div>
+
+<script>
+
+function openPanel(){
+
+location.href="login.html";
+
+}
+
+if(localStorage.getItem("token")){
+
+location.href="dashboard.html";
+
+}
+
+</script>
+
 </body>
+
 </html>
