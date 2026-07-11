@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-content="width=device-width,initial-scale=1.0">
+content="width=device-width, initial-scale=1.0">
 
 <title>Gowind SMM Panel</title>
 
@@ -31,6 +31,7 @@ padding:20px;
 text-align:center;
 font-size:24px;
 font-weight:bold;
+box-shadow:0 2px 10px rgba(0,0,0,.4);
 
 }
 
@@ -46,7 +47,7 @@ margin:20px auto;
 
 display:grid;
 grid-template-columns:
-repeat(auto-fit,minmax(180px,1fr));
+repeat(auto-fit,minmax(170px,1fr));
 
 gap:15px;
 margin-bottom:25px;
@@ -60,16 +61,22 @@ text-decoration:none;
 background:#1e293b;
 color:white;
 padding:18px;
-border-radius:10px;
 text-align:center;
+border-radius:10px;
+font-size:16px;
 font-weight:bold;
+
+}
+
+.menu a:hover{
+
+background:#2563eb;
 
 }
 
 .cards{
 
 display:grid;
-
 grid-template-columns:
 repeat(auto-fit,minmax(220px,1fr));
 
@@ -133,25 +140,15 @@ cursor:pointer;
 class="menu"
 id="adminMenu">
 
-<a href="providers.html">
-🏢 Providers
-</a>
+<a href="providers.html">🏢 Providers</a>
 
-<a href="services.html">
-🛠 Services
-</a>
+<a href="services.html">🛠 Services</a>
 
-<a href="orders.html">
-📦 Orders
-</a>
+<a href="orders.html">📦 Orders</a>
 
-<a href="users.html">
-👥 Users
-</a>
+<a href="users.html">👥 Users</a>
 
-<a href="settings.html">
-⚙️ Settings
-</a>
+<a href="settings.html">⚙️ Settings</a>
 
 </div>
 
@@ -161,31 +158,23 @@ id="adminMenu">
 class="menu"
 id="userMenu">
 
-<a href="new-order.html">
-🛒 New Order
-</a>
+<a href="new-order.html">🛒 New Order</a>
 
-<a href="orderhistory.html">
-📋 Order History
-</a>
+<a href="orderhistory.html">📋 Order History</a>
 
-<a href="wallet.html">
-💰 Wallet
-</a>
+<a href="wallet.html">💰 Wallet</a>
 
-<a href="transactions.html">
-💳 Transactions
-</a>
+<a href="transactions.html">💳 Transactions</a>
 
-<a href="profile.html">
-👤 Profile
-</a>
+<a href="profile.html">👤 Profile</a>
 
 </div>
 
 <div class="cards">
 
-<div class="card">
+<div
+class="card"
+id="usersCard">
 
 <h3>Total Users</h3>
 
@@ -209,7 +198,9 @@ id="userMenu">
 
 </div>
 
-<div class="card">
+<div
+class="card"
+id="providersCard">
 
 <h3>Total Providers</h3>
 
@@ -233,13 +224,15 @@ id="userMenu">
 
 </div>
 
-<div class="card">
+<div
+class="card"
+id="revenueCard">
 
 <h3>Total Revenue</h3>
 
 <h1 id="revenue">
 
-₹0
+₹0.00
 
 </h1>
 
@@ -266,9 +259,9 @@ JSON.parse(localStorage.getItem("user"));
    LOGIN CHECK
 =========================== */
 
-if(!localStorage.getItem("token")){
+if (!localStorage.getItem("token")) {
 
-location.href="login.html";
+    location.href = "login.html";
 
 }
 
@@ -276,17 +269,19 @@ location.href="login.html";
    ROLE CHECK
 =========================== */
 
-if(USER.role==="admin"){
+if (USER && USER.role === "admin") {
 
-document.getElementById("adminMenu").style.display="grid";
+    document.getElementById("adminMenu").style.display = "grid";
+    document.getElementById("userMenu").style.display = "none";
 
-document.getElementById("userMenu").style.display="none";
+} else {
 
-}else{
+    document.getElementById("adminMenu").style.display = "none";
+    document.getElementById("userMenu").style.display = "grid";
 
-document.getElementById("adminMenu").style.display="none";
-
-document.getElementById("userMenu").style.display="grid";
+    document.getElementById("usersCard").style.display = "none";
+    document.getElementById("providersCard").style.display = "none";
+    document.getElementById("revenueCard").style.display = "none";
 
 }
 
@@ -298,13 +293,11 @@ async function loadDashboard(){
 
 try{
 
-const response=await fetch(
-
-API+"/api/admin/dashboard"
-
+const response = await fetch(
+API + "/api/admin/dashboard"
 );
 
-const data=await response.json();
+const data = await response.json();
 
 if(!data.success){
 
@@ -312,24 +305,24 @@ return;
 
 }
 
-document.getElementById("users").innerHTML=
+document.getElementById("users").innerHTML =
 data.dashboard.users;
 
-document.getElementById("orders").innerHTML=
+document.getElementById("orders").innerHTML =
 data.dashboard.orders;
 
-document.getElementById("providers").innerHTML=
+document.getElementById("providers").innerHTML =
 data.dashboard.providers;
 
-document.getElementById("services").innerHTML=
+document.getElementById("services").innerHTML =
 data.dashboard.services;
 
-document.getElementById("revenue").innerHTML=
-"₹"+Number(data.dashboard.revenue).toFixed(2);
+document.getElementById("revenue").innerHTML =
+"₹" + Number(data.dashboard.revenue).toFixed(2);
 
 }catch(err){
 
-console.log(err.message);
+console.log(err);
 
 }
 
@@ -362,7 +355,8 @@ window.onload=function(){
 loadDashboard();
 
 };
-   /* ===========================
+
+/* ===========================
    MENU ANIMATION
 =========================== */
 
@@ -387,26 +381,19 @@ this.style.transform="scale(1)";
    LOGOUT BUTTON
 =========================== */
 
-document.querySelector(".logout")
-.addEventListener("mouseenter",function(){
+document.querySelector(".logout").addEventListener("mouseenter",function(){
 
 this.style.transform="scale(1.03)";
-this.style.transition=".2s";
 
 });
 
-document.querySelector(".logout")
-.addEventListener("mouseleave",function(){
+document.querySelector(".logout").addEventListener("mouseleave",function(){
 
 this.style.transform="scale(1)";
 
 });
 
-/* ===========================
-   PAGE READY
-=========================== */
-
-console.log("Dashboard Ready");
+console.log("Dashboard Loaded Successfully");
 
 </script>
 
