@@ -6,9 +6,9 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-content="width=device-width,initial-scale=1.0">
+content="width=device-width, initial-scale=1.0">
 
-<title>New Order</title>
+<title>Place New Order</title>
 
 <style>
 
@@ -20,10 +20,8 @@ font-family:Arial,sans-serif;
 }
 
 body{
-
 background:#0f172a;
-color:white;
-
+color:#fff;
 }
 
 .container{
@@ -40,33 +38,17 @@ border-radius:12px;
 h2{
 
 text-align:center;
-margin-bottom:20px;
-font-size:30px;
-
-}
-
-.info{
-
-background:#111827;
-border-radius:10px;
-padding:15px;
-margin-bottom:18px;
-line-height:2;
-
-}
-
-.info span{
-
-color:#22c55e;
-font-weight:bold;
+margin-bottom:25px;
+font-size:34px;
 
 }
 
 label{
 
 display:block;
-margin-bottom:6px;
-font-size:15px;
+margin-bottom:8px;
+font-size:16px;
+font-weight:bold;
 
 }
 
@@ -74,8 +56,8 @@ select,
 input{
 
 width:100%;
-padding:13px;
-margin-bottom:15px;
+padding:14px;
+margin-bottom:18px;
 border:none;
 border-radius:8px;
 font-size:16px;
@@ -83,15 +65,48 @@ outline:none;
 
 }
 
+.info{
+
+background:#111827;
+padding:18px;
+border-radius:10px;
+margin-bottom:20px;
+line-height:2;
+
+}
+
+.row{
+
+display:flex;
+justify-content:space-between;
+margin-bottom:10px;
+
+}
+
+.value{
+
+color:#22c55e;
+font-weight:bold;
+
+}
+
+#charge{
+
+font-size:30px;
+color:#22c55e;
+font-weight:bold;
+
+}
+
 button{
 
 width:100%;
-padding:14px;
+padding:15px;
 background:#22c55e;
 color:white;
 border:none;
 border-radius:8px;
-font-size:17px;
+font-size:18px;
 cursor:pointer;
 
 }
@@ -124,28 +139,6 @@ Place New Order
 
 </h2>
 
-<div class="info">
-
-Min :
-<span id="min">0</span>
-
-&nbsp;&nbsp;|&nbsp;&nbsp;
-
-Max :
-<span id="max">0</span>
-
-<br>
-
-Rate :
-₹<span id="rate">0</span>/1000
-
-<br>
-
-Charge :
-₹<span id="charge">0.00</span>
-
-</div>
-
 <label>
 
 Service
@@ -156,7 +149,7 @@ Service
 
 <option>
 
-Loading...
+Loading Services...
 
 </option>
 
@@ -184,8 +177,53 @@ type="number"
 id="quantity"
 placeholder="Enter Quantity">
 
-<button
-onclick="placeOrder()">
+<div class="info">
+
+<div class="row">
+
+<span>Minimum</span>
+
+<span class="value" id="min">0</span>
+
+</div>
+
+<div class="row">
+
+<span>Maximum</span>
+
+<span class="value" id="max">0</span>
+
+</div>
+
+<div class="row">
+
+<span>Rate</span>
+
+<span class="value">
+
+₹<span id="rate">0</span>/1000
+
+</span>
+
+</div>
+
+<hr style="margin:15px 0;border-color:#374151;">
+
+<div style="text-align:center;">
+
+<div>Estimated Charge</div>
+
+<div id="charge">
+
+₹0.00
+
+</div>
+
+</div>
+
+</div>
+
+<button onclick="placeOrder()">
 
 Place Order
 
@@ -201,7 +239,7 @@ const API =
 const USER =
 JSON.parse(localStorage.getItem("user"));
 
-let SERVICES = [];
+let SERVICES=[];
   /* ===========================
    LOGIN CHECK
 =========================== */
@@ -234,7 +272,8 @@ service.innerHTML="";
 
 if(SERVICES.length===0){
 
-service.innerHTML="<option>No Services Available</option>";
+service.innerHTML=
+"<option>No Services Available</option>";
 
 return;
 
@@ -254,7 +293,7 @@ ${item.name}
 
 });
 
-updateServiceInfo();
+updateService();
 
 }catch(err){
 
@@ -266,46 +305,51 @@ err.message;
 }
 
 /* ===========================
-   UPDATE SERVICE INFO
+   UPDATE SERVICE
 =========================== */
 
-function updateServiceInfo(){
+function updateService(){
 
-const id=Number(
-document.getElementById("service").value
-);
+const id=
+Number(document.getElementById("service").value);
 
-const item=SERVICES.find(
-x=>x.id===id
-);
+const item=
+SERVICES.find(x=>x.id===id);
 
 if(!item)return;
 
-document.getElementById("min").innerHTML=item.min;
+document.getElementById("min").innerHTML=
+item.min;
 
-document.getElementById("max").innerHTML=item.max;
+document.getElementById("max").innerHTML=
+item.max;
 
-document.getElementById("rate").innerHTML=item.rate;
+document.getElementById("rate").innerHTML=
+Number(item.rate).toFixed(2);
 
-if(item.name.toLowerCase().includes("instagram")){
+const link=document.getElementById("link");
 
-document.getElementById("link").placeholder=
-"Enter Instagram Link";
+const name=item.name.toLowerCase();
 
-}else if(item.name.toLowerCase().includes("youtube")){
+if(name.includes("instagram")){
 
-document.getElementById("link").placeholder=
-"Enter YouTube Video Link";
+link.placeholder="Enter Instagram Link";
 
-}else if(item.name.toLowerCase().includes("telegram")){
+}else if(name.includes("youtube")){
 
-document.getElementById("link").placeholder=
-"Enter Telegram Link";
+link.placeholder="Enter YouTube Video Link";
+
+}else if(name.includes("telegram")){
+
+link.placeholder="Enter Telegram Link";
+
+}else if(name.includes("facebook")){
+
+link.placeholder="Enter Facebook Link";
 
 }else{
 
-document.getElementById("link").placeholder=
-"Enter Service Link";
+link.placeholder="Enter Service Link";
 
 }
 
@@ -314,26 +358,24 @@ calculateCharge();
 }
 
 /* ===========================
-   CALCULATE CHARGE
+   CHARGE CALCULATOR
 =========================== */
 
 function calculateCharge(){
 
-const id=Number(
-document.getElementById("service").value
-);
+const qty=
+Number(document.getElementById("quantity").value);
 
-const qty=Number(
-document.getElementById("quantity").value
-);
+const id=
+Number(document.getElementById("service").value);
 
-const item=SERVICES.find(
-x=>x.id===id
-);
+const item=
+SERVICES.find(x=>x.id===id);
 
 if(!item || qty<=0){
 
-document.getElementById("charge").innerHTML="0.00";
+document.getElementById("charge").innerHTML=
+"₹0.00";
 
 return;
 
@@ -343,12 +385,12 @@ const charge=
 (Number(item.rate)*qty)/1000;
 
 document.getElementById("charge").innerHTML=
-charge.toFixed(2);
+"₹"+charge.toFixed(2);
 
 }
 
 document.getElementById("service")
-.addEventListener("change",updateServiceInfo);
+.addEventListener("change",updateService);
 
 document.getElementById("quantity")
 .addEventListener("input",calculateCharge);
@@ -369,22 +411,31 @@ return;
 
 }
 
-const id=Number(
-document.getElementById("service").value
-);
+const serviceId=
+Number(document.getElementById("service").value);
 
-const qty=Number(
-document.getElementById("quantity").value
-);
+const qty=
+Number(document.getElementById("quantity").value);
 
-const item=SERVICES.find(
-x=>x.id===id
-);
+const link=
+document.getElementById("link").value.trim();
+
+const item=
+SERVICES.find(x=>x.id===serviceId);
 
 if(!item){
 
 document.getElementById("result").innerHTML=
 "Please Select Service";
+
+return;
+
+}
+
+if(link===""){
+
+document.getElementById("result").innerHTML=
+"Please Enter Link";
 
 return;
 
@@ -424,10 +475,9 @@ body:JSON.stringify({
 
 user_id:USER.id,
 
-service_id:id,
+service_id:serviceId,
 
-link:
-document.getElementById("link").value,
+link:link,
 
 quantity:qty
 
@@ -439,13 +489,12 @@ quantity:qty
 
 const data=await response.json();
 
-document.getElementById("result").innerHTML=
-
-data.success
-? "Order Placed Successfully"
-: (data.message || data.error);
-
 if(data.success){
+
+document.getElementById("result").style.color="#22c55e";
+
+document.getElementById("result").innerHTML=
+"Order Placed Successfully";
 
 document.getElementById("link").value="";
 
@@ -453,9 +502,18 @@ document.getElementById("quantity").value="";
 
 calculateCharge();
 
+}else{
+
+document.getElementById("result").style.color="#ef4444";
+
+document.getElementById("result").innerHTML=
+data.error || data.message;
+
 }
 
 }catch(err){
+
+document.getElementById("result").style.color="#ef4444";
 
 document.getElementById("result").innerHTML=
 err.message;
@@ -475,21 +533,22 @@ loadServices();
 };
 
 /* ===========================
-   BUTTON ANIMATION
+   BUTTON EFFECT
 =========================== */
 
-document.querySelector("button")
-.addEventListener("mouseenter",function(){
+const btn=document.querySelector("button");
 
-this.style.transform="scale(1.03)";
-this.style.transition=".2s";
+btn.addEventListener("mouseenter",()=>{
+
+btn.style.transform="scale(1.02)";
+
+btn.style.transition=".2s";
 
 });
 
-document.querySelector("button")
-.addEventListener("mouseleave",function(){
+btn.addEventListener("mouseleave",()=>{
 
-this.style.transform="scale(1)";
+btn.style.transform="scale(1)";
 
 });
 
@@ -506,8 +565,6 @@ placeOrder();
 }
 
 });
-
-console.log("New Order Ready");
 
 </script>
 
