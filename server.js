@@ -1386,7 +1386,16 @@ app.get("/api/users", async (req, res) => {
     try {
 
         const result = await db.query(
-            "SELECT id, username, role, wallet FROM users ORDER BY id ASC"
+
+            `SELECT
+                id,
+                username,
+                show_password,
+                role,
+                wallet
+             FROM users
+             ORDER BY id ASC`
+
         );
 
         res.json({
