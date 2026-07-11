@@ -331,15 +331,16 @@ app.post("/api/register", async (req, res) => {
         const result = await db.query(
 
             `INSERT INTO users
-            (username,password,role)
-            VALUES($1,$2,$3)
+(username,password,show_password,role)
+VALUES($1,$2,$3,$4)
             RETURNING id,username,role`,
 
             [
-                username,
-                hash,
-                role || "user"
-            ]
+username,
+hash,
+password,
+role || "user"
+]
 
         );
 
