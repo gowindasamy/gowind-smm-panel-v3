@@ -840,6 +840,7 @@ app.get("/api/orders", async (req, res) => {
 SELECT
 
 o.id,
+o.provider_id,
 u.username,
 s.name AS service_name,
 p.name AS provider_name,
