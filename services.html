@@ -346,31 +346,25 @@ location.href =
 =========================== */
 async function deleteAllServices(){
 
-if(!confirm("Delete ALL Services?")){
+if(!confirm("Are you sure you want to delete all services?")){
 
 return;
 
 }
 
-const response=await fetch(
-
-API+"/api/services",
-
-{
+const response = await fetch(API+"/api/services",{
 
 method:"DELETE"
 
-}
+});
 
-);
-
-const data=await response.json();
+const data = await response.json();
 
 alert(data.message);
 
 loadServices();
 
-}
+  }
 async function deleteService(serviceId){
 
 const ok = confirm(
