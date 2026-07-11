@@ -760,16 +760,17 @@ app.post("/api/orders", async (req, res) => {
 
         });
 
-    } catch (err) {
+    catch (err) {
 
-        res.status(500).json({
+    console.error(err);
 
-            success: false,
-            error: err.message
+    res.status(500).json({
+        success: false,
+        error: err.message,
+        stack: err.stack
+    });
 
-        });
-
-    }
+}
 
 });
 /* ===========================
