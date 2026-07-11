@@ -1,39 +1,257 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Gowind SMM Panel</title>
-    <link rel="stylesheet" href="style.css">
+
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0">
+
+<title>Login</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+
+background:#0f172a;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+
+}
+
+.box{
+
+background:#1e293b;
+padding:30px;
+width:350px;
+border-radius:10px;
+color:white;
+
+}
+
+h2{
+
+text-align:center;
+margin-bottom:20px;
+
+}
+
+input{
+
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border:none;
+border-radius:6px;
+
+}
+
+button{
+
+width:100%;
+padding:12px;
+background:#2563eb;
+border:none;
+border-radius:6px;
+color:white;
+font-size:16px;
+cursor:pointer;
+
+}
+
+#result{
+
+margin-top:15px;
+text-align:center;
+
+}
+
+</style>
+
 </head>
+
 <body>
 
-<header>
-    <h1>🔐 Gowind SMM Panel</h1>
-    <p>User Login</p>
-</header>
+<div class="box">
 
-<main>
-    <h2>Login</h2>
+<h2>🔐 Admin Login</h2>
 
-    <form id="loginForm">
-        <input type="text" id="username" placeholder="Username" required><br><br>
+<input
+type="text"
+id="username"
+placeholder="Username">
 
-        <input type="password" id="password" placeholder="Password" required><br><br>
+<input
+type="password"
+id="password"
+placeholder="Password">
 
-        <button type="submit">Login</button>
-    </form>
+<button
+onclick="login()">
 
-    <br>
+Login
 
-    <a href="index.html">
-        <button type="button">⬅ Back</button>
-    </a>
+</button>
 
-    <p id="message"></p>
-</main>
+<div id="result"></div>
 
-<script src="script.js"></script>
+<script>
+
+const API =
+"https://gowind-smm-panel-v3.onrender.com";
+   /* ===========================
+   LOGIN
+=========================== */
+
+async function login(){
+
+try{
+
+const username =
+document.getElementById("username").value;
+
+const password =
+document.getElementById("password").value;
+
+if(!username || !password){
+
+document.getElementById("result").innerHTML =
+"Please enter username and password";
+
+return;
+
+}
+
+const response = await fetch(
+
+API + "/api/login",
+
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+username,
+password
+
+})
+
+}
+
+);
+
+const data = await response.json();
+
+if(data.success){
+
+localStorage.setItem(
+"token",
+data.token
+);
+
+localStorage.setItem(
+"user",
+JSON.stringify(data.user)
+);
+
+document.getElementById("result").innerHTML =
+"✅ Login Successful";
+
+setTimeout(()=>{
+
+location.href="dashboard.html";
+
+},1000);
+
+}else{
+
+document.getElementById("result").innerHTML =
+data.message || "Login Failed";
+
+}
+
+}catch(err){
+
+document.getElementById("result").innerHTML =
+err.message;
+
+}
+
+    }
+    /* ===========================
+   ENTER KEY LOGIN
+=========================== */
+
+document.addEventListener("keydown",function(e){
+
+if(e.key==="Enter"){
+
+login();
+
+}
+
+});
+
+/* ===========================
+   AUTO LOGIN CHECK
+=========================== */
+
+if(localStorage.getItem("token")){
+
+location.href="dashboard.html";
+
+}
+
+/* ===========================
+   AUTO FOCUS
+=========================== */
+
+window.onload=function(){
+
+document.getElementById("username").focus();
+
+};
+
+/* ===========================
+   BUTTON ANIMATION
+=========================== */
+
+document.querySelector("button")
+.addEventListener("mouseenter",function(){
+
+this.style.transform="scale(1.05)";
+this.style.transition=".2s";
+
+});
+
+document.querySelector("button")
+.addEventListener("mouseleave",function(){
+
+this.style.transform="scale(1)";
+
+});
+    /* ===========================
+   PAGE READY
+=========================== */
+
+console.log("Login Page Ready");
+
+</script>
 
 </body>
+
 </html>
