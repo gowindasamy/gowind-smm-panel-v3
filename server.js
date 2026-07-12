@@ -482,6 +482,36 @@ ORDER BY s.id ASC
     }
 
 });
+app.get("/api/services/user", async (req, res) => {
+
+    try {
+
+        const result = await db.query(`
+SELECT
+s.*,
+p.name AS provider_name
+FROM services s
+LEFT JOIN providers p
+ON s.provider_id = p.id
+WHERE s.status = TRUE
+ORDER BY s.id ASC
+`);
+
+        res.json({
+            success: true,
+            services: result.rows
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
 
 /* ===========================
    GET SINGLE SERVICE
