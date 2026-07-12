@@ -5,8 +5,7 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Admin Dashboard</title>
 
@@ -24,11 +23,11 @@ font-family:Arial,sans-serif;
 
 body{
 
-background:
-radial-gradient(circle at top left,#7c3aed33,transparent 35%),
-radial-gradient(circle at top right,#06b6d433,transparent 35%),
-radial-gradient(circle at bottom,#2563eb33,transparent 40%),
-#0b1120;
+background:#08111f;
+
+background-image:
+radial-gradient(circle at top left,#2563eb22,transparent 35%),
+radial-gradient(circle at bottom right,#06b6d422,transparent 40%);
 
 color:#fff;
 
@@ -42,16 +41,14 @@ overflow-x:hidden;
 
 width:95%;
 
-max-width:1200px;
+max-width:500px;
 
-margin:20px auto;
-
-padding:5px;
+margin:18px auto;
 
 }
 
 /* ===========================
-   HEADER
+HEADER
 =========================== */
 
 .header{
@@ -62,7 +59,9 @@ justify-content:space-between;
 
 align-items:center;
 
-padding:18px;
+padding:20px;
+
+border-radius:18px;
 
 background:rgba(255,255,255,.05);
 
@@ -72,71 +71,41 @@ backdrop-filter:blur(18px);
 
 border:1px solid rgba(255,255,255,.08);
 
-border-radius:18px;
-
-margin-bottom:20px;
-
 box-shadow:
 
-0 0 25px rgba(59,130,246,.15);
+0 10px 30px rgba(0,0,0,.25),
+
+0 0 20px rgba(37,99,235,.18);
+
+margin-bottom:18px;
 
 }
 
-.brand{
+.title h1{
 
-display:flex;
+font-size:28px;
 
-align-items:center;
+font-weight:700;
 
-gap:15px;
+background:linear-gradient(
+90deg,
+#3b82f6,
+#06b6d4
+);
 
-}
+-webkit-background-clip:text;
 
-.logo{
-
-width:60px;
-
-height:60px;
-
-border-radius:50%;
-
-overflow:hidden;
-
-border:2px solid #2563eb;
-
-box-shadow:
-
-0 0 20px rgba(37,99,235,.30);
-
-}
-
-.logo img{
-
-width:100%;
-
-height:100%;
-
-object-fit:cover;
-
-}
-
-.title h2{
-
-font-size:24px;
-
-font-weight:bold;
-
-color:#ffffff;
+-webkit-text-fill-color:transparent;
 
 }
 
 .title p{
 
+margin-top:4px;
+
 font-size:13px;
 
 color:#94a3b8;
-
-margin-top:3px;
 
 }
 
@@ -150,21 +119,23 @@ gap:10px;
 
 .action-btn{
 
-width:45px;
+width:46px;
 
-height:45px;
+height:46px;
 
 border:none;
 
 border-radius:50%;
 
-background:#1e293b;
+background:rgba(255,255,255,.06);
+
+border:1px solid rgba(255,255,255,.08);
 
 color:#fff;
 
-cursor:pointer;
-
 font-size:18px;
+
+cursor:pointer;
 
 transition:.3s;
 
@@ -183,25 +154,20 @@ box-shadow:
 }
 
 /* ===========================
-   STATS
+CARDS
 =========================== */
 
-.stats{
+.cards{
 
 display:grid;
 
-grid-template-columns:
-repeat(auto-fit,minmax(220px,1fr));
-
 gap:15px;
-
-margin-bottom:20px;
 
 }
 
 .card{
 
-background:rgba(255,255,255,.06);
+background:rgba(255,255,255,.05);
 
 backdrop-filter:blur(18px);
 
@@ -211,21 +177,15 @@ border:1px solid rgba(255,255,255,.08);
 
 border-radius:18px;
 
-padding:20px;
+padding:18px;
+
+transition:.35s;
 
 position:relative;
 
 overflow:hidden;
 
 cursor:pointer;
-
-transition:.35s;
-
-box-shadow:
-
-0 8px 32px rgba(0,0,0,.25),
-
-0 0 20px rgba(37,99,235,.12);
 
 }
 
@@ -249,7 +209,7 @@ background:linear-gradient(
 
 transparent,
 
-rgba(255,255,255,.18),
+rgba(255,255,255,.12),
 
 transparent
 
@@ -269,20 +229,59 @@ left:180%;
 
 .card:hover{
 
-transform:translateY(-6px);
+transform:translateY(-4px);
 
-border-color:rgba(59,130,246,.45);
+border-color:#3b82f6;
 
 box-shadow:
 
-0 0 20px rgba(59,130,246,.35),
+0 0 20px rgba(37,99,235,.30),
 
-0 0 40px rgba(124,58,237,.25);
+0 0 35px rgba(6,182,212,.20);
 
 }
+
+.card-title{
+
+display:flex;
+
+align-items:center;
+
+gap:10px;
+
+font-size:16px;
+
+font-weight:600;
+
+color:#fff;
+
+margin-bottom:10px;
+
+}
+
+.card-title i{
+
+color:#3b82f6;
+
+font-size:18px;
+
+}
+
+.card-value{
+
+font-size:32px;
+
+font-weight:bold;
+
+color:#fff;
+
+}
+
 .wallet{
 
-grid-column:1/-1;
+font-size:30px;
+
+color:#22c55e;
 
 }
    </style>
@@ -297,21 +296,11 @@ grid-column:1/-1;
 
 <div class="header">
 
-<div class="brand">
-
-<div class="logo">
-
-<img src="assets/logo.png" alt="Logo">
-
-</div>
-
 <div class="title">
 
-<h2>Gowind SMM Panel</h2>
+<h1>Gowind SMM Panel</h1>
 
 <p>Private Multi Provider Panel</p>
-
-</div>
 
 </div>
 
@@ -339,77 +328,105 @@ title="Logout">
 
 </div>
 
-<!-- Dashboard Cards -->
+<!-- Dashboard -->
 
-<div class="stats">
+<div class="cards">
 
 <div class="card">
 
-<h4>
+<div class="card-title">
 
 <i class="fa-solid fa-cart-shopping"></i>
 
-Total Orders
+<span>Total Orders</span>
 
-</h4>
+</div>
 
-<h2 id="totalOrders">0</h2>
+<div
+class="card-value"
+id="totalOrders">
+
+0
+
+</div>
 
 </div>
 
 <div class="card">
 
-<h4>
+<div class="card-title">
 
 <i class="fa-solid fa-users"></i>
 
-Total Users
+<span>Total Users</span>
 
-</h4>
+</div>
 
-<h2 id="totalUsers">0</h2>
+<div
+class="card-value"
+id="totalUsers">
+
+0
+
+</div>
 
 </div>
 
 <div class="card">
 
-<h4>
+<div class="card-title">
 
 <i class="fa-solid fa-box"></i>
 
-Total Services
+<span>Total Services</span>
 
-</h4>
+</div>
 
-<h2 id="totalServices">0</h2>
+<div
+class="card-value"
+id="totalServices">
+
+0
+
+</div>
 
 </div>
 
 <div class="card">
 
-<h4>
+<div class="card-title">
 
 <i class="fa-solid fa-server"></i>
 
-Providers
-
-</h4>
-
-<h2 id="totalProviders">0</h2>
+<span>Providers</span>
 
 </div>
 
-<div class="card wallet">
+<div
+class="card-value"
+id="totalProviders">
 
-<h4>
+0
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
 
 <i class="fa-solid fa-wallet"></i>
 
-Wallet Balance
+<span>Wallet Balance</span>
 
-</h4>
+</div>
 
-<h2 id="walletBalance">₹0.00</h2>
+<div
+class="card-value wallet"
+id="walletBalance">
+
+₹0.00
 
 </div>
 
@@ -417,103 +434,94 @@ Wallet Balance
 
 <!-- Menu -->
 
-<div class="stats">
-
 <div class="card"
-
 onclick="location.href='new-order.html'">
 
-<h4>
+<div class="card-title">
 
 <i class="fa-solid fa-cart-plus"></i>
 
-New Order
+<span>New Order</span>
 
-</h4>
+</div>
 
 </div>
 
 <div class="card"
-
 onclick="location.href='orders.html'">
 
-<h4>
+<div class="card-title">
 
 <i class="fa-solid fa-list-check"></i>
 
-Orders
+<span>Orders</span>
 
-</h4>
+</div>
 
 </div>
 
 <div class="card"
-
 onclick="location.href='users.html'">
 
-<h4>
+<div class="card-title">
 
 <i class="fa-solid fa-users"></i>
 
-Users
+<span>Users</span>
 
-</h4>
+</div>
 
 </div>
 
 <div class="card"
-
 onclick="location.href='services.html'">
 
-<h4>
+<div class="card-title">
 
 <i class="fa-solid fa-box"></i>
 
-Services
+<span>Services</span>
 
-</h4>
+</div>
 
 </div>
 
 <div class="card"
-
 onclick="location.href='providers.html'">
 
-<h4>
+<div class="card-title">
 
 <i class="fa-solid fa-server"></i>
 
-Providers
+<span>Providers</span>
 
-</h4>
+</div>
 
 </div>
 
 <div class="card"
-
 onclick="location.href='transactions.html'">
 
-<h4>
+<div class="card-title">
 
 <i class="fa-solid fa-wallet"></i>
 
-Transactions
+<span>Transactions</span>
 
-</h4>
+</div>
 
 </div>
 
 <div class="card"
-
 onclick="location.href='profile.html'">
 
-<h4>
+<div class="card-title">
 
 <i class="fa-solid fa-user"></i>
 
-Profile
+<span>Profile</span>
 
-</h4>
+</div>
 
 </div>
 
@@ -526,9 +534,7 @@ const API="https://gowind-smm-panel-v3.onrender.com";
 
 try{
 
-const response=await fetch(
-API+"/api/admin/dashboard"
-);
+const response=await fetch(API+"/api/admin/dashboard");
 
 if(!response.ok) return;
 
@@ -550,7 +556,7 @@ data.dashboard.providers ?? 0;
 
 }catch(error){
 
-console.error("Dashboard:",error);
+console.error(error);
 
 }
 
@@ -577,13 +583,14 @@ const data=await response.json();
 if(data.success){
 
 document.getElementById("walletBalance").textContent=
-"₹"+Number(data.wallet||0).toFixed(2);
+
+"₹"+Number(data.wallet || 0).toFixed(2);
 
 }
 
 }catch(error){
 
-console.error("Wallet:",error);
+console.error(error);
 
 }
 
@@ -595,23 +602,19 @@ localStorage.removeItem("token");
 
 localStorage.removeItem("user");
 
-location.href="login.html";
+window.location.href="login.html";
 
 }
 
-const token=
-localStorage.getItem("token");
+const token=localStorage.getItem("token");
 
-const user=
-JSON.parse(localStorage.getItem("user"));
+const user=JSON.parse(
+localStorage.getItem("user")
+);
 
-if(
-!token||
-!user||
-user.role!=="admin"
-){
+if(!token || !user || user.role!=="admin"){
 
-location.href="login.html";
+window.location.href="login.html";
 
 }
 
