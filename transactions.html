@@ -4,10 +4,14 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+content="width=device-width,initial-scale=1.0">
 
 <title>Transactions</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 <style>
 
@@ -19,85 +23,304 @@ font-family:Arial,sans-serif;
 }
 
 body{
-background:#0f172a;
-color:white;
-}
 
-header{
+background:#08111f;
 
-background:#1e293b;
-padding:20px;
-text-align:center;
-font-size:24px;
-font-weight:bold;
+background-image:
+radial-gradient(circle at top left,
+rgba(147,51,234,.18),
+transparent 35%),
+radial-gradient(circle at top right,
+rgba(6,182,212,.15),
+transparent 35%),
+radial-gradient(circle at bottom right,
+rgba(37,99,235,.18),
+transparent 40%);
+
+color:#fff;
+
+min-height:100vh;
 
 }
 
 .container{
 
 width:95%;
-margin:auto;
-padding:20px;
+
+max-width:1200px;
+
+margin:18px auto;
 
 }
 
-input{
+.header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:16px 18px;
+
+margin-bottom:18px;
+
+border-radius:18px;
+
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
+
+box-shadow:
+0 10px 30px rgba(0,0,0,.25),
+0 0 20px rgba(37,99,235,.18);
+
+}
+
+.title h2{
+
+font-size:24px;
+
+font-weight:700;
+
+background:linear-gradient(
+90deg,
+#3b82f6,
+#06b6d4
+);
+
+-webkit-background-clip:text;
+
+-webkit-text-fill-color:transparent;
+
+}
+
+.status{
+
+display:flex;
+
+align-items:center;
+
+gap:6px;
+
+margin-top:6px;
+
+font-size:12px;
+
+font-weight:600;
+
+color:#22c55e;
+
+}
+
+.status-dot{
+
+width:8px;
+
+height:8px;
+
+border-radius:50%;
+
+background:#22c55e;
+
+box-shadow:0 0 10px #22c55e;
+
+}
+
+.actions{
+
+display:flex;
+
+gap:10px;
+
+}
+
+.action-btn{
+
+width:44px;
+
+height:44px;
+
+border:none;
+
+border-radius:50%;
+
+background:rgba(255,255,255,.06);
+
+border:1px solid rgba(255,255,255,.08);
+
+color:#fff;
+
+font-size:17px;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.action-btn:hover{
+
+background:#2563eb;
+
+transform:scale(1.08);
+
+box-shadow:0 0 18px rgba(37,99,235,.35);
+
+}
+
+.search{
 
 width:100%;
-padding:12px;
-margin-bottom:20px;
+
+padding:15px;
+
+margin-bottom:18px;
+
+background:rgba(255,255,255,.05);
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:14px;
+
+outline:none;
+
+font-size:16px;
+
+color:#fff;
+
+}
+
+.search::placeholder{
+
+color:#94a3b8;
+
+}
+
+.search:focus{
+
+border-color:#3b82f6;
+
+box-shadow:0 0 18px rgba(59,130,246,.35);
+
+}
+
+.refresh-btn{
+
+width:100%;
+
+padding:15px;
+
+margin-bottom:18px;
+
 border:none;
-border-radius:6px;
+
+border-radius:14px;
+
+font-size:17px;
+
+font-weight:600;
+
+cursor:pointer;
+
+color:#fff;
+
+background:linear-gradient(
+90deg,
+#2563eb,
+#8b5cf6,
+#06b6d4
+);
+
+transition:.3s;
+
+}
+
+.refresh-btn:hover{
+
+transform:translateY(-2px);
+
+box-shadow:0 0 25px rgba(59,130,246,.35);
+
+}
+
+.table-card{
+
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:18px;
+
+overflow:auto;
 
 }
 
 table{
 
 width:100%;
+
+min-width:700px;
+
 border-collapse:collapse;
 
 }
 
 th{
 
-background:#334155;
-padding:12px;
+padding:16px;
+
+background:rgba(59,130,246,.18);
+
+font-size:15px;
 
 }
 
 td{
 
-padding:10px;
+padding:15px;
+
 text-align:center;
-border-bottom:1px solid #475569;
+
+border-top:1px solid rgba(255,255,255,.08);
 
 }
 
 .credit{
 
 background:#22c55e;
-padding:5px 10px;
-border-radius:5px;
+
+padding:6px 12px;
+
+border-radius:8px;
+
+font-weight:bold;
 
 }
 
 .debit{
 
 background:#ef4444;
-padding:5px 10px;
-border-radius:5px;
+
+padding:6px 12px;
+
+border-radius:8px;
+
+font-weight:bold;
 
 }
 
-button{
+@media(max-width:700px){
 
-padding:12px 20px;
-background:#2563eb;
-color:white;
-border:none;
-border-radius:6px;
-cursor:pointer;
-margin-top:20px;
+table{
+
+min-width:650px;
+
+}
 
 }
 
@@ -107,29 +330,80 @@ margin-top:20px;
 
 <body>
 
-<header>
-
-💳 Transaction History
-
-</header>
-
 <div class="container">
 
+<div class="header">
+
+<div class="title">
+
+<h2 id="siteName">
+
+Loading...
+
+</h2>
+
+<div class="status">
+
+<div class="status-dot"></div>
+
+<span>ACTIVE</span>
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<button
+class="action-btn"
+onclick="history.back()">
+
+<i class="fa-solid fa-arrow-left"></i>
+
+</button>
+
+<button
+class="action-btn"
+onclick="logout()">
+
+<i class="fa-solid fa-right-from-bracket"></i>
+
+</button>
+
+</div>
+
+</div>
+
 <input
-type="text"
+class="search"
 id="search"
-placeholder="Search Transaction..."
+type="text"
+placeholder="Search Transactions..."
 onkeyup="searchTransactions()">
 
-<table>
+<button
+class="refresh-btn"
+onclick="loadTransactions()">
+
+<i class="fa-solid fa-rotate-right"></i>
+
+Refresh
+
+</button>
+
+<div class="table-card">
+  <table>
 
 <thead>
 
 <tr>
 
 <th>ID</th>
+
 <th>Type</th>
+
 <th>Amount</th>
+
 <th>Date</th>
 
 </tr>
@@ -138,17 +412,23 @@ onkeyup="searchTransactions()">
 
 <tbody id="transactionTable">
 
+<tr>
+
+<td colspan="4">
+
+Loading...
+
+</td>
+
+</tr>
+
 </tbody>
 
 </table>
 
-<br>
+</div>
 
-<button onclick="loadTransactions()">
-
-🔄 Refresh
-
-</button>
+</div>
 
 <script>
 
@@ -156,59 +436,89 @@ const API =
 "https://gowind-smm-panel-v3.onrender.com";
 
 const USER =
-JSON.parse(localStorage.getItem("user"));
+JSON.parse(
+localStorage.getItem("user")
+);
 
 let allTransactions = [];
-  /* ===========================
-   LOAD TRANSACTIONS
-=========================== */
+
+if(!localStorage.getItem("token") || !USER){
+
+location.href="login.html";
+
+}
+
+async function loadSettings(){
+
+try{
+
+const response=
+await fetch(API+"/api/settings");
+
+const data=
+await response.json();
+
+if(data.success){
+
+document.getElementById("siteName").textContent=
+data.settings.site_name;
+
+}
+
+}catch(err){
+
+console.log(err);
+
+}
+
+}
 
 async function loadTransactions(){
 
 try{
 
-const response = await fetch(
-API + "/api/transactions/" + USER.id
+const response=
+await fetch(
+API+"/api/transactions/"+USER.id
 );
 
-const data = await response.json();
+const data=
+await response.json();
 
 if(!data.success){
 
-document.getElementById("transactionTable").innerHTML =
+document.getElementById("transactionTable").innerHTML=
+
 "<tr><td colspan='4'>No Transactions Found</td></tr>";
 
 return;
 
 }
 
-allTransactions = data.transactions;
+allTransactions=
+data.transactions || [];
 
 renderTransactions(allTransactions);
 
 }catch(err){
 
-document.getElementById("transactionTable").innerHTML =
+document.getElementById("transactionTable").innerHTML=
+
 "<tr><td colspan='4'>"+err.message+"</td></tr>";
 
 }
 
 }
+  function renderTransactions(list){
 
-/* ===========================
-   RENDER TRANSACTIONS
-=========================== */
-
-function renderTransactions(list){
-
-const table =
+const table=
 document.getElementById("transactionTable");
 
-table.innerHTML = "";
+table.innerHTML="";
 
 if(list.length===0){
 
-table.innerHTML =
+table.innerHTML=
 "<tr><td colspan='4'>No Transactions Found</td></tr>";
 
 return;
@@ -217,12 +527,12 @@ return;
 
 list.forEach(item=>{
 
-const badge =
+const badge=
 item.type==="Credit"
 ? "credit"
 : "debit";
 
-table.innerHTML += `
+table.innerHTML+=`
 
 <tr>
 
@@ -231,17 +541,22 @@ table.innerHTML += `
 <td>
 
 <span class="${badge}">
+
 ${item.type}
+
 </span>
 
 </td>
 
-<td>₹${item.amount}</td>
+<td>
+
+₹${Number(item.amount).toFixed(2)}
+
+</td>
 
 <td>
 
-${new Date(item.created_at)
-.toLocaleString()}
+${new Date(item.created_at).toLocaleString()}
 
 </td>
 
@@ -252,25 +567,35 @@ ${new Date(item.created_at)
 });
 
 }
-  /* ===========================
-   SEARCH TRANSACTIONS
-=========================== */
 
 function searchTransactions(){
 
-const keyword =
+const keyword=
+
 document.getElementById("search")
-.value.toLowerCase();
 
-const filtered = allTransactions.filter(item=>
+.value
 
-String(item.id).includes(keyword) ||
+.toLowerCase();
+
+const filtered=
+
+allTransactions.filter(item=>
+
+String(item.id).includes(keyword)
+
+||
 
 String(item.type)
+
 .toLowerCase()
-.includes(keyword) ||
+
+.includes(keyword)
+
+||
 
 String(item.amount)
+
 .includes(keyword)
 
 );
@@ -279,53 +604,43 @@ renderTransactions(filtered);
 
 }
 
-/* ===========================
-   LOGIN CHECK
-=========================== */
+function logout(){
 
-if(!localStorage.getItem("token")){
+localStorage.removeItem("token");
+
+localStorage.removeItem("user");
 
 location.href="login.html";
 
 }
 
-/* ===========================
-   AUTO REFRESH
-=========================== */
-
-setInterval(loadTransactions,30000);
-
-/* ===========================
-   WINDOW LOAD
-=========================== */
-
 window.onload=function(){
+
+loadSettings();
 
 loadTransactions();
 
 };
-  /* ===========================
-   BUTTON ANIMATION
-=========================== */
 
-document.querySelector("button").addEventListener("mouseenter",function(){
+setInterval(loadTransactions,30000);
 
-    this.style.transform="scale(1.05)";
-    this.style.transition=".2s";
+document.addEventListener("keydown",function(e){
+
+if(e.key==="Escape"){
+
+history.back();
+
+}
+
+if(e.ctrlKey && e.key==="r"){
+
+e.preventDefault();
+
+loadTransactions();
+
+}
 
 });
-
-document.querySelector("button").addEventListener("mouseleave",function(){
-
-    this.style.transform="scale(1)";
-
-});
-
-/* ===========================
-   PAGE READY
-=========================== */
-
-console.log("Transactions Page Loaded");
 
 </script>
 
