@@ -1,364 +1,1661 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-        
-        body {
-            min-height: 100vh;
-            background-color: #030611;
-            color: #fff;
-            overflow-x: hidden;
-            padding-bottom: 50px;
-            position: relative;
-        }
 
-        /* Live Background Canvas Layout Positioning */
-        #galaxy-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1;
-            pointer-events: none;
-        }
+<meta charset="UTF-8">
 
-        .container { 
-            width: 95%; 
-            max-width: 540px; 
-            margin: 20px auto; 
-            padding: 10px; 
-            position: relative; 
-            z-index: 2; 
-        }
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-        /* Image Model Header Design */
-        .header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 12px 6px; margin-bottom: 25px;
-        }
-        .brand { display: flex; align-items: center; gap: 14px; }
-        .logo {
-            width: 52px; height: 52px; border-radius: 50%; background: #0b1120;
-            border: 2px solid rgba(59, 130, 246, 0.6); overflow: hidden; 
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
-        }
-        .logo img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .brand h2 {
-            font-size: 22px; 
-            background: linear-gradient(90deg, #a5b4fc, #c084fc);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            font-weight: bold;
-        }
-        .brand p { color: #94a3b8; font-size: 12px; margin-top: 2px; }
+<title>Admin Dashboard</title>
 
-        /* Top Right Glass Buttons Group */
-        .header-actions { display: flex; align-items: center; gap: 12px; }
-        .btn-action {
-            width: 44px; height: 44px; border-radius: 50%; 
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; transition: all 0.2s ease; color: #fff;
-        }
-        .btn-action:hover { background: rgba(255, 255, 255, 0.1); transform: scale(1.05); }
-        .btn-action.logout-trigger { color: #f87171; }
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-        /* Continuous Stack Matrix System */
-        .unified-stack { display: flex; flex-direction: column; gap: 0px; }
+<style>
 
-        /* Bordered Stack Rows Similar to the Image */
-        .row-card {
-            background: rgba(13, 22, 43, 0.45); 
-            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.06); 
-            border-radius: 14px; padding: 14px 18px; 
-            display: flex; align-items: center; justify-content: space-between;
-            text-decoration: none; color: inherit; transition: all 0.2s ease;
-            margin-bottom: 10px;
-        }
-        .row-card:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.15);
-            transform: translateY(-1px);
-        }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
 
-        .card-left { display: flex; align-items: center; gap: 16px; }
-        .card-icon { font-size: 22px; width: 28px; display: flex; justify-content: center; }
-        
-        .card-details h3 { font-size: 16px; font-weight: bold; color: #fff; letter-spacing: 0.3px; }
-        .card-details p { color: #94a3b8; font-size: 12px; margin-top: 2px; }
+html{
+scroll-behavior:smooth;
+}
 
-        /* Text Effects from Reference Image */
-        .rainbow-text {
-            background: linear-gradient(90deg, #ff8da1, #ffb38a, #fff38a, #a2ff8a, #8ad2ff, #d28aff);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .stat-value { font-size: 24px; font-weight: bold; color: #fff; }
-        .arrow-icon { color: #94a3b8; font-size: 14px; }
+body{
 
-        /* Live Feed Divider Labels */
-        .feed-divider {
-            text-align: center;
-            font-size: 10px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            margin: 6px 0 14px 0;
-            background: linear-gradient(90deg, #ff758c, #ff7eb3, #fccb90, #96e6a1, #8fd3f4, #b993d6);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
+font-family:"Poppins",sans-serif;
 
-        /* Tiny Trending Badges */
-        .trending-row {
-            display: flex;
-            gap: 12px;
-            font-size: 9px;
-            font-weight: bold;
-            margin-top: 4px;
-            letter-spacing: 0.5px;
-        }
-        .trend-lbl { color: #f87171; }
-        .trend-val {
-            background: linear-gradient(90deg, #d4fc79, #96e6a1, #8fd3f4);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
+background:#020617;
+
+overflow-x:hidden;
+
+color:#fff;
+
+min-height:100vh;
+
+}
+
+/* ===========================
+   LIVE GALAXY CANVAS
+=========================== */
+
+#galaxy{
+
+position:fixed;
+
+top:0;
+left:0;
+
+width:100%;
+
+height:100%;
+
+z-index:-5;
+
+}
+
+/* ===========================
+   NEBULA
+=========================== */
+
+body::before{
+
+content:"";
+
+position:fixed;
+
+top:-150px;
+
+left:-150px;
+
+width:420px;
+
+height:420px;
+
+border-radius:50%;
+
+background:#2563eb;
+
+filter:blur(170px);
+
+opacity:.35;
+
+animation:nebula1 12s ease-in-out infinite alternate;
+
+z-index:-4;
+
+}
+
+body::after{
+
+content:"";
+
+position:fixed;
+
+bottom:-170px;
+
+right:-150px;
+
+width:450px;
+
+height:450px;
+
+border-radius:50%;
+
+background:#9333ea;
+
+filter:blur(180px);
+
+opacity:.30;
+
+animation:nebula2 14s ease-in-out infinite alternate;
+
+z-index:-4;
+
+}
+
+@keyframes nebula1{
+
+0%{
+
+transform:translate(0,0);
+
+}
+
+100%{
+
+transform:translate(120px,70px);
+
+}
+
+}
+
+@keyframes nebula2{
+
+0%{
+
+transform:translate(0,0);
+
+}
+
+100%{
+
+transform:translate(-120px,-80px);
+
+}
+
+}
+
+/* ===========================
+   PLEXUS GRID
+=========================== */
+
+.grid{
+
+position:fixed;
+
+inset:0;
+
+background-image:
+
+linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),
+
+linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+
+background-size:90px 90px;
+
+opacity:.12;
+
+animation:gridMove 25s linear infinite;
+
+z-index:-3;
+
+}
+
+@keyframes gridMove{
+
+0%{
+
+transform:translate(0,0);
+
+}
+
+100%{
+
+transform:translate(-90px,-90px);
+
+}
+
+}
+
+/* ===========================
+   CONTAINER
+=========================== */
+
+.container{
+
+width:95%;
+
+max-width:560px;
+
+margin:auto;
+
+padding:18px;
+
+}
+
+/* ===========================
+   GLASS
+=========================== */
+
+.glass{
+
+background:rgba(255,255,255,.06);
+
+backdrop-filter:blur(18px);
+
+-webkit-backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
+
+box-shadow:
+
+0 0 25px rgba(37,99,235,.18),
+
+0 0 40px rgba(147,51,234,.12);
+
+}
+
+/* ===========================
+   HEADER
+=========================== */
+
+.header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:16px;
+
+border-radius:22px;
+
+margin-bottom:22px;
+
+}
+
+.brand{
+
+display:flex;
+
+align-items:center;
+
+gap:14px;
+
+}
+
+.logo{
+
+width:64px;
+
+height:64px;
+
+border-radius:50%;
+
+overflow:hidden;
+
+border:3px solid #38bdf8;
+
+box-shadow:
+
+0 0 18px #38bdf8;
+
+}
+
+.logo img{
+
+width:100%;
+
+height:100%;
+
+object-fit:cover;
+
+}
+
+.title h2{
+
+font-family:"Orbitron",sans-serif;
+
+font-size:24px;
+
+background:linear-gradient(
+
+90deg,
+
+#60a5fa,
+
+#22d3ee,
+
+#c084fc,
+
+#fb7185
+
+);
+
+background-size:300%;
+
+-webkit-background-clip:text;
+
+-webkit-text-fill-color:transparent;
+
+animation:rainbow 6s linear infinite;
+
+}
+
+.title p{
+
+margin-top:4px;
+
+font-size:13px;
+
+color:#cbd5e1;
+
+}
+
+@keyframes rainbow{
+
+0%{
+
+background-position:0%;
+
+}
+
+100%{
+
+background-position:300%;
+
+}
+
+}
+    .actions{
+
+display:flex;
+
+align-items:center;
+
+gap:12px;
+
+}
+
+.action-btn{
+
+width:50px;
+
+height:50px;
+
+border-radius:50%;
+
+border:none;
+
+cursor:pointer;
+
+color:#fff;
+
+font-size:22px;
+
+background:rgba(255,255,255,.06);
+
+backdrop-filter:blur(16px);
+
+border:1px solid rgba(255,255,255,.08);
+
+transition:.35s;
+
+}
+
+.action-btn:hover{
+
+transform:translateY(-4px) scale(1.08);
+
+box-shadow:
+
+0 0 20px #38bdf8,
+
+0 0 40px rgba(147,51,234,.35);
+
+}
+
+.live{
+
+margin:18px 0;
+
+text-align:center;
+
+font-size:13px;
+
+font-family:"Orbitron",sans-serif;
+
+background:linear-gradient(
+
+90deg,
+
+#ff5f6d,
+
+#ffc371,
+
+#00dbde,
+
+#fc00ff
+
+);
+
+background-size:300%;
+
+-webkit-background-clip:text;
+
+-webkit-text-fill-color:transparent;
+
+animation:rainbow 5s linear infinite;
+
+}
+
+/* ===========================
+   DASHBOARD STATS
+=========================== */
+
+.stats{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:16px;
+
+margin-bottom:22px;
+
+}
+
+.stat{
+
+padding:18px;
+
+border-radius:20px;
+
+position:relative;
+
+overflow:hidden;
+
+transition:.35s;
+
+}
+
+.stat:hover{
+
+transform:translateY(-5px);
+
+box-shadow:
+
+0 0 25px rgba(56,189,248,.25),
+
+0 0 45px rgba(147,51,234,.20);
+
+}
+
+.stat::before{
+
+content:"";
+
+position:absolute;
+
+top:-40%;
+
+left:-40%;
+
+width:180%;
+
+height:180%;
+
+background:linear-gradient(
+
+120deg,
+
+transparent,
+
+rgba(255,255,255,.08),
+
+transparent
+
+);
+
+transform:rotate(25deg);
+
+animation:shine 6s linear infinite;
+
+}
+
+@keyframes shine{
+
+100%{
+
+transform:translateX(220%) rotate(25deg);
+
+}
+
+}
+
+.stat h4{
+
+font-size:15px;
+
+color:#cbd5e1;
+
+margin-bottom:10px;
+
+}
+
+.stat h1{
+
+font-size:36px;
+
+font-family:"Orbitron",sans-serif;
+
+color:#fff;
+
+text-shadow:
+
+0 0 12px rgba(56,189,248,.45);
+
+}
+
+.stat small{
+
+display:block;
+
+margin-top:8px;
+
+color:#94a3b8;
+
+font-size:11px;
+
+letter-spacing:1px;
+
+}
     </style>
+
 </head>
 
 <body>
-    <!-- Live Space Engine Canvas -->
-    <canvas id="galaxy-canvas"></canvas>
 
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="brand">
-                <div class="logo"><img src="assets/logo.png?v=1" alt="Logo"></div>
-                <div>
-                    <h2>Gowind SMM Panel</h2>
-                    <p>Private Multi Provider SMM Panel</p>
-                </div>
-            </div>
-            <div class="header-actions">
-                <div class="btn-action" onclick="location.href='settings.html'" title="Settings">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 0.46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/>
-                    </svg>
-                </div>
-                <div class="btn-action logout-trigger" onclick="logout()" title="Logout">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                    </svg>
-                </div>
-            </div>
-        </div>
+<canvas id="galaxy"></canvas>
 
-        <!-- Integrated Data Stack Row Components -->
-        <div class="unified-stack">
-            
-            <div class="row-card" style="cursor: default;">
-                <div class="card-left">
-                    <div class="card-icon">📦</div>
-                    <div class="card-details"><h3 class="rainbow-text">Total Orders</h3></div>
-                </div>
-                <div class="stat-value" id="totalOrders">0</div>
-            </div>
+<div class="grid"></div>
 
-            <div class="feed-divider">LIVE FEED</div>
+<div class="container">
 
-            <div class="row-card" style="cursor: default;">
-                <div class="card-left">
-                    <div class="card-icon">👥</div>
-                    <div class="card-details"><h3>Total Users</h3></div>
-                </div>
-                <div class="stat-value" id="totalUsers">0</div>
-            </div>
+<div class="header glass">
 
-            <div class="row-card" style="cursor: default;">
-                <div class="card-left">
-                    <div class="card-icon">🛠</div>
-                    <div class="card-details"><h3>Total Services</h3></div>
-                </div>
-                <div class="stat-value" id="totalServices">0</div>
-            </div>
+<div class="brand">
 
-            <div class="row-card" style="cursor: default;">
-                <div class="card-left">
-                    <div class="card-icon">🌐</div>
-                    <div class="card-details"><h3>Providers</h3></div>
-                </div>
-                <div class="stat-value" id="totalProviders">0</div>
-            </div>
+<div class="logo">
 
-            <div class="feed-divider">LIVE FEED</div>
+<img src="assets/logo.png?v=1">
 
-            <!-- Operational Route Actions -->
-            <div class="row-card" onclick="location.href='new-order.html'">
-                <div class="card-left">
-                    <div class="card-icon">🛒</div>
-                    <div class="card-details">
-                        <h3>New Order</h3>
-                        <p>Place a new order</p>
-                        <div class="trending-row">
-                            <span class="trend-lbl">TRENDING:</span><span class="trend-val">INSTAGRAM</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="arrow-icon">❯</div>
-            </div>
+</div>
 
-            <div class="row-card" onclick="location.href='orders.html'">
-                <div class="card-left">
-                    <div class="card-icon">📦</div>
-                    <div class="card-details"><h3>Orders</h3><p>Manage all orders</p></div>
-                </div>
-                <div class="arrow-icon">❯</div>
-            </div>
+<div class="title">
 
-            <div class="row-card" onclick="location.href='users.html'">
-                <div class="card-left">
-                    <div class="card-icon">👥</div>
-                    <div class="card-details"><h3>Users</h3><p>Manage users</p></div>
-                </div>
-                <div class="arrow-icon">❯</div>
-            </div>
+<h2>Gowind SMM Panel</h2>
 
-            <div class="row-card" onclick="location.href='services.html'">
-                <div class="card-left">
-                    <div class="card-icon">🛠</div>
-                    <div class="card-details"><h3>Services</h3><p>Manage services</p></div>
-                </div>
-                <div class="arrow-icon">❯</div>
-            </div>
+<p>Private Multi Provider SMM Panel</p>
 
-            <div class="row-card" onclick="location.href='providers.html'">
-                <div class="card-left">
-                    <div class="card-icon">🌐</div>
-                    <div class="card-details"><h3>Providers</h3><p>Manage providers</p></div>
-                </div>
-                <div class="arrow-icon">❯</div>
-            </div>
+</div>
 
-            <div class="row-card" onclick="location.href='transactions.html'">
-                <div class="card-left">
-                    <div class="card-icon">💳</div>
-                    <div class="card-details"><h3>Transactions</h3><p>Wallet transactions</p></div>
-                </div>
-                <div class="arrow-icon">❯</div>
-            </div>
+</div>
 
-            <div class="row-card" onclick="location.href='profile.html'">
-                <div class="card-left">
-                    <div class="card-icon">👤</div>
-                    <div class="card-details"><h3>Profile</h3><p>Admin profile</p></div>
-                </div>
-                <div class="arrow-icon">❯</div>
-            </div>
+<div class="actions">
 
-        </div>
-    </div>
+<button
 
-    <!-- Live Galaxy Vector Graphics Canvas Engine Script -->
-    <script>
-        const canvas = document.getElementById('galaxy-canvas');
-        const ctx = canvas.getContext('2d');
+class="action-btn"
 
-        let width, height, stars = [], nebulaCenter;
+onclick="location.href='settings.html'">
 
-        function initCanvas() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-            nebulaCenter = { x: width * 0.5, y: height * 0.5 };
-            generateStars(350);
-        }
+⚙️
 
-        function generateStars(count) {
-            stars = [];
-            // Generate nebula particle cloud mapping layout
-            for(let i=0; i<count; i++) {
-                let angle = Math.random() * Math.PI * 2;
-                let distance = Math.random() * Math.max(width, height) * 0.6;
-                let speed = (Math.random() * 0.0004) + 0.0001;
-                let size = Math.random() * 1.5;
-                let colorRange = ['rgba(124, 58, 237, ', 'rgba(6, 182, 212, ', 'rgba(244, 63, 94, ', 'rgba(255, 255, 255, '];
-                
-                stars.push({
-                    angle: angle,
-                    distance: distance,
-                    speed: speed,
-                    size: size,
-                    opacity: Math.random(),
-                    colorBase: colorRange[Math.floor(Math.random() * colorRange.length)]
-                });
-            }
-        }
+</button>
 
-        function drawGalaxy() {
-            ctx.fillStyle = '#030611';
-            ctx.fillRect(0, 0, width, height);
+<button
 
-            // Center Nebula Core Glow
-            let coreGlow = ctx.createRadialGradient(nebulaCenter.x, nebulaCenter.y, 10, nebulaCenter.x, nebulaCenter.y, Math.min(width, height) * 0.5);
-            coreGlow.addColorStop(0, 'rgba(124, 58, 237, 0.18)');
-            coreGlow.addColorStop(0.4, 'rgba(6, 182, 212, 0.12)');
-            coreGlow.addColorStop(1, 'rgba(3, 6, 17, 0)');
-            ctx.fillStyle = coreGlow;
-            ctx.fillRect(0, 0, width, height);
+class="action-btn">
 
-            // Animate moving cosmic spiral particles matrix
-            for(let i=0; i<stars.length; i++) {
-                let star = stars[i];
-                star.angle += star.speed; // Rotation update logic
-                
-                // Add minor noise spiral warp
-                let x = nebulaCenter.x + Math.cos(star.angle) * star.distance;
-                let y = nebulaCenter.y + Math.sin(star.angle) * (star.distance * 0.75); // Elliptical perspective
+🔔
 
-                ctx.fillStyle = star.colorBase + star.opacity + ')';
-                ctx.beginPath();
-                ctx.arc(x, y, star.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-            requestAnimationFrame(drawGalaxy);
-        }
+</button>
 
-        window.addEventListener('resize', initCanvas);
-        initCanvas();
-        drawGalaxy();
-    </script>
+<button
 
-    <!-- Native Dynamic Application Control Layer Logic[cite: 2] -->
-    <script>
-        const API = "https://gowind-smm-panel-v3.onrender.com";[cite: 2]
+class="action-btn"
 
-        async function loadDashboard() {[cite: 2]
-            try {[cite: 2]
-                const response = await fetch(API + "/api/admin/dashboard");[cite: 2]
-                const data = await response.json();[cite: 2]
-                if (!data.success) return;[cite: 2]
-                document.getElementById("totalOrders").innerHTML = data.total_orders || 0;[cite: 2]
-                document.getElementById("totalUsers").innerHTML = data.total_users || 0;[cite: 2]
-                document.getElementById("totalServices").innerHTML = data.total_services || 0;[cite: 2]
-                document.getElementById("totalProviders").innerHTML = data.total_providers || 0;[cite: 2]
-            } catch (err) { console.log(err); }[cite: 2]
-        }
+onclick="logout()">
 
-        function logout() {[cite: 2]
-            if (!confirm("Logout from Admin Panel?")) return;[cite: 2]
-            localStorage.removeItem("token"); localStorage.removeItem("user"); location.href = "login.html";[cite: 2]
-        }
+🚪
 
-        const USER = JSON.parse(localStorage.getItem("user"));[cite: 2]
-        if (!localStorage.getItem("token") || !USER || USER.role !== "admin") location.href = "login.html";[cite: 2]
+</button>
 
-        setInterval(loadDashboard, 30000);[cite: 2]
-        window.onload = function () { loadDashboard(); };[cite: 2]
-    </script>
+</div>
+
+</div>
+
+<div class="live">
+
+● LIVE COSMIC DASHBOARD ●
+
+</div>
+
+<div class="stats">
+
+<div class="stat glass">
+
+<h4>📦 Total Orders</h4>
+
+<h1 id="totalOrders">0</h1>
+
+<small>LIVE DATA</small>
+
+</div>
+
+<div class="stat glass">
+
+<h4>👥 Total Users</h4>
+
+<h1 id="totalUsers">0</h1>
+
+<small>LIVE DATA</small>
+
+</div>
+
+<div class="stat glass">
+
+<h4>🛠 Services</h4>
+
+<h1 id="totalServices">0</h1>
+
+<small>AVAILABLE</small>
+
+</div>
+
+<div class="stat glass">
+
+<h4>🌐 Providers</h4>
+
+<h1 id="totalProviders">0</h1>
+
+<small>CONNECTED</small>
+
+</div>
+
+<div class="stat glass"
+
+style="grid-column:1/3;">
+
+<h4>💰 Total Revenue</h4>
+
+<h1 id="totalRevenue">
+
+₹0.00
+
+</h1>
+
+<small>ALL TIME</small>
+
+</div>
+
+</div>
+/* ===========================
+   MENU
+=========================== */
+
+.menu{
+
+display:flex;
+
+flex-direction:column;
+
+gap:14px;
+
+margin-bottom:25px;
+
+}
+
+.menu-card{
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+padding:18px;
+
+border-radius:20px;
+
+cursor:pointer;
+
+transition:.35s;
+
+position:relative;
+
+overflow:hidden;
+
+}
+
+.menu-card:hover{
+
+transform:translateY(-4px);
+
+box-shadow:
+
+0 0 22px rgba(56,189,248,.30),
+
+0 0 40px rgba(147,51,234,.25);
+
+}
+
+.menu-card::before{
+
+content:"";
+
+position:absolute;
+
+left:-120%;
+
+top:0;
+
+width:60%;
+
+height:100%;
+
+background:linear-gradient(
+
+90deg,
+
+transparent,
+
+rgba(255,255,255,.12),
+
+transparent
+
+);
+
+transform:skewX(-25deg);
+
+transition:.8s;
+
+}
+
+.menu-card:hover::before{
+
+left:180%;
+
+}
+
+.menu-left{
+
+display:flex;
+
+align-items:center;
+
+gap:18px;
+
+}
+
+.menu-icon{
+
+width:60px;
+
+height:60px;
+
+border-radius:18px;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:30px;
+
+background:rgba(255,255,255,.08);
+
+box-shadow:
+
+0 0 15px rgba(56,189,248,.18);
+
+}
+
+.menu-title{
+
+font-size:19px;
+
+font-weight:600;
+
+}
+
+.menu-sub{
+
+font-size:13px;
+
+color:#94a3b8;
+
+margin-top:3px;
+
+}
+
+.menu-arrow{
+
+font-size:28px;
+
+transition:.35s;
+
+}
+
+.menu-card:hover
+
+.menu-arrow{
+
+transform:translateX(8px);
+
+color:#38bdf8;
+
+}
+    <!-- ===========================
+     MENU
+=========================== -->
+
+<div class="menu">
+
+<div class="menu-card glass"
+
+onclick="location.href='new-order.html'">
+
+<div class="menu-left">
+
+<div class="menu-icon">🛒</div>
+
+<div>
+
+<div class="menu-title">
+
+New Order
+
+</div>
+
+<div class="menu-sub">
+
+Place new order
+
+</div>
+
+</div>
+
+</div>
+
+<div class="menu-arrow">
+
+➜
+
+</div>
+
+</div>
+
+<div class="menu-card glass"
+
+onclick="location.href='orders.html'">
+
+<div class="menu-left">
+
+<div class="menu-icon">
+
+📦
+
+</div>
+
+<div>
+
+<div class="menu-title">
+
+Orders
+
+</div>
+
+<div class="menu-sub">
+
+Manage all orders
+
+</div>
+
+</div>
+
+</div>
+
+<div class="menu-arrow">
+
+➜
+
+</div>
+
+</div>
+
+<div class="menu-card glass"
+
+onclick="location.href='users.html'">
+
+<div class="menu-left">
+
+<div class="menu-icon">
+
+👥
+
+</div>
+
+<div>
+
+<div class="menu-title">
+
+Users
+
+</div>
+
+<div class="menu-sub">
+
+Manage users
+
+</div>
+
+</div>
+
+</div>
+
+<div class="menu-arrow">
+
+➜
+
+</div>
+
+</div>
+
+<div class="menu-card glass"
+
+onclick="location.href='services.html'">
+
+<div class="menu-left">
+
+<div class="menu-icon">
+
+🛠
+
+</div>
+
+<div>
+
+<div class="menu-title">
+
+Services
+
+</div>
+
+<div class="menu-sub">
+
+Manage services
+
+</div>
+
+</div>
+
+</div>
+
+<div class="menu-arrow">
+
+➜
+
+</div>
+
+</div>
+
+<div class="menu-card glass"
+
+onclick="location.href='providers.html'">
+
+<div class="menu-left">
+
+<div class="menu-icon">
+
+🌐
+
+</div>
+
+<div>
+
+<div class="menu-title">
+
+Providers
+
+</div>
+
+<div class="menu-sub">
+
+Manage providers
+
+</div>
+
+</div>
+
+</div>
+
+<div class="menu-arrow">
+
+➜
+
+</div>
+
+</div>
+
+<div class="menu-card glass"
+
+onclick="location.href='transactions.html'">
+
+<div class="menu-left">
+
+<div class="menu-icon">
+
+💳
+
+</div>
+
+<div>
+
+<div class="menu-title">
+
+Transactions
+
+</div>
+
+<div class="menu-sub">
+
+Wallet history
+
+</div>
+
+</div>
+
+</div>
+
+<div class="menu-arrow">
+
+➜
+
+</div>
+
+</div>
+
+<div class="menu-card glass"
+
+onclick="location.href='profile.html'">
+
+<div class="menu-left">
+
+<div class="menu-icon">
+
+👤
+
+</div>
+
+<div>
+
+<div class="menu-title">
+
+Profile
+
+</div>
+
+<div class="menu-sub">
+
+Admin profile
+
+</div>
+
+</div>
+
+</div>
+
+<div class="menu-arrow">
+
+➜
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const API =
+"https://gowind-smm-panel-v3.onrender.com";
+    /* ===========================
+   LIVE DASHBOARD
+=========================== */
+
+async function loadDashboard(){
+
+try{
+
+const response=await fetch(
+
+API+"/api/admin/dashboard"
+
+);
+
+const data=await response.json();
+
+if(!data.success){
+
+return;
+
+}
+
+animateCounter(
+
+"totalOrders",
+
+data.dashboard.orders
+
+);
+
+animateCounter(
+
+"totalUsers",
+
+data.dashboard.users
+
+);
+
+animateCounter(
+
+"totalServices",
+
+data.dashboard.services
+
+);
+
+animateCounter(
+
+"totalProviders",
+
+data.dashboard.providers
+
+);
+
+document.getElementById(
+
+"totalRevenue"
+
+).innerHTML=
+
+"₹"+Number(
+
+data.dashboard.revenue
+
+).toFixed(2);
+
+}catch(err){
+
+console.log(err);
+
+}
+
+}
+
+/* ===========================
+   COUNTER
+=========================== */
+
+function animateCounter(id,end){
+
+const el=document.getElementById(id);
+
+let start=0;
+
+const step=Math.max(
+
+1,
+
+Math.ceil(end/40)
+
+);
+
+const timer=setInterval(()=>{
+
+start+=step;
+
+if(start>=end){
+
+start=end;
+
+clearInterval(timer);
+
+}
+
+el.innerHTML=start.toLocaleString();
+
+},25);
+
+}
+
+/* ===========================
+   LOGIN CHECK
+=========================== */
+
+const USER=
+
+JSON.parse(
+
+localStorage.getItem("user")
+
+);
+
+if(
+
+!USER ||
+
+USER.role!=="admin"
+
+){
+
+location.href="login.html";
+
+}
+
+/* ===========================
+   LOGOUT
+=========================== */
+
+function logout(){
+
+if(
+
+confirm("Logout Admin?")
+
+){
+
+localStorage.removeItem("token");
+
+localStorage.removeItem("user");
+
+location.href="login.html";
+
+}
+
+}
+
+/* ===========================
+   AUTO REFRESH
+=========================== */
+
+loadDashboard();
+
+setInterval(
+
+loadDashboard,
+
+30000
+
+);
+    /* ===========================
+   GALAXY
+=========================== */
+
+const canvas=
+
+document.getElementById(
+
+"galaxy"
+
+);
+
+const ctx=
+
+canvas.getContext("2d");
+
+let stars=[];
+
+function resize(){
+
+canvas.width=
+
+window.innerWidth;
+
+canvas.height=
+
+window.innerHeight;
+
+}
+
+window.onresize=resize;
+
+resize();
+
+for(
+
+let i=0;
+
+i<250;
+
+i++
+
+){
+
+stars.push({
+
+x:Math.random()*canvas.width,
+
+y:Math.random()*canvas.height,
+
+r:Math.random()*2,
+
+dx:(Math.random()-.5)*.2,
+
+dy:(Math.random()-.5)*.2
+
+});
+
+}
+
+function drawGalaxy(){
+
+ctx.clearRect(
+
+0,
+
+0,
+
+canvas.width,
+
+canvas.height
+
+);
+
+stars.forEach(s=>{
+
+ctx.beginPath();
+
+ctx.arc(
+
+s.x,
+
+s.y,
+
+s.r,
+
+0,
+
+Math.PI*2
+
+);
+
+ctx.fillStyle="#ffffff";
+
+ctx.fill();
+
+s.x+=s.dx;
+
+s.y+=s.dy;
+
+if(
+
+s.x<0||
+
+s.x>canvas.width
+
+)s.dx*=-1;
+
+if(
+
+s.y<0||
+
+s.y>canvas.height
+
+)s.dy*=-1;
+
+});
+
+requestAnimationFrame(
+
+drawGalaxy
+
+);
+
+}
+
+drawGalaxy();
+    /* ===========================
+   PLEXUS EFFECT
+=========================== */
+
+const mouse={
+
+x:0,
+
+y:0
+
+};
+
+document.addEventListener(
+
+"mousemove",
+
+e=>{
+
+mouse.x=e.clientX;
+
+mouse.y=e.clientY;
+
+});
+
+function drawPlexus(){
+
+for(let i=0;i<stars.length;i++){
+
+for(let j=i+1;j<stars.length;j++){
+
+const dx=stars[i].x-stars[j].x;
+
+const dy=stars[i].y-stars[j].y;
+
+const dist=Math.sqrt(dx*dx+dy*dy);
+
+if(dist<110){
+
+ctx.beginPath();
+
+ctx.moveTo(
+
+stars[i].x,
+
+stars[i].y
+
+);
+
+ctx.lineTo(
+
+stars[j].x,
+
+stars[j].y
+
+);
+
+ctx.strokeStyle=
+
+"rgba(56,189,248,"+
+
+(1-dist/110)*0.25+
+
+")";
+
+ctx.lineWidth=1;
+
+ctx.stroke();
+
+}
+
+}
+
+}
+
+}
+
+const oldDraw=drawGalaxy;
+
+drawGalaxy=function(){
+
+ctx.clearRect(
+
+0,
+
+0,
+
+canvas.width,
+
+canvas.height
+
+);
+
+drawPlexus();
+
+stars.forEach(s=>{
+
+ctx.beginPath();
+
+ctx.arc(
+
+s.x,
+
+s.y,
+
+s.r,
+
+0,
+
+Math.PI*2
+
+);
+
+ctx.fillStyle="#ffffff";
+
+ctx.fill();
+
+s.x+=s.dx;
+
+s.y+=s.dy;
+
+if(s.x<0||s.x>canvas.width)s.dx*=-1;
+
+if(s.y<0||s.y>canvas.height)s.dy*=-1;
+
+});
+
+requestAnimationFrame(drawGalaxy);
+
+};
+
+drawGalaxy();
+
+/* ===========================
+   SHOOTING STAR
+=========================== */
+
+setInterval(()=>{
+
+const star=document.createElement("div");
+
+star.style.position="fixed";
+
+star.style.left=Math.random()*window.innerWidth+"px";
+
+star.style.top="-20px";
+
+star.style.width="2px";
+
+star.style.height="90px";
+
+star.style.background="linear-gradient(#fff,transparent)";
+
+star.style.transform="rotate(35deg)";
+
+star.style.pointerEvents="none";
+
+star.style.zIndex="-2";
+
+star.style.animation="shoot 1.8s linear forwards";
+
+document.body.appendChild(star);
+
+setTimeout(()=>{
+
+star.remove();
+
+},1800);
+
+},2500);
+
+/* ===========================
+   SHOOT CSS
+=========================== */
+
+const style=document.createElement("style");
+
+style.innerHTML=`
+
+@keyframes shoot{
+
+0%{
+
+transform:
+
+translate(0,0)
+
+rotate(35deg);
+
+opacity:1;
+
+}
+
+100%{
+
+transform:
+
+translate(-450px,700px)
+
+rotate(35deg);
+
+opacity:0;
+
+}
+
+}
+
+`;
+
+document.head.appendChild(style);
+
+/* ===========================
+   TOAST
+=========================== */
+
+function toast(msg){
+
+const t=document.createElement("div");
+
+t.innerHTML=msg;
+
+t.style.position="fixed";
+
+t.style.bottom="25px";
+
+t.style.left="50%";
+
+t.style.transform="translateX(-50%)";
+
+t.style.background="rgba(15,23,42,.92)";
+
+t.style.padding="12px 20px";
+
+t.style.borderRadius="14px";
+
+t.style.border="1px solid #38bdf8";
+
+t.style.boxShadow="0 0 25px #38bdf8";
+
+t.style.zIndex="9999";
+
+document.body.appendChild(t);
+
+setTimeout(()=>{
+
+t.remove();
+
+},2500);
+
+}
+
+console.log("🚀 Cosmic Dashboard Ready");
+
+</script>
+
 </body>
+
 </html>
