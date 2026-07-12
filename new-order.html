@@ -6,9 +6,12 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+content="width=device-width,initial-scale=1.0">
 
-<title>Place New Order</title>
+<title>New Order</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 <style>
 
@@ -20,35 +23,184 @@ font-family:Arial,sans-serif;
 }
 
 body{
-background:#0f172a;
+
+background:#08111f;
+
+background-image:
+radial-gradient(circle at top left,
+rgba(147,51,234,.18),
+transparent 35%),
+
+radial-gradient(circle at top right,
+rgba(6,182,212,.15),
+transparent 35%),
+
+radial-gradient(circle at bottom right,
+rgba(37,99,235,.18),
+transparent 40%);
+
 color:#fff;
+
+min-height:100vh;
+
 }
 
 .container{
 
-width:450px;
-max-width:95%;
-margin:35px auto;
-background:#1e293b;
-padding:25px;
-border-radius:12px;
+width:95%;
+max-width:500px;
+
+margin:18px auto;
 
 }
 
-h2{
+.header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:16px 18px;
+
+margin-bottom:18px;
+
+border-radius:18px;
+
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
+
+box-shadow:
+0 10px 30px rgba(0,0,0,.25),
+0 0 20px rgba(37,99,235,.18);
+
+}
+
+.title h2{
+
+font-size:24px;
+
+background:linear-gradient(
+90deg,
+#3b82f6,
+#06b6d4);
+
+-webkit-background-clip:text;
+
+-webkit-text-fill-color:transparent;
+
+}
+
+.status{
+
+display:flex;
+
+align-items:center;
+
+gap:6px;
+
+margin-top:6px;
+
+font-size:12px;
+
+font-weight:600;
+
+color:#22c55e;
+
+}
+
+.status-dot{
+
+width:8px;
+
+height:8px;
+
+border-radius:50%;
+
+background:#22c55e;
+
+box-shadow:0 0 10px #22c55e;
+
+}
+
+.actions{
+
+display:flex;
+
+gap:10px;
+
+}
+
+.action-btn{
+
+width:44px;
+height:44px;
+
+border:none;
+
+border-radius:50%;
+
+background:rgba(255,255,255,.06);
+
+border:1px solid rgba(255,255,255,.08);
+
+color:#fff;
+
+font-size:17px;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.action-btn:hover{
+
+background:#2563eb;
+
+transform:scale(1.08);
+
+}
+
+.card{
+
+padding:22px;
+
+border-radius:18px;
+
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
+
+box-shadow:0 8px 25px rgba(0,0,0,.20);
+
+}
+
+.card h3{
 
 text-align:center;
+
+font-size:30px;
+
 margin-bottom:25px;
-font-size:34px;
 
 }
 
 label{
 
 display:block;
+
 margin-bottom:8px;
-font-size:16px;
-font-weight:bold;
+
+font-weight:600;
+
+font-size:15px;
 
 }
 
@@ -56,71 +208,134 @@ select,
 input{
 
 width:100%;
-padding:14px;
+
+padding:15px;
+
 margin-bottom:18px;
-border:none;
-border-radius:8px;
-font-size:16px;
+
+background:rgba(255,255,255,.05);
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:14px;
+
 outline:none;
+
+font-size:16px;
+
+color:#fff;
+
+}
+
+select option{
+
+background:#0f172a;
+
+}
+
+input::placeholder{
+
+color:#94a3b8;
+
+}
+
+input:focus,
+select:focus{
+
+border-color:#3b82f6;
+
+box-shadow:0 0 18px rgba(59,130,246,.35);
 
 }
 
 .info{
 
-background:#111827;
-padding:18px;
-border-radius:10px;
-margin-bottom:20px;
-line-height:2;
+margin:20px 0;
+
+padding:20px;
+
+border-radius:18px;
+
+background:rgba(255,255,255,.04);
+
+border:1px solid rgba(255,255,255,.08);
 
 }
 
 .row{
 
 display:flex;
+
 justify-content:space-between;
-margin-bottom:10px;
+
+margin-bottom:15px;
 
 }
 
 .value{
 
 color:#22c55e;
+
 font-weight:bold;
 
 }
 
 #charge{
 
-font-size:30px;
-color:#22c55e;
+margin-top:18px;
+
+font-size:34px;
+
 font-weight:bold;
+
+text-align:center;
+
+color:#22c55e;
 
 }
 
 button{
 
 width:100%;
+
 padding:15px;
-background:#22c55e;
-color:white;
+
 border:none;
-border-radius:8px;
+
+border-radius:14px;
+
+background:linear-gradient(
+90deg,
+#2563eb,
+#8b5cf6,
+#06b6d4);
+
+color:#fff;
+
 font-size:18px;
+
+font-weight:600;
+
 cursor:pointer;
+
+transition:.3s;
 
 }
 
 button:hover{
 
-background:#16a34a;
+transform:translateY(-2px);
+
+box-shadow:0 0 25px rgba(59,130,246,.35);
 
 }
 
 #result{
 
-margin-top:15px;
+margin-top:18px;
+
 text-align:center;
+
 font-weight:bold;
 
 }
@@ -133,12 +348,55 @@ font-weight:bold;
 
 <div class="container">
 
-<h2>
+<div class="header">
 
-Place New Order
+<div class="title">
+
+<h2 id="siteName">
+
+Loading...
 
 </h2>
 
+<div class="status">
+
+<div class="status-dot"></div>
+
+<span>ACTIVE</span>
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<button
+class="action-btn"
+onclick="history.back()">
+
+<i class="fa-solid fa-arrow-left"></i>
+
+</button>
+
+<button
+class="action-btn"
+onclick="logout()">
+
+<i class="fa-solid fa-right-from-bracket"></i>
+
+</button>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>
+
+Place New Order
+
+</h3>
 <label>
 
 Service
@@ -181,37 +439,77 @@ placeholder="Enter Quantity">
 
 <div class="row">
 
-<span>Minimum</span>
+<span>
 
-<span class="value" id="min">0</span>
+Minimum
 
-</div>
+</span>
 
-<div class="row">
+<span
+class="value"
+id="min">
 
-<span>Maximum</span>
-
-<span class="value" id="max">0</span>
-
-</div>
-
-<div class="row">
-
-<span>Rate</span>
-
-<span class="value">
-
-₹<span id="rate">0</span>/1000
+0
 
 </span>
 
 </div>
 
-<hr style="margin:15px 0;border-color:#374151;">
+<div class="row">
+
+<span>
+
+Maximum
+
+</span>
+
+<span
+class="value"
+id="max">
+
+0
+
+</span>
+
+</div>
+
+<div class="row">
+
+<span>
+
+Rate
+
+</span>
+
+<span class="value">
+
+₹<span id="rate">
+
+0.00
+
+</span>
+
+/1000
+
+</span>
+
+</div>
+
+<hr style="
+margin:18px 0;
+border:1px solid rgba(255,255,255,.08);
+">
 
 <div style="text-align:center;">
 
-<div>Estimated Charge</div>
+<div style="
+font-size:16px;
+margin-bottom:10px;
+">
+
+Estimated Charge
+
+</div>
 
 <div id="charge">
 
@@ -225,11 +523,19 @@ placeholder="Enter Quantity">
 
 <button onclick="placeOrder()">
 
+<i class="fa-solid fa-cart-shopping"></i>
+
+&nbsp;
+
 Place Order
 
 </button>
 
 <div id="result"></div>
+
+</div>
+
+</div>
 
 <script>
 
@@ -237,43 +543,63 @@ const API =
 "https://gowind-smm-panel-v3.onrender.com";
 
 const USER =
-JSON.parse(localStorage.getItem("user"));
+JSON.parse(
+localStorage.getItem("user")
+);
 
-let SERVICES=[];
-  /* ===========================
-   LOGIN CHECK
-=========================== */
-
-if(!localStorage.getItem("token")){
+let SERVICES = [];
+  if(!localStorage.getItem("token") || !USER){
 
 location.href="login.html";
 
 }
 
-/* ===========================
-   LOAD SERVICES
-=========================== */
+async function loadSettings(){
+
+try{
+
+const response=
+await fetch(API+"/api/settings");
+
+const data=
+await response.json();
+
+if(data.success){
+
+document.getElementById("siteName").textContent=
+data.settings.site_name;
+
+}
+
+}catch(err){
+
+console.log(err);
+
+}
+
+}
 
 async function loadServices(){
 
 try{
 
-const response=await fetch(
-API+"/api/services"
-);
+const response=
+await fetch(API+"/api/services");
 
-const data=await response.json();
+const data=
+await response.json();
 
-SERVICES=data.services;
+SERVICES=data.services||[];
 
-const service=document.getElementById("service");
+const service=
+document.getElementById("service");
 
 service.innerHTML="";
 
 if(SERVICES.length===0){
 
 service.innerHTML=
-"<option>No Services Available</option>";
+"<option>No Services</option>";
 
 return;
 
@@ -282,13 +608,9 @@ return;
 SERVICES.forEach(item=>{
 
 service.innerHTML+=`
-
 <option value="${item.id}">
-
 ${item.name}
-
 </option>
-
 `;
 
 });
@@ -304,10 +626,6 @@ err.message;
 
 }
 
-/* ===========================
-   UPDATE SERVICE
-=========================== */
-
 function updateService(){
 
 const id=
@@ -318,245 +636,132 @@ SERVICES.find(x=>x.id===id);
 
 if(!item)return;
 
-document.getElementById("min").innerHTML=
-item.min;
+min.textContent=item.min;
 
-document.getElementById("max").innerHTML=
-item.max;
+max.textContent=item.max;
 
-document.getElementById("rate").innerHTML=
+rate.textContent=
 Number(item.rate).toFixed(2);
-
-const link=document.getElementById("link");
-
-const name=item.name.toLowerCase();
-
-if(name.includes("instagram")){
-
-link.placeholder="Enter Instagram Link";
-
-}else if(name.includes("youtube")){
-
-link.placeholder="Enter YouTube Video Link";
-
-}else if(name.includes("telegram")){
-
-link.placeholder="Enter Telegram Link";
-
-}else if(name.includes("facebook")){
-
-link.placeholder="Enter Facebook Link";
-
-}else{
-
-link.placeholder="Enter Service Link";
-
-}
 
 calculateCharge();
 
 }
 
-/* ===========================
-   CHARGE CALCULATOR
-=========================== */
-
 function calculateCharge(){
 
 const qty=
-Number(document.getElementById("quantity").value);
+Number(quantity.value);
 
 const id=
-Number(document.getElementById("service").value);
+Number(service.value);
 
 const item=
 SERVICES.find(x=>x.id===id);
 
-if(!item || qty<=0){
+if(!item||qty<=0){
 
-document.getElementById("charge").innerHTML=
-"₹0.00";
+charge.textContent="₹0.00";
 
 return;
 
 }
 
-const charge=
+const total=
 (Number(item.rate)*qty)/1000;
 
-document.getElementById("charge").innerHTML=
-"₹"+charge.toFixed(2);
+charge.textContent=
+"₹"+total.toFixed(2);
 
 }
 
-document.getElementById("service")
-.addEventListener("change",updateService);
+service.onchange=updateService;
 
-document.getElementById("quantity")
-.addEventListener("input",calculateCharge);
-  /* ===========================
-   PLACE ORDER
-=========================== */
+quantity.oninput=calculateCharge;
 
 async function placeOrder(){
 
 try{
 
-if(!USER){
-
-document.getElementById("result").innerHTML=
-"Please Login First";
-
-return;
-
-}
-
-const serviceId=
-Number(document.getElementById("service").value);
-
-const qty=
-Number(document.getElementById("quantity").value);
-
-const link=
-document.getElementById("link").value.trim();
-
-const item=
-SERVICES.find(x=>x.id===serviceId);
-
-if(!item){
-
-document.getElementById("result").innerHTML=
-"Please Select Service";
-
-return;
-
-}
-
-if(link===""){
-
-document.getElementById("result").innerHTML=
-"Please Enter Link";
-
-return;
-
-}
-
-if(qty<item.min){
-
-document.getElementById("result").innerHTML=
-"Minimum Quantity : "+item.min;
-
-return;
-
-}
-
-if(qty>item.max){
-
-document.getElementById("result").innerHTML=
-"Maximum Quantity : "+item.max;
-
-return;
-
-}
-
-const response=await fetch(
-
-API+"/api/orders",
-
-{
+const response=
+await fetch(API+"/api/orders",{
 
 method:"POST",
 
 headers:{
+
 "Content-Type":"application/json"
+
 },
 
 body:JSON.stringify({
 
 user_id:USER.id,
 
-service_id:serviceId,
+service_id:Number(service.value),
 
-link:link,
+link:link.value.trim(),
 
-quantity:qty
+quantity:Number(quantity.value)
 
 })
 
-}
+});
 
-);
-
-const data=await response.json();
+const data=
+await response.json();
 
 if(data.success){
 
-document.getElementById("result").style.color="#22c55e";
+result.style.color="#22c55e";
 
-document.getElementById("result").innerHTML=
+result.innerHTML=
 "Order Placed Successfully";
 
-document.getElementById("link").value="";
+link.value="";
 
-document.getElementById("quantity").value="";
+quantity.value="";
 
 calculateCharge();
 
 }else{
 
-document.getElementById("result").style.color="#ef4444";
+result.style.color="#ef4444";
 
-document.getElementById("result").innerHTML=
-data.error || data.message;
+result.innerHTML=
+data.error||data.message;
 
 }
 
 }catch(err){
 
-document.getElementById("result").style.color="#ef4444";
+result.style.color="#ef4444";
 
-document.getElementById("result").innerHTML=
+result.innerHTML=
 err.message;
 
 }
 
 }
 
-/* ===========================
-   PAGE LOAD
-=========================== */
+function logout(){
+
+localStorage.removeItem("token");
+
+localStorage.removeItem("user");
+
+location.href="login.html";
+
+}
 
 window.onload=function(){
+
+loadSettings();
 
 loadServices();
 
 };
 
-/* ===========================
-   BUTTON EFFECT
-=========================== */
-
-const btn=document.querySelector("button");
-
-btn.addEventListener("mouseenter",()=>{
-
-btn.style.transform="scale(1.02)";
-
-btn.style.transition=".2s";
-
-});
-
-btn.addEventListener("mouseleave",()=>{
-
-btn.style.transform="scale(1)";
-
-});
-
-/* ===========================
-   ENTER KEY
-=========================== */
-
-document.addEventListener("keydown",function(e){
+document.addEventListener("keydown",e=>{
 
 if(e.key==="Enter"){
 
