@@ -24,7 +24,11 @@ font-family:Arial,sans-serif;
 
 body{
 
-background:#0b1120;
+background:
+radial-gradient(circle at top left,#7c3aed33,transparent 35%),
+radial-gradient(circle at top right,#06b6d433,transparent 35%),
+radial-gradient(circle at bottom,#2563eb33,transparent 40%),
+#0b1120;
 
 color:#fff;
 
@@ -58,17 +62,23 @@ justify-content:space-between;
 
 align-items:center;
 
-background:#111827;
+padding:18px;
 
-border:1px solid #1f2937;
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(18px);
+
+-webkit-backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
 
 border-radius:18px;
 
-padding:18px;
-
 margin-bottom:20px;
 
-box-shadow:0 0 20px rgba(37,99,235,.15);
+box-shadow:
+
+0 0 25px rgba(59,130,246,.15);
 
 }
 
@@ -191,11 +201,15 @@ margin-bottom:20px;
 
 .card{
 
-background:#111827;
+background:rgba(255,255,255,.06);
 
-border:1px solid #1f2937;
+backdrop-filter:blur(18px);
 
-border-radius:16px;
+-webkit-backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:18px;
 
 padding:20px;
 
@@ -205,11 +219,13 @@ overflow:hidden;
 
 cursor:pointer;
 
-transition:.3s;
+transition:.35s;
 
 box-shadow:
 
-0 0 12px rgba(37,99,235,.12);
+0 8px 32px rgba(0,0,0,.25),
+
+0 0 20px rgba(37,99,235,.12);
 
 }
 
@@ -233,11 +249,13 @@ background:linear-gradient(
 
 transparent,
 
-rgba(255,255,255,.08),
+rgba(255,255,255,.18),
 
 transparent
 
 );
+
+transform:skewX(-20deg);
 
 transition:.8s;
 
@@ -245,48 +263,23 @@ transition:.8s;
 
 .card:hover::before{
 
-left:170%;
+left:180%;
 
 }
 
 .card:hover{
 
-transform:translateY(-5px);
+transform:translateY(-6px);
 
-border-color:#2563eb;
+border-color:rgba(59,130,246,.45);
 
 box-shadow:
 
-0 0 20px rgba(37,99,235,.35),
+0 0 20px rgba(59,130,246,.35),
 
-0 0 35px rgba(124,58,237,.25);
-
-}
-
-.card h4{
-
-font-size:15px;
-
-color:#cbd5e1;
-
-margin-bottom:10px;
-
-display:flex;
-
-align-items:center;
-
-gap:8px;
+0 0 40px rgba(124,58,237,.25);
 
 }
-
-.card h2{
-
-font-size:30px;
-
-font-weight:bold;
-
-}
-
 .wallet{
 
 grid-column:1/-1;
