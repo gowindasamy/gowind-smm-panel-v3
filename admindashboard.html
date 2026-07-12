@@ -2,1455 +2,454 @@
 <html lang="en">
 
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>Admin Dashboard</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
-html{
-scroll-behavior:smooth;
-}
-
-body{
-
-font-family:'Poppins',sans-serif;
-
-background:#050816;
-
-color:#fff;
-
-overflow-x:hidden;
-
-min-height:100vh;
-
-position:relative;
-
-}
-
-/* ===========================
-   COSMIC NEBULA BACKGROUND
-=========================== */
-
-body::before{
-
-content:"";
-
-position:fixed;
-
-inset:0;
-
-background:
-
-radial-gradient(circle at 20% 20%,rgba(0,170,255,.30),transparent 28%),
-
-radial-gradient(circle at 80% 25%,rgba(155,0,255,.28),transparent 30%),
-
-radial-gradient(circle at 60% 75%,rgba(0,255,255,.20),transparent 32%),
-
-radial-gradient(circle at 35% 90%,rgba(255,0,150,.16),transparent 30%),
-
-#050816;
-
-animation:nebulaMove 18s linear infinite alternate;
-
-z-index:-5;
-
-}
-
-@keyframes nebulaMove{
-
-0%{
-
-transform:scale(1);
-
-}
-
-100%{
-
-transform:scale(1.12);
-
-}
-
-}
-
-/* ===========================
-   STARS
-=========================== */
-
-.stars{
-
-position:fixed;
-
-inset:0;
-
-background-image:
-
-radial-gradient(#ffffff 1px,transparent 1px),
-
-radial-gradient(#7dd3fc 1px,transparent 1px),
-
-radial-gradient(#a855f7 1px,transparent 1px);
-
-background-size:
-
-130px 130px,
-
-180px 180px,
-
-220px 220px;
-
-background-position:
-
-0 0,
-
-50px 90px,
-
-120px 50px;
-
-opacity:.55;
-
-animation:starsMove 60s linear infinite;
-
-z-index:-4;
-
-}
-
-@keyframes starsMove{
-
-from{
-
-transform:translateY(0);
-
-}
-
-to{
-
-transform:translateY(-400px);
-
-}
-
-}
-
-/* ===========================
-   PLEXUS OVERLAY
-=========================== */
-
-.plexus{
-
-position:fixed;
-
-inset:0;
-
-background-image:
-
-linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
-
-linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
-
-background-size:120px 120px;
-
-opacity:.12;
-
-animation:gridMove 20s linear infinite;
-
-z-index:-3;
-
-}
-
-@keyframes gridMove{
-
-0%{
-
-transform:translate(0,0);
-
-}
-
-100%{
-
-transform:translate(-120px,-120px);
-
-}
-
-}
-
-/* ===========================
-   FLOATING GLOW
-=========================== */
-
-.glow{
-
-position:fixed;
-
-width:280px;
-
-height:280px;
-
-border-radius:50%;
-
-filter:blur(120px);
-
-pointer-events:none;
-
-}
-
-.glow1{
-
-background:#00d4ff;
-
-top:-80px;
-
-left:-70px;
-
-animation:float1 10s ease-in-out infinite;
-
-}
-
-.glow2{
-
-background:#7c3aed;
-
-bottom:-90px;
-
-right:-80px;
-
-animation:float2 12s ease-in-out infinite;
-
-}
-
-@keyframes float1{
-
-0%,100%{
-
-transform:translate(0,0);
-
-}
-
-50%{
-
-transform:translate(70px,50px);
-
-}
-
-}
-
-@keyframes float2{
-
-0%,100%{
-
-transform:translate(0,0);
-
-}
-
-50%{
-
-transform:translate(-80px,-40px);
-
-}
-
-}
-
-/* ===========================
-   CONTAINER
-=========================== */
-
-.container{
-
-width:95%;
-
-max-width:520px;
-
-margin:auto;
-
-padding:20px;
-
-position:relative;
-
-z-index:10;
-
-}
-  /* ===========================
-   HEADER
-=========================== */
-
-.header{
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-background:rgba(255,255,255,.06);
-
-backdrop-filter:blur(18px);
-
-border:1px solid rgba(255,255,255,.10);
-
-border-radius:24px;
-
-padding:18px;
-
-box-shadow:
-
-0 0 25px rgba(0,180,255,.20),
-
-0 0 45px rgba(124,58,237,.18);
-
-margin-bottom:25px;
-
-animation:fadeDown .8s;
-
-}
-
-@keyframes fadeDown{
-
-from{
-
-opacity:0;
-
-transform:translateY(-25px);
-
-}
-
-to{
-
-opacity:1;
-
-transform:translateY(0);
-
-}
-
-}
-
-.brand{
-
-display:flex;
-
-align-items:center;
-
-gap:14px;
-
-}
-
-.logo{
-
-width:70px;
-
-height:70px;
-
-border-radius:50%;
-
-overflow:hidden;
-
-border:3px solid rgba(0,255,255,.5);
-
-box-shadow:
-
-0 0 18px #00d4ff,
-
-0 0 35px rgba(0,212,255,.35);
-
-animation:logoGlow 2.5s infinite alternate;
-
-}
-
-.logo img{
-
-width:100%;
-
-height:100%;
-
-object-fit:cover;
-
-}
-
-@keyframes logoGlow{
-
-0%{
-
-box-shadow:
-
-0 0 10px #00d4ff,
-
-0 0 20px rgba(0,212,255,.25);
-
-}
-
-100%{
-
-box-shadow:
-
-0 0 20px #00d4ff,
-
-0 0 40px rgba(124,58,237,.55);
-
-}
-
-}
-
-.title h2{
-
-font-family:'Orbitron',sans-serif;
-
-font-size:28px;
-
-background:linear-gradient(
-
-90deg,
-
-#00e5ff,
-
-#7c3aed,
-
-#ff3cac
-
-);
-
--webkit-background-clip:text;
-
--webkit-text-fill-color:transparent;
-
-}
-
-.title p{
-
-font-size:14px;
-
-color:#cbd5e1;
-
-margin-top:4px;
-
-}
-
-.actions{
-
-display:flex;
-
-gap:12px;
-
-}
-
-.circle-btn{
-
-width:58px;
-
-height:58px;
-
-border-radius:50%;
-
-border:none;
-
-cursor:pointer;
-
-font-size:25px;
-
-color:#fff;
-
-background:rgba(255,255,255,.08);
-
-backdrop-filter:blur(15px);
-
-border:1px solid rgba(255,255,255,.08);
-
-transition:.35s;
-
-}
-
-.circle-btn:hover{
-
-transform:translateY(-4px) scale(1.08);
-
-box-shadow:
-
-0 0 18px #00d4ff,
-
-0 0 35px rgba(124,58,237,.35);
-
-}
-
-/* ===========================
-   LIVE FEED
-=========================== */
-
-.live{
-
-text-align:center;
-
-font-family:'Orbitron',sans-serif;
-
-font-size:13px;
-
-margin:18px 0;
-
-background:linear-gradient(
-
-90deg,
-
-#ff4d4d,
-
-#ffd93d,
-
-#00e5ff,
-
-#7c3aed
-
-);
-
-background-size:400%;
-
--webkit-background-clip:text;
-
--webkit-text-fill-color:transparent;
-
-animation:liveMove 4s linear infinite;
-
-}
-
-@keyframes liveMove{
-
-0%{
-
-background-position:0%;
-
-}
-
-100%{
-
-background-position:400%;
-
-}
-
-}
-
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            /* Cosmic Galaxy Theme Background Effects */
+            background: 
+                radial-gradient(circle at 80% 15%, rgba(124, 58, 237, 0.22), transparent 45%),
+                radial-gradient(circle at 15% 75%, rgba(6, 182, 212, 0.18), transparent 50%),
+                radial-gradient(circle at center, rgba(15, 23, 42, 0.85), #060b13);
+            background-color: #060b13;
+            color: #fff;
+            overflow-x: hidden;
+            padding-bottom: 50px;
+        }
+
+        /* Glowing Background overlays */
+        body::before {
+            content: "";
+            position: fixed;
+            width: 350px;
+            height: 350px;
+            background: #7c3aed;
+            filter: blur(160px);
+            top: -100px;
+            left: -100px;
+            opacity: .25;
+            z-index: -1;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            width: 380px;
+            height: 380px;
+            background: #06b6d4;
+            filter: blur(180px);
+            bottom: -100px;
+            right: -100px;
+            opacity: .22;
+            z-index: -1;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 580px; /* Aligned for seamless layout */
+            margin: 20px auto;
+            padding: 10px;
+        }
+
+        /* Header Style Updates */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, .03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, .06);
+            border-radius: 18px;
+            padding: 16px;
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: #0b1120;
+            border: 2px solid rgba(59, 130, 246, 0.5);
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(59, 130, 246, .3);
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .brand h2 {
+            font-size: 20px;
+            background: linear-gradient(90deg, #3b82f6, #06b6d4, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        .brand p {
+            color: #64748b;
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        /* Header Right Corner Circular Action Buttons Group */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-action {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #cbd5e1;
+        }
+
+        .btn-action:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .btn-action.logout-trigger {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+        }
+
+        .btn-action.logout-trigger:hover {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Unified Vertical Stack List for Cards */
+        .unified-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Unified Row Card Styles */
+        .row-card {
+            background: rgba(255, 255, 255, .03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, .05);
+            border-radius: 14px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .row-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.15);
+        }
+
+        .card-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .card-icon {
+            font-size: 22px;
+            width: 28px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .card-details h3 {
+            font-size: 15px;
+            font-weight: 500;
+            color: #f1f5f9;
+        }
+
+        .card-details p {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 1px;
+        }
+
+        /* Rainbow Linear Gradient Text Elements */
+        .rainbow-text {
+            background: linear-gradient(90deg, #ff758c, #ff7eb3, #fccb90, #d4fc79, #96e6a1, #84fab0, #8fd3f4, #b993d6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.2);
+        }
+
+        .arrow-icon {
+            color: #475569;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .row-card:hover .arrow-icon {
+            color: #94a3b8;
+            transform: translateX(2px);
+        }
+
+        /* Bottom Settings & Logout Elements completely removed */
+
+        /* Mobile Responsive View updates */
+        @media(max-width: 480px) {
+            .brand h2 { font-size: 18px; }
+            .logo { width: 48px; height: 48px; }
+            .row-card { padding: 14px 16px; }
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="stars"></div>
-
-<div class="plexus"></div>
-
-<div class="glow glow1"></div>
-
-<div class="glow glow2"></div>
-
-<div class="container">
-
-<div class="header">
-
-<div class="brand">
-
-<div class="logo">
-
-<img src="assets/logo.png?v=1">
-
-</div>
-
-<div class="title">
-
-<h2>Gowind SMM Panel</h2>
-
-<p>Private Multi Provider SMM Panel</p>
-
-</div>
-
-</div>
-
-<div class="actions">
-
-<button
-
-class="circle-btn"
-
-onclick="location.href='settings.html'">
-
-⚙️
-
-</button>
-
-<button
-
-class="circle-btn"
-
-onclick="logout()">
-
-🚪
-
-</button>
-
-</div>
-
-</div>
-
-<div class="live">
-
-● LIVE FEED ● LIVE DASHBOARD ●
-
-</div>
-/* ===========================
-   STATS
-=========================== */
-
-.stats{
-
-display:flex;
-
-flex-direction:column;
-
-gap:16px;
-
-margin-bottom:20px;
-
-}
-
-.stat-card{
-
-position:relative;
-
-display:flex;
-
-align-items:center;
-
-gap:16px;
-
-padding:18px;
-
-border-radius:22px;
-
-background:rgba(255,255,255,.05);
-
-backdrop-filter:blur(20px);
-
-border:1px solid rgba(255,255,255,.10);
-
-overflow:hidden;
-
-transition:.35s;
-
-box-shadow:
-
-0 0 18px rgba(0,212,255,.12);
-
-}
-
-.stat-card:hover{
-
-transform:translateY(-5px);
-
-border-color:#00d4ff;
-
-box-shadow:
-
-0 0 25px rgba(0,212,255,.35),
-
-0 0 50px rgba(124,58,237,.30);
-
-}
-
-.stat-card::before{
-
-content:"";
-
-position:absolute;
-
-left:-120%;
-
-top:0;
-
-width:60%;
-
-height:100%;
-
-background:linear-gradient(
-
-90deg,
-
-transparent,
-
-rgba(255,255,255,.18),
-
-transparent
-
-);
-
-transform:skewX(-20deg);
-
-animation:shine 5s linear infinite;
-
-}
-
-@keyframes shine{
-
-100%{
-
-left:180%;
-
-}
-
-}
-
-.icon-box{
-
-width:60px;
-
-height:60px;
-
-border-radius:18px;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-font-size:34px;
-
-background:rgba(255,255,255,.08);
-
-box-shadow:0 0 15px rgba(0,212,255,.25);
-
-}
-
-.card-info{
-
-flex:1;
-
-}
-
-.card-info h3{
-
-font-family:'Orbitron',sans-serif;
-
-font-size:23px;
-
-background:linear-gradient(
-
-90deg,
-
-#ff9a3c,
-
-#ffe259,
-
-#00e5ff,
-
-#a855f7
-
-);
-
-background-size:300%;
-
--webkit-background-clip:text;
-
--webkit-text-fill-color:transparent;
-
-animation:rainbow 5s linear infinite;
-
-}
-
-@keyframes rainbow{
-
-0%{
-
-background-position:0%;
-
-}
-
-100%{
-
-background-position:300%;
-
-}
-
-}
-
-.card-info h1{
-
-font-size:42px;
-
-margin-top:6px;
-
-font-weight:bold;
-
-color:#7df9ff;
-
-text-shadow:
-
-0 0 10px #00d4ff,
-
-0 0 20px #7c3aed;
-
-}
-
-.live-tag{
-
-position:absolute;
-
-right:15px;
-
-bottom:10px;
-
-font-size:11px;
-
-font-family:'Orbitron',sans-serif;
-
-background:linear-gradient(
-
-90deg,
-
-#ff4d4d,
-
-#ffe259,
-
-#00e5ff,
-
-#7c3aed
-
-);
-
-background-size:400%;
-
--webkit-background-clip:text;
-
--webkit-text-fill-color:transparent;
-
-animation:rainbow 4s linear infinite;
-
-}
-  <!-- ===========================
-     LIVE STATS
-=========================== -->
-
-<div class="stats">
-
-<div class="stat-card">
-
-<div class="icon-box">📦</div>
-
-<div class="card-info">
-
-<h3>Total Orders</h3>
-
-<h1 id="totalOrders">0</h1>
-
-</div>
-
-<div class="live-tag">
-
-LIVE FEED
-
-</div>
-
-</div>
-
-<div class="stat-card">
-
-<div class="icon-box">👥</div>
-
-<div class="card-info">
-
-<h3>Total Users</h3>
-
-<h1 id="totalUsers">0</h1>
-
-</div>
-
-<div class="live-tag">
-
-LIVE FEED
-
-</div>
-
-</div>
-
-<div class="stat-card">
-
-<div class="icon-box">🛠</div>
-
-<div class="card-info">
-
-<h3>Total Services</h3>
-
-<h1 id="totalServices">0</h1>
-
-</div>
-
-<div class="live-tag">
-
-LIVE FEED
-
-</div>
-
-</div>
-
-<div class="stat-card">
-
-<div class="icon-box">🌐</div>
-
-<div class="card-info">
-
-<h3>Providers</h3>
-
-<h1 id="totalProviders">0</h1>
-
-</div>
-
-<div class="live-tag">
-
-LIVE FEED
-
-</div>
-
-</div>
-
-</div>
-/* ===========================
-   MENU
-=========================== */
-
-.menu{
-
-display:flex;
-
-flex-direction:column;
-
-gap:15px;
-
-margin-top:18px;
-
-}
-
-.menu-card{
-
-display:flex;
-
-align-items:center;
-
-justify-content:space-between;
-
-padding:18px;
-
-border-radius:22px;
-
-background:rgba(255,255,255,.05);
-
-backdrop-filter:blur(18px);
-
-border:1px solid rgba(255,255,255,.08);
-
-cursor:pointer;
-
-transition:.35s;
-
-position:relative;
-
-overflow:hidden;
-
-box-shadow:
-
-0 0 18px rgba(0,212,255,.10);
-
-}
-
-.menu-card::before{
-
-content:"";
-
-position:absolute;
-
-left:-100%;
-
-top:0;
-
-width:55%;
-
-height:100%;
-
-background:linear-gradient(
-
-90deg,
-
-transparent,
-
-rgba(255,255,255,.20),
-
-transparent
-
-);
-
-transform:skewX(-25deg);
-
-transition:.8s;
-
-}
-
-.menu-card:hover::before{
-
-left:170%;
-
-}
-
-.menu-card:hover{
-
-transform:translateX(8px);
-
-border-color:#00d4ff;
-
-box-shadow:
-
-0 0 25px rgba(0,212,255,.35),
-
-0 0 45px rgba(124,58,237,.30);
-
-}
-
-.left{
-
-display:flex;
-
-align-items:center;
-
-gap:16px;
-
-}
-
-.menu-icon{
-
-width:60px;
-
-height:60px;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-font-size:32px;
-
-border-radius:16px;
-
-background:rgba(255,255,255,.08);
-
-box-shadow:0 0 15px rgba(0,212,255,.25);
-
-}
-
-.menu-title{
-
-font-size:22px;
-
-font-weight:600;
-
-}
-
-.menu-sub{
-
-font-size:14px;
-
-color:#cbd5e1;
-
-margin-top:3px;
-
-}
-
-.arrow{
-
-font-size:32px;
-
-color:#ffffff;
-
-transition:.3s;
-
-}
-
-.menu-card:hover .arrow{
-
-transform:translateX(8px);
-
-color:#00e5ff;
-
-}
-  <!-- ===========================
-     MENU
-=========================== -->
-
-<div class="menu">
-
-<div class="menu-card"
-onclick="location.href='new-order.html'">
-
-<div class="left">
-
-<div class="menu-icon">🛒</div>
-
-<div>
-
-<div class="menu-title">New Order</div>
-
-<div class="menu-sub">Place a new order</div>
-
-</div>
-
-</div>
-
-<div class="arrow">❯</div>
-
-</div>
-
-<div class="menu-card"
-onclick="location.href='orders.html'">
-
-<div class="left">
-
-<div class="menu-icon">📦</div>
-
-<div>
-
-<div class="menu-title">Orders</div>
-
-<div class="menu-sub">Manage all orders</div>
-
-</div>
-
-</div>
-
-<div class="arrow">❯</div>
-
-</div>
-
-<div class="menu-card"
-onclick="location.href='users.html'">
-
-<div class="left">
-
-<div class="menu-icon">👥</div>
-
-<div>
-
-<div class="menu-title">Users</div>
-
-<div class="menu-sub">Manage users</div>
-
-</div>
-
-</div>
-
-<div class="arrow">❯</div>
-
-</div>
-
-<div class="menu-card"
-onclick="location.href='services.html'">
-
-<div class="left">
-
-<div class="menu-icon">🛠</div>
-
-<div>
-
-<div class="menu-title">Services</div>
-
-<div class="menu-sub">Manage services</div>
-
-</div>
-
-</div>
-
-<div class="arrow">❯</div>
-
-</div>
-
-<div class="menu-card"
-onclick="location.href='providers.html'">
-
-<div class="left">
-
-<div class="menu-icon">🌐</div>
-
-<div>
-
-<div class="menu-title">Providers</div>
-
-<div class="menu-sub">Manage providers</div>
-
-</div>
-
-</div>
-
-<div class="arrow">❯</div>
-
-</div>
-
-<div class="menu-card"
-onclick="location.href='transactions.html'">
-
-<div class="left">
-
-<div class="menu-icon">💳</div>
-
-<div>
-
-<div class="menu-title">Transactions</div>
-
-<div class="menu-sub">Wallet transactions</div>
-
-</div>
-
-</div>
-
-<div class="arrow">❯</div>
-
-</div>
-
-<div class="menu-card"
-onclick="location.href='profile.html'">
-
-<div class="left">
-
-<div class="menu-icon">👤</div>
-
-<div>
-
-<div class="menu-title">Profile</div>
-
-<div class="menu-sub">Admin profile</div>
-
-</div>
-
-</div>
-
-<div class="arrow">❯</div>
-
-</div>
-
-</div>
-
-<script>
-
-const API =
-"https://gowind-smm-panel-v3.onrender.com";
-  /* ===========================
-   DASHBOARD DATA
-=========================== */
-
-async function loadDashboard(){
-
-try{
-
-const response=await fetch(
-
-API+"/api/admin/dashboard"
-
-);
-
-const data=await response.json();
-
-if(!data.success){
-
-return;
-
-}
-
-animateValue(
-
-"totalOrders",
-
-Number(data.dashboard.orders)
-
-);
-
-animateValue(
-
-"totalUsers",
-
-Number(data.dashboard.users)
-
-);
-
-animateValue(
-
-"totalServices",
-
-Number(data.dashboard.services)
-
-);
-
-animateValue(
-
-"totalProviders",
-
-Number(data.dashboard.providers)
-
-);
-
-}catch(err){
-
-console.log(err);
-
-}
-
-}
-
-/* ===========================
-   COUNTER ANIMATION
-=========================== */
-
-function animateValue(id,end){
-
-const el=document.getElementById(id);
-
-let start=0;
-
-const speed=25;
-
-const step=Math.max(
-
-1,
-
-Math.ceil(end/40)
-
-);
-
-const timer=setInterval(()=>{
-
-start+=step;
-
-if(start>=end){
-
-start=end;
-
-clearInterval(timer);
-
-}
-
-el.innerHTML=start.toLocaleString();
-
-},speed);
-
-}
-
-/* ===========================
-   LOGOUT
-=========================== */
-
-function logout(){
-
-if(!confirm("Logout Admin?")){
-
-return;
-
-}
-
-localStorage.removeItem("token");
-
-localStorage.removeItem("user");
-
-location.href="login.html";
-
-}
-
-/* ===========================
-   LOGIN CHECK
-=========================== */
-
-const USER=
-
-JSON.parse(
-
-localStorage.getItem("user")
-
-);
-
-if(
-
-!USER ||
-
-USER.role!=="admin"
-
-){
-
-location.href="login.html";
-
-}
-
-/* ===========================
-   AUTO REFRESH
-=========================== */
-
-loadDashboard();
-
-setInterval(
-
-loadDashboard,
-
-30000
-
-);
-  /* ===========================
-   LENS FLARE
-=========================== */
-
-const flare=document.createElement("div");
-
-flare.style.position="fixed";
-
-flare.style.width="220px";
-
-flare.style.height="220px";
-
-flare.style.borderRadius="50%";
-
-flare.style.background="radial-gradient(circle,#00d4ff66,transparent)";
-
-flare.style.filter="blur(40px)";
-
-flare.style.pointerEvents="none";
-
-flare.style.zIndex="0";
-
-document.body.appendChild(flare);
-
-document.addEventListener(
-
-"mousemove",
-
-e=>{
-
-flare.style.left=(e.clientX-110)+"px";
-
-flare.style.top=(e.clientY-110)+"px";
-
-}
-
-);
-  /* ===========================
-   READY
-=========================== */
-
-console.log(
-
-"🚀 Cosmic Dashboard Ready"
-
-);
-
-</script>
-
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="brand">
+                <div class="logo">
+                    <img src="assets/logo.png?v=1" alt="Logo">
+                </div>
+                <div>
+                    <h2>Gowind SMM Panel</h2>
+                    <p>Private Multi Provider SMM Panel</p>
+                </div>
+            </div>
+            
+            <!-- Right Corner Control Buttons -->
+            <div class="header-actions">
+                <!-- Settings Trigger Button -->
+                <div class="btn-action" onclick="location.href='settings.html'" title="Panel Settings">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                </div>
+                <!-- Logout Trigger Button -->
+                <div class="btn-action logout-trigger" onclick="logout()" title="Logout Panel">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Integrated Unified Stack List -->
+        <div class="unified-stack">
+            
+            <!-- Statistical Elements -->
+            <div class="row-card" style="cursor: default;">
+                <div class="card-left">
+                    <div class="card-icon">📦</div>
+                    <div class="card-details">
+                        <!-- Rainbow text applied here -->
+                        <h3 class="rainbow-text">Total Orders</h3>
+                    </div>
+                </div>
+                <div class="stat-value" id="totalOrders">0</div>
+            </div>
+
+            <div class="row-card" style="cursor: default;">
+                <div class="card-left">
+                    <div class="card-icon">👥</div>
+                    <div class="card-details">
+                        <h3>Total Users</h3>
+                    </div>
+                </div>
+                <div class="stat-value" id="totalUsers">0</div>
+            </div>
+
+            <div class="row-card" style="cursor: default;">
+                <div class="card-left">
+                    <div class="card-icon">🛠</div>
+                    <div class="card-details">
+                        <h3>Total Services</h3>
+                    </div>
+                </div>
+                <div class="stat-value" id="totalServices">0</div>
+            </div>
+
+            <div class="row-card" style="cursor: default;">
+                <div class="card-left">
+                    <div class="card-icon">🌐</div>
+                    <div class="card-details">
+                        <h3>Providers</h3>
+                    </div>
+                </div>
+                <div class="stat-value" id="totalProviders">0</div>
+            </div>
+
+            <!-- Navigation Links Elements -->
+            <div class="row-card" onclick="location.href='new-order.html'">
+                <div class="card-left">
+                    <div class="card-icon">🛒</div>
+                    <div class="card-details">
+                        <h3 class="rainbow-text">New Order</h3>
+                        <p>Place a new order</p>
+                    </div>
+                </div>
+                <div class="arrow-icon">❯</div>
+            </div>
+
+            <div class="row-card" onclick="location.href='orders.html'">
+                <div class="card-left">
+                    <div class="card-icon">📦</div>
+                    <div class="card-details">
+                        <h3>Orders</h3>
+                        <p>Manage all orders</p>
+                    </div>
+                </div>
+                <div class="arrow-icon">❯</div>
+            </div>
+
+            <div class="row-card" onclick="location.href='users.html'">
+                <div class="card-left">
+                    <div class="card-icon">👥</div>
+                    <div class="card-details">
+                        <h3>Users</h3>
+                        <p>Manage users</p>
+                    </div>
+                </div>
+                <div class="arrow-icon">❯</div>
+            </div>
+
+            <div class="row-card" onclick="location.href='services.html'">
+                <div class="card-left">
+                    <div class="card-icon">🛠</div>
+                    <div class="card-details">
+                        <h3 class="rainbow-text">Services</h3>
+                        <p>Manage services</p>
+                    </div>
+                </div>
+                <div class="arrow-icon">❯</div>
+            </div>
+
+            <div class="row-card" onclick="location.href='providers.html'">
+                <div class="card-left">
+                    <div class="card-icon">🌐</div>
+                    <div class="card-details">
+                        <h3>Providers</h3>
+                        <p>Manage providers</p>
+                    </div>
+                </div>
+                <div class="arrow-icon">❯</div>
+            </div>
+
+            <div class="row-card" onclick="location.href='transactions.html'">
+                <div class="card-left">
+                    <div class="card-icon">💳</div>
+                    <div class="card-details">
+                        <h3>Transactions</h3>
+                        <p>Wallet transactions</p>
+                    </div>
+                </div>
+                <div class="arrow-icon">❯</div>
+            </div>
+
+            <div class="row-card" onclick="location.href='profile.html'">
+                <div class="card-left">
+                    <div class="card-icon">👤</div>
+                    <div class="card-details">
+                        <h3>Profile</h3>
+                        <p>Admin profile</p>
+                    </div>
+                </div>
+                <div class="arrow-icon">❯</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- System Functions & Scripts[cite: 2] -->
+    <script>
+        const API = "https://gowind-smm-panel-v3.onrender.com";[cite: 2]
+
+        async function loadDashboard() {[cite: 2]
+            try {[cite: 2]
+                const response = await fetch(API + "/api/admin/dashboard");[cite: 2]
+                const data = await response.json();[cite: 2]
+                if (!data.success) return;[cite: 2]
+
+                document.getElementById("totalOrders").innerHTML = data.total_orders || 0;[cite: 2]
+                document.getElementById("totalUsers").innerHTML = data.total_users || 0;[cite: 2]
+                document.getElementById("totalServices").innerHTML = data.total_services || 0;[cite: 2]
+                document.getElementById("totalProviders").innerHTML = data.total_providers || 0;[cite: 2]
+            } catch (err) {[cite: 2]
+                console.log(err);[cite: 2]
+            }
+        }
+
+        function logout() {[cite: 2]
+            if (!confirm("Logout from Admin Panel?")) return;[cite: 2]
+            localStorage.removeItem("token");[cite: 2]
+            localStorage.removeItem("user");[cite: 2]
+            location.href = "login.html";[cite: 2]
+        }
+
+        const USER = JSON.parse(localStorage.getItem("user"));[cite: 2]
+        if (!localStorage.getItem("token") || !USER || USER.role !== "admin") {[cite: 2]
+            location.href = "login.html";[cite: 2]
+        }
+
+        setInterval(loadDashboard, 30000);[cite: 2]
+        window.onload = function () { loadDashboard(); };[cite: 2]
+
+        // Toast feedback logic
+        function showToast(message) {[cite: 2]
+            const toast = document.createElement("div");[cite: 2]
+            toast.innerHTML = "✅ " + message;[cite: 2]
+            toast.style.position = "fixed"; toast.style.top = "20px"; toast.style.right = "20px";[cite: 2]
+            toast.style.background = "#22c55e"; toast.style.color = "#fff"; toast.style.padding = "15px 20px";[cite: 2]
+            toast.style.borderRadius = "12px"; toast.style.zIndex = "9999";[cite: 2]
+            document.body.appendChild(toast);[cite: 2]
+            setTimeout(() => { toast.remove(); }, 3000);[cite: 2]
+        }
+
+        // Shortcuts mapping handler[cite: 2]
+        document.addEventListener("keydown", function (e) {[cite: 2]
+            if (e.key === "F5") { e.preventDefault(); loadDashboard(); showToast("Dashboard Refreshed"); }[cite: 2]
+            if (e.ctrlKey && e.key === "l") { e.preventDefault(); logout(); }[cite: 2]
+        });
+    </script>
 </body>
-
 </html>
