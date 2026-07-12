@@ -7,106 +7,136 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
         
-        /* Fixed Galaxy Background Gradient Canvas Matrix */
-        html, body {
+        body {
             min-height: 100vh;
-            background-color: #030712 !important;
-            background-image: 
-                radial-gradient(circle at 80% 20%, rgba(124, 58, 237, 0.25) 0%, transparent 50%),
-                radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.20) 0%, transparent 60%),
-                radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.95) 0%, #030712 100%) !important;
-            background-attachment: fixed !important;
-            background-size: cover !important;
+            background-color: #030611;
             color: #fff;
             overflow-x: hidden;
             padding-bottom: 50px;
+            position: relative;
         }
 
-        /* Ambient Glowing Nebula Blobs */
-        .nebula-glow-1 {
-            position: fixed; width: 300px; height: 300px; background: #7c3aed;
-            filter: blur(140px); top: -50px; left: -50px; opacity: 0.3; z-index: -1;
+        /* Live Background Canvas Layout Positioning */
+        #galaxy-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
             pointer-events: none;
         }
-        .nebula-glow-2 {
-            position: fixed; width: 350px; height: 350px; background: #06b6d4;
-            filter: blur(160px); bottom: -50px; right: -50px; opacity: 0.25; z-index: -1;
-            pointer-events: none;
+
+        .container { 
+            width: 95%; 
+            max-width: 540px; 
+            margin: 20px auto; 
+            padding: 10px; 
+            position: relative; 
+            z-index: 2; 
         }
 
-        .container { width: 95%; max-width: 580px; margin: 20px auto; padding: 10px; position: relative; z-index: 2; }
-
-        /* Header UI Layout */
+        /* Image Model Header Design */
         .header {
             display: flex; align-items: center; justify-content: space-between;
-            background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 18px;
-            padding: 16px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4); margin-bottom: 20px;
+            padding: 12px 6px; margin-bottom: 25px;
         }
-        .brand { display: flex; align-items: center; gap: 12px; }
+        .brand { display: flex; align-items: center; gap: 14px; }
         .logo {
-            width: 55px; height: 55px; border-radius: 50%; background: #0b1120;
-            border: 2px solid rgba(59, 130, 246, 0.5); overflow: hidden; box-shadow: 0 0 15px rgba(59, 130, 246, .3);
+            width: 52px; height: 52px; border-radius: 50%; background: #0b1120;
+            border: 2px solid rgba(59, 130, 246, 0.6); overflow: hidden; 
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
         }
         .logo img { width: 100%; height: 100%; object-fit: cover; }
+        
         .brand h2 {
-            font-size: 20px; background: linear-gradient(90deg, #3b82f6, #06b6d4, #a855f7);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold;
+            font-size: 22px; 
+            background: linear-gradient(90deg, #a5b4fc, #c084fc);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            font-weight: bold;
         }
-        .brand p { color: #64748b; font-size: 11px; margin-top: 2px; }
+        .brand p { color: #94a3b8; font-size: 12px; margin-top: 2px; }
 
-        /* Control Buttons Group */
-        .header-actions { display: flex; align-items: center; gap: 10px; }
+        /* Top Right Glass Buttons Group */
+        .header-actions { display: flex; align-items: center; gap: 12px; }
         .btn-action {
-            width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.08);
-            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; color: #cbd5e1;
+            width: 44px; height: 44px; border-radius: 50%; 
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; transition: all 0.2s ease; color: #fff;
         }
-        .btn-action:hover { background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.2); transform: scale(1.05); }
-        .btn-action.logout-trigger { color: #ef4444; background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.2); }
-        .btn-action.logout-trigger:hover { background: rgba(239, 68, 68, 0.18); border-color: rgba(239, 68, 68, 0.3); }
+        .btn-action:hover { background: rgba(255, 255, 255, 0.1); transform: scale(1.05); }
+        .btn-action.logout-trigger { color: #f87171; }
 
-        /* Unified Stack List Row Layout */
-        .unified-stack { display: flex; flex-direction: column; gap: 10px; }
+        /* Continuous Stack Matrix System */
+        .unified-stack { display: flex; flex-direction: column; gap: 0px; }
+
+        /* Bordered Stack Rows Similar to the Image */
         .row-card {
-            background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 14px;
-            padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;
-            text-decoration: none; color: inherit; transition: all 0.2s ease; cursor: pointer;
+            background: rgba(13, 22, 43, 0.45); 
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06); 
+            border-radius: 14px; padding: 14px 18px; 
+            display: flex; align-items: center; justify-content: space-between;
+            text-decoration: none; color: inherit; transition: all 0.2s ease;
+            margin-bottom: 10px;
         }
         .row-card:hover {
-            background: rgba(255, 255, 255, 0.04); border-color: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px); box-shadow: 0 4px 20px rgba(124, 58, 237, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
         }
-        .card-left { display: flex; align-items: center; gap: 15px; }
+
+        .card-left { display: flex; align-items: center; gap: 16px; }
         .card-icon { font-size: 22px; width: 28px; display: flex; justify-content: center; }
-        .card-details h3 { font-size: 15px; font-weight: 500; color: #f1f5f9; }
-        .card-details p { color: #64748b; font-size: 11px; margin-top: 1px; }
+        
+        .card-details h3 { font-size: 16px; font-weight: bold; color: #fff; letter-spacing: 0.3px; }
+        .card-details p { color: #94a3b8; font-size: 12px; margin-top: 2px; }
 
-        /* Premium Visual Elements */
+        /* Text Effects from Reference Image */
         .rainbow-text {
-            background: linear-gradient(90deg, #ff758c, #ff7eb3, #fccb90, #d4fc79, #96e6a1, #84fab0, #8fd3f4, #b993d6);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold;
+            background: linear-gradient(90deg, #ff8da1, #ffb38a, #fff38a, #a2ff8a, #8ad2ff, #d28aff);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .stat-value { font-size: 22px; font-weight: bold; color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
-        .arrow-icon { color: #475569; font-size: 15px; transition: 0.2s; }
-        .row-card:hover .arrow-icon { color: #94a3b8; transform: translateX(2px); }
+        .stat-value { font-size: 24px; font-weight: bold; color: #fff; }
+        .arrow-icon { color: #94a3b8; font-size: 14px; }
 
-        @media(max-width: 480px) {
-            .brand h2 { font-size: 18px; }
-            .logo { width: 48px; height: 48px; }
-            .row-card { padding: 14px 16px; }
+        /* Live Feed Divider Labels */
+        .feed-divider {
+            text-align: center;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin: 6px 0 14px 0;
+            background: linear-gradient(90deg, #ff758c, #ff7eb3, #fccb90, #96e6a1, #8fd3f4, #b993d6);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* Tiny Trending Badges */
+        .trending-row {
+            display: flex;
+            gap: 12px;
+            font-size: 9px;
+            font-weight: bold;
+            margin-top: 4px;
+            letter-spacing: 0.5px;
+        }
+        .trend-lbl { color: #f87171; }
+        .trend-val {
+            background: linear-gradient(90deg, #d4fc79, #96e6a1, #8fd3f4);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
 
 <body>
-    <!-- Ambient Canvas Glow Blocks -->
-    <div class="nebula-glow-1"></div>
-    <div class="nebula-glow-2"></div>
+    <!-- Live Space Engine Canvas -->
+    <canvas id="galaxy-canvas"></canvas>
 
     <div class="container">
-        <!-- Header Section -->
+        <!-- Header -->
         <div class="header">
             <div class="brand">
                 <div class="logo"><img src="assets/logo.png?v=1" alt="Logo"></div>
@@ -115,25 +145,23 @@
                     <p>Private Multi Provider SMM Panel</p>
                 </div>
             </div>
-            <!-- Header buttons right corner -->
             <div class="header-actions">
                 <div class="btn-action" onclick="location.href='settings.html'" title="Settings">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 0.46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/>
                     </svg>
                 </div>
                 <div class="btn-action logout-trigger" onclick="logout()" title="Logout">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                     </svg>
                 </div>
             </div>
         </div>
 
-        <!-- Vertical Stack Item List -->
+        <!-- Integrated Data Stack Row Components -->
         <div class="unified-stack">
-            <!-- Stats Rows layout -->
+            
             <div class="row-card" style="cursor: default;">
                 <div class="card-left">
                     <div class="card-icon">📦</div>
@@ -141,6 +169,8 @@
                 </div>
                 <div class="stat-value" id="totalOrders">0</div>
             </div>
+
+            <div class="feed-divider">LIVE FEED</div>
 
             <div class="row-card" style="cursor: default;">
                 <div class="card-left">
@@ -166,11 +196,19 @@
                 <div class="stat-value" id="totalProviders">0</div>
             </div>
 
-            <!-- Navigation Links Matrix layout -->
+            <div class="feed-divider">LIVE FEED</div>
+
+            <!-- Operational Route Actions -->
             <div class="row-card" onclick="location.href='new-order.html'">
                 <div class="card-left">
                     <div class="card-icon">🛒</div>
-                    <div class="card-details"><h3 class="rainbow-text">New Order</h3><p>Place a new order</p></div>
+                    <div class="card-details">
+                        <h3>New Order</h3>
+                        <p>Place a new order</p>
+                        <div class="trending-row">
+                            <span class="trend-lbl">TRENDING:</span><span class="trend-val">INSTAGRAM</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="arrow-icon">❯</div>
             </div>
@@ -194,7 +232,7 @@
             <div class="row-card" onclick="location.href='services.html'">
                 <div class="card-left">
                     <div class="card-icon">🛠</div>
-                    <div class="card-details"><h3 class="rainbow-text">Services</h3><p>Manage services</p></div>
+                    <div class="card-details"><h3>Services</h3><p>Manage services</p></div>
                 </div>
                 <div class="arrow-icon">❯</div>
             </div>
@@ -222,10 +260,80 @@
                 </div>
                 <div class="arrow-icon">❯</div>
             </div>
+
         </div>
     </div>
 
-    <!-- Active Logic Functions script[cite: 2] -->
+    <!-- Live Galaxy Vector Graphics Canvas Engine Script -->
+    <script>
+        const canvas = document.getElementById('galaxy-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height, stars = [], nebulaCenter;
+
+        function initCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            nebulaCenter = { x: width * 0.5, y: height * 0.5 };
+            generateStars(350);
+        }
+
+        function generateStars(count) {
+            stars = [];
+            // Generate nebula particle cloud mapping layout
+            for(let i=0; i<count; i++) {
+                let angle = Math.random() * Math.PI * 2;
+                let distance = Math.random() * Math.max(width, height) * 0.6;
+                let speed = (Math.random() * 0.0004) + 0.0001;
+                let size = Math.random() * 1.5;
+                let colorRange = ['rgba(124, 58, 237, ', 'rgba(6, 182, 212, ', 'rgba(244, 63, 94, ', 'rgba(255, 255, 255, '];
+                
+                stars.push({
+                    angle: angle,
+                    distance: distance,
+                    speed: speed,
+                    size: size,
+                    opacity: Math.random(),
+                    colorBase: colorRange[Math.floor(Math.random() * colorRange.length)]
+                });
+            }
+        }
+
+        function drawGalaxy() {
+            ctx.fillStyle = '#030611';
+            ctx.fillRect(0, 0, width, height);
+
+            // Center Nebula Core Glow
+            let coreGlow = ctx.createRadialGradient(nebulaCenter.x, nebulaCenter.y, 10, nebulaCenter.x, nebulaCenter.y, Math.min(width, height) * 0.5);
+            coreGlow.addColorStop(0, 'rgba(124, 58, 237, 0.18)');
+            coreGlow.addColorStop(0.4, 'rgba(6, 182, 212, 0.12)');
+            coreGlow.addColorStop(1, 'rgba(3, 6, 17, 0)');
+            ctx.fillStyle = coreGlow;
+            ctx.fillRect(0, 0, width, height);
+
+            // Animate moving cosmic spiral particles matrix
+            for(let i=0; i<stars.length; i++) {
+                let star = stars[i];
+                star.angle += star.speed; // Rotation update logic
+                
+                // Add minor noise spiral warp
+                let x = nebulaCenter.x + Math.cos(star.angle) * star.distance;
+                let y = nebulaCenter.y + Math.sin(star.angle) * (star.distance * 0.75); // Elliptical perspective
+
+                ctx.fillStyle = star.colorBase + star.opacity + ')';
+                ctx.beginPath();
+                ctx.arc(x, y, star.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            requestAnimationFrame(drawGalaxy);
+        }
+
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+        drawGalaxy();
+    </script>
+
+    <!-- Native Dynamic Application Control Layer Logic[cite: 2] -->
     <script>
         const API = "https://gowind-smm-panel-v3.onrender.com";[cite: 2]
 
@@ -251,19 +359,6 @@
 
         setInterval(loadDashboard, 30000);[cite: 2]
         window.onload = function () { loadDashboard(); };[cite: 2]
-
-        function showToast(message) {[cite: 2]
-            const toast = document.createElement("div"); toast.innerHTML = "✅ " + message;[cite: 2]
-            toast.style.position = "fixed"; toast.style.top = "20px"; toast.style.right = "20px";[cite: 2]
-            toast.style.background = "#22c55e"; toast.style.color = "#fff"; toast.style.padding = "15px 20px";[cite: 2]
-            toast.style.borderRadius = "12px"; toast.style.zIndex = "9999"; document.body.appendChild(toast);[cite: 2]
-            setTimeout(() => { toast.remove(); }, 3000);[cite: 2]
-        }
-
-        document.addEventListener("keydown", function (e) {[cite: 2]
-            if (e.key === "F5") { e.preventDefault(); loadDashboard(); showToast("Dashboard Refreshed"); }[cite: 2]
-            if (e.ctrlKey && e.key === "l") { e.preventDefault(); logout(); }[cite: 2]
-        });
     </script>
 </body>
 </html>
