@@ -1637,30 +1637,67 @@ app.post("/api/users/set-balance", async (req, res) => {
 
         const { user_id, balance } = req.body;
 
-        await db.query(
-
-            "UPDATE users SET wallet=$1 WHERE id=$2",
-
-            [
-                balance,
-                user_id
-            ]
-
+        // Current Wallet
+        const current = await db.query(
+            "SELECT wallet FROM users WHERE id=$1",
+            [user_id]
         );
+
+        if(current.rows.length===0){
+
+            return res.status(404).json({
+                success:false,
+                message:"User not found"
+            });
+
+        }
+
+        const oldBalance =
+        Number(current.rows[0].wallet);
+
+        // Update Wallet
+        await db.query(
+            "UPDATE users SET wallet=$1 WHERE id=$2",
+            [balance,user_id]
+        );
+
+        // Difference
+        const difference =
+        Number(balance)-oldBalance;
+
+        if(difference!==0){
+
+            await db.query(
+
+                `INSERT INTO transactions
+                (user_id,amount,type)
+                VALUES($1,$2,$3)`,
+
+                [
+                    user_id,
+                    Math.abs(difference),
+                    difference>0
+                    ? "Credit"
+                    : "Debit"
+                ]
+
+            );
+
+        }
 
         res.json({
 
-            success: true,
-            message: "Balance Updated Successfully"
+            success:true,
+            message:"Balance Updated Successfully"
 
         });
 
-    } catch (err) {
+    } catch(err){
 
         res.status(500).json({
 
-            success: false,
-            error: err.message
+            success:false,
+            error:err.message
 
         });
 
