@@ -5,7 +5,8 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Admin Dashboard</title>
 
@@ -41,7 +42,13 @@ max-width:1200px;
 
 margin:20px auto;
 
+padding:5px;
+
 }
+
+/* ===========================
+   HEADER
+=========================== */
 
 .header{
 
@@ -51,15 +58,17 @@ justify-content:space-between;
 
 align-items:center;
 
-padding:18px;
-
 background:#111827;
 
 border:1px solid #1f2937;
 
-border-radius:15px;
+border-radius:18px;
+
+padding:18px;
 
 margin-bottom:20px;
+
+box-shadow:0 0 20px rgba(37,99,235,.15);
 
 }
 
@@ -85,6 +94,10 @@ overflow:hidden;
 
 border:2px solid #2563eb;
 
+box-shadow:
+
+0 0 20px rgba(37,99,235,.30);
+
 }
 
 .logo img{
@@ -100,6 +113,8 @@ object-fit:cover;
 .title h2{
 
 font-size:24px;
+
+font-weight:bold;
 
 color:#ffffff;
 
@@ -141,19 +156,32 @@ cursor:pointer;
 
 font-size:18px;
 
+transition:.3s;
+
 }
 
 .action-btn:hover{
 
 background:#2563eb;
 
+transform:scale(1.08);
+
+box-shadow:
+
+0 0 18px rgba(37,99,235,.45);
+
 }
+
+/* ===========================
+   STATS
+=========================== */
 
 .stats{
 
 display:grid;
 
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+grid-template-columns:
+repeat(auto-fit,minmax(220px,1fr));
 
 gap:15px;
 
@@ -167,25 +195,95 @@ background:#111827;
 
 border:1px solid #1f2937;
 
-border-radius:15px;
+border-radius:16px;
 
 padding:20px;
+
+position:relative;
+
+overflow:hidden;
+
+cursor:pointer;
+
+transition:.3s;
+
+box-shadow:
+
+0 0 12px rgba(37,99,235,.12);
+
+}
+
+.card::before{
+
+content:"";
+
+position:absolute;
+
+top:0;
+
+left:-120%;
+
+width:60%;
+
+height:100%;
+
+background:linear-gradient(
+
+90deg,
+
+transparent,
+
+rgba(255,255,255,.08),
+
+transparent
+
+);
+
+transition:.8s;
+
+}
+
+.card:hover::before{
+
+left:170%;
+
+}
+
+.card:hover{
+
+transform:translateY(-5px);
+
+border-color:#2563eb;
+
+box-shadow:
+
+0 0 20px rgba(37,99,235,.35),
+
+0 0 35px rgba(124,58,237,.25);
 
 }
 
 .card h4{
 
-font-size:14px;
+font-size:15px;
 
-color:#94a3b8;
+color:#cbd5e1;
 
 margin-bottom:10px;
+
+display:flex;
+
+align-items:center;
+
+gap:8px;
 
 }
 
 .card h2{
 
 font-size:30px;
+
+font-weight:bold;
 
 }
 
@@ -201,6 +299,8 @@ grid-column:1/-1;
 <body>
 
 <div class="container">
+
+<!-- Header -->
 
 <div class="header">
 
@@ -226,7 +326,8 @@ grid-column:1/-1;
 
 <button
 class="action-btn"
-onclick="location.href='settings.html'">
+onclick="location.href='settings.html'"
+title="Settings">
 
 <i class="fa-solid fa-gear"></i>
 
@@ -234,7 +335,8 @@ onclick="location.href='settings.html'">
 
 <button
 class="action-btn"
-onclick="logout()">
+onclick="logout()"
+title="Logout">
 
 <i class="fa-solid fa-right-from-bracket"></i>
 
@@ -244,11 +346,19 @@ onclick="logout()">
 
 </div>
 
+<!-- Dashboard Cards -->
+
 <div class="stats">
 
 <div class="card">
 
-<h4>Total Orders</h4>
+<h4>
+
+<i class="fa-solid fa-cart-shopping"></i>
+
+Total Orders
+
+</h4>
 
 <h2 id="totalOrders">0</h2>
 
@@ -256,7 +366,13 @@ onclick="logout()">
 
 <div class="card">
 
-<h4>Total Users</h4>
+<h4>
+
+<i class="fa-solid fa-users"></i>
+
+Total Users
+
+</h4>
 
 <h2 id="totalUsers">0</h2>
 
@@ -264,7 +380,13 @@ onclick="logout()">
 
 <div class="card">
 
-<h4>Total Services</h4>
+<h4>
+
+<i class="fa-solid fa-box"></i>
+
+Total Services
+
+</h4>
 
 <h2 id="totalServices">0</h2>
 
@@ -272,7 +394,13 @@ onclick="logout()">
 
 <div class="card">
 
-<h4>Total Providers</h4>
+<h4>
+
+<i class="fa-solid fa-server"></i>
+
+Providers
+
+</h4>
 
 <h2 id="totalProviders">0</h2>
 
@@ -280,7 +408,13 @@ onclick="logout()">
 
 <div class="card wallet">
 
-<h4>Wallet Balance</h4>
+<h4>
+
+<i class="fa-solid fa-wallet"></i>
+
+Wallet Balance
+
+</h4>
 
 <h2 id="walletBalance">₹0.00</h2>
 
@@ -288,61 +422,105 @@ onclick="logout()">
 
 </div>
 
+<!-- Menu -->
+
 <div class="stats">
 
 <div class="card"
-onclick="location.href='new-order.html'"
-style="cursor:pointer">
 
-<h4>New Order</h4>
+onclick="location.href='new-order.html'">
 
-</div>
+<h4>
 
-<div class="card"
-onclick="location.href='orders.html'"
-style="cursor:pointer">
+<i class="fa-solid fa-cart-plus"></i>
 
-<h4>Orders</h4>
+New Order
+
+</h4>
 
 </div>
 
 <div class="card"
-onclick="location.href='users.html'"
-style="cursor:pointer">
 
-<h4>Users</h4>
+onclick="location.href='orders.html'">
 
-</div>
+<h4>
 
-<div class="card"
-onclick="location.href='services.html'"
-style="cursor:pointer">
+<i class="fa-solid fa-list-check"></i>
 
-<h4>Services</h4>
+Orders
+
+</h4>
 
 </div>
 
 <div class="card"
-onclick="location.href='providers.html'"
-style="cursor:pointer">
 
-<h4>Providers</h4>
+onclick="location.href='users.html'">
 
-</div>
+<h4>
 
-<div class="card"
-onclick="location.href='transactions.html'"
-style="cursor:pointer">
+<i class="fa-solid fa-users"></i>
 
-<h4>Transactions</h4>
+Users
+
+</h4>
 
 </div>
 
 <div class="card"
-onclick="location.href='profile.html'"
-style="cursor:pointer">
 
-<h4>Profile</h4>
+onclick="location.href='services.html'">
+
+<h4>
+
+<i class="fa-solid fa-box"></i>
+
+Services
+
+</h4>
+
+</div>
+
+<div class="card"
+
+onclick="location.href='providers.html'">
+
+<h4>
+
+<i class="fa-solid fa-server"></i>
+
+Providers
+
+</h4>
+
+</div>
+
+<div class="card"
+
+onclick="location.href='transactions.html'">
+
+<h4>
+
+<i class="fa-solid fa-wallet"></i>
+
+Transactions
+
+</h4>
+
+</div>
+
+<div class="card"
+
+onclick="location.href='profile.html'">
+
+<h4>
+
+<i class="fa-solid fa-user"></i>
+
+Profile
+
+</h4>
 
 </div>
 
@@ -353,73 +531,78 @@ style="cursor:pointer">
 const API="https://gowind-smm-panel-v3.onrender.com";
    async function loadDashboard(){
 
-    try{
+try{
 
-        const response=await fetch(
-            API+"/api/admin/dashboard"
-        );
+const response=await fetch(
+API+"/api/admin/dashboard"
+);
 
-        const data=await response.json();
+if(!response.ok) return;
 
-        if(!data.success)return;
+const data=await response.json();
 
-        document.getElementById("totalOrders").textContent=
-            data.dashboard.orders || 0;
+if(!data.success) return;
 
-        document.getElementById("totalUsers").textContent=
-            data.dashboard.users || 0;
+document.getElementById("totalOrders").textContent=
+data.dashboard.orders ?? 0;
 
-        document.getElementById("totalServices").textContent=
-            data.dashboard.services || 0;
+document.getElementById("totalUsers").textContent=
+data.dashboard.users ?? 0;
 
-        document.getElementById("totalProviders").textContent=
-            data.dashboard.providers || 0;
+document.getElementById("totalServices").textContent=
+data.dashboard.services ?? 0;
 
-    }catch(error){
+document.getElementById("totalProviders").textContent=
+data.dashboard.providers ?? 0;
 
-        console.error(error);
+}catch(error){
 
-    }
+console.error("Dashboard:",error);
+
+}
 
 }
 
 async function loadWallet(){
 
-    try{
+try{
 
-        const user=
-        JSON.parse(localStorage.getItem("user"));
+const user=JSON.parse(
+localStorage.getItem("user")
+);
 
-        if(!user)return;
+if(!user) return;
 
-        const response=await fetch(
-            API+"/api/wallet/"+user.id
-        );
+const response=await fetch(
+API+"/api/wallet/"+user.id
+);
 
-        const data=await response.json();
+if(!response.ok) return;
 
-        if(data.success){
+const data=await response.json();
 
-            document.getElementById("walletBalance").textContent=
-            "₹"+Number(data.wallet).toFixed(2);
+if(data.success){
 
-        }
+document.getElementById("walletBalance").textContent=
+"₹"+Number(data.wallet||0).toFixed(2);
 
-    }catch(error){
+}
 
-        console.error(error);
+}catch(error){
 
-    }
+console.error("Wallet:",error);
+
+}
 
 }
 
 function logout(){
 
-    localStorage.removeItem("token");
+localStorage.removeItem("token");
 
-    localStorage.removeItem("user");
+localStorage.removeItem("user");
 
-    location.href="login.html";
+location.href="login.html";
 
 }
 
@@ -430,28 +613,28 @@ const user=
 JSON.parse(localStorage.getItem("user"));
 
 if(
-    !token||
-    !user||
-    user.role!=="admin"
+!token||
+!user||
+user.role!=="admin"
 ){
 
-    location.href="login.html";
+location.href="login.html";
 
 }
 
 window.onload=function(){
 
-    loadDashboard();
+loadDashboard();
 
-    loadWallet();
+loadWallet();
 
 };
 
 setInterval(function(){
 
-    loadDashboard();
+loadDashboard();
 
-    loadWallet();
+loadWallet();
 
 },30000);
 
