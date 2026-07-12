@@ -9,13 +9,8 @@
 
 <title>Admin Dashboard</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 <style>
 
@@ -23,150 +18,20 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:"Poppins",sans-serif;
+font-family:Arial,sans-serif;
 }
 
 body{
 
-background:#050816;
+background:#0b1120;
 
-color:#ffffff;
-
-overflow-x:hidden;
+color:#fff;
 
 min-height:100vh;
 
-}
-
-/* ===========================
-   LIVE BACKGROUND
-=========================== */
-
-#bgCanvas{
-
-position:fixed;
-
-top:0;
-left:0;
-
-width:100%;
-height:100%;
-
-z-index:-10;
+overflow-x:hidden;
 
 }
-
-body::before{
-
-content:"";
-
-position:fixed;
-
-width:450px;
-height:450px;
-
-border-radius:50%;
-
-background:#2563eb;
-
-filter:blur(180px);
-
-top:-180px;
-left:-180px;
-
-opacity:.35;
-
-animation:glow1 12s ease-in-out infinite alternate;
-
-z-index:-9;
-
-}
-
-body::after{
-
-content:"";
-
-position:fixed;
-
-width:420px;
-height:420px;
-
-border-radius:50%;
-
-background:#9333ea;
-
-filter:blur(180px);
-
-bottom:-180px;
-right:-180px;
-
-opacity:.30;
-
-animation:glow2 15s ease-in-out infinite alternate;
-
-z-index:-9;
-
-}
-
-@keyframes glow1{
-
-100%{
-
-transform:translate(120px,80px);
-
-}
-
-}
-
-@keyframes glow2{
-
-100%{
-
-transform:translate(-100px,-70px);
-
-}
-
-}
-
-/* ===========================
-   GRID
-=========================== */
-
-.grid{
-
-position:fixed;
-
-inset:0;
-
-background-image:
-
-linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
-
-linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
-
-background-size:90px 90px;
-
-opacity:.12;
-
-animation:gridMove 20s linear infinite;
-
-z-index:-8;
-
-}
-
-@keyframes gridMove{
-
-100%{
-
-transform:translate(-90px,-90px);
-
-}
-
-}
-
-/* ===========================
-   CONTAINER
-=========================== */
 
 .container{
 
@@ -174,39 +39,9 @@ width:95%;
 
 max-width:1200px;
 
-margin:25px auto;
-
-padding:20px;
+margin:20px auto;
 
 }
-
-/* ===========================
-   GLASS CARD
-=========================== */
-
-.glass{
-
-background:rgba(255,255,255,.05);
-
-backdrop-filter:blur(18px);
-
--webkit-backdrop-filter:blur(18px);
-
-border:1px solid rgba(255,255,255,.08);
-
-box-shadow:
-
-0 0 20px rgba(37,99,235,.18),
-
-0 0 35px rgba(147,51,234,.12);
-
-border-radius:20px;
-
-}
-
-/* ===========================
-   HEADER
-=========================== */
 
 .header{
 
@@ -216,9 +51,15 @@ justify-content:space-between;
 
 align-items:center;
 
-padding:18px 22px;
+padding:18px;
 
-margin-bottom:25px;
+background:#111827;
+
+border:1px solid #1f2937;
+
+border-radius:15px;
+
+margin-bottom:20px;
 
 }
 
@@ -234,17 +75,15 @@ gap:15px;
 
 .logo{
 
-width:65px;
+width:60px;
 
-height:65px;
+height:60px;
 
 border-radius:50%;
 
 overflow:hidden;
 
-border:2px solid #3b82f6;
-
-box-shadow:0 0 20px rgba(59,130,246,.45);
+border:2px solid #2563eb;
 
 }
 
@@ -260,15 +99,9 @@ object-fit:cover;
 
 .title h2{
 
-font-size:26px;
+font-size:24px;
 
-font-weight:700;
-
-background:linear-gradient(90deg,#60a5fa,#22d3ee,#c084fc);
-
--webkit-background-clip:text;
-
--webkit-text-fill-color:transparent;
+color:#ffffff;
 
 }
 
@@ -278,7 +111,7 @@ font-size:13px;
 
 color:#94a3b8;
 
-margin-top:4px;
+margin-top:3px;
 
 }
 
@@ -286,199 +119,96 @@ margin-top:4px;
 
 display:flex;
 
-gap:12px;
+gap:10px;
 
 }
 
 .action-btn{
 
-width:48px;
+width:45px;
 
-height:48px;
+height:45px;
 
 border:none;
 
 border-radius:50%;
 
-background:rgba(255,255,255,.06);
+background:#1e293b;
 
-border:1px solid rgba(255,255,255,.08);
-
-color:#ffffff;
+color:#fff;
 
 cursor:pointer;
 
 font-size:18px;
 
-transition:.3s;
-
 }
 
 .action-btn:hover{
 
-transform:translateY(-4px);
-
-box-shadow:
-
-0 0 20px rgba(59,130,246,.45);
+background:#2563eb;
 
 }
-   /* ===========================
-   STATS
-=========================== */
 
 .stats{
 
 display:grid;
 
-grid-template-columns:
-repeat(auto-fit,minmax(240px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
 
-gap:18px;
+gap:15px;
 
-margin-bottom:25px;
+margin-bottom:20px;
 
 }
 
-.stat-card{
+.card{
+
+background:#111827;
+
+border:1px solid #1f2937;
+
+border-radius:15px;
 
 padding:20px;
 
-position:relative;
+}
 
-overflow:hidden;
+.card h4{
 
-transition:.3s;
+font-size:14px;
+
+color:#94a3b8;
+
+margin-bottom:10px;
 
 }
 
-.stat-card:hover{
+.card h2{
 
-transform:translateY(-5px);
-
-box-shadow:
-
-0 0 25px rgba(59,130,246,.30),
-
-0 0 45px rgba(147,51,234,.20);
-
-}
-
-.stat-card::before{
-
-content:"";
-
-position:absolute;
-
-left:-120%;
-
-top:0;
-
-width:60%;
-
-height:100%;
-
-background:linear-gradient(
-
-90deg,
-
-transparent,
-
-rgba(255,255,255,.10),
-
-transparent
-
-);
-
-transform:skewX(-20deg);
-
-animation:shine 6s linear infinite;
-
-}
-
-@keyframes shine{
-
-100%{
-
-left:180%;
-
-}
-
-}
-
-.card-head{
-
-display:flex;
-
-align-items:center;
-
-gap:12px;
-
-margin-bottom:12px;
-
-}
-
-.card-head i{
-
-font-size:22px;
-
-color:#38bdf8;
-
-}
-
-.card-head span{
-
-font-size:15px;
-
-font-weight:600;
-
-color:#cbd5e1;
-
-}
-
-.card-value{
-
-font-size:34px;
-
-font-weight:700;
-
-letter-spacing:1px;
+font-size:30px;
 
 }
 
 .wallet{
 
-background:linear-gradient(
+grid-column:1/-1;
 
-135deg,
-
-rgba(34,197,94,.18),
-
-rgba(59,130,246,.12)
-
-);
-
-   }
+}
    </style>
 
 </head>
 
 <body>
 
-<canvas id="bgCanvas"></canvas>
-
-<div class="grid"></div>
-
 <div class="container">
 
-<div class="header glass">
+<div class="header">
 
 <div class="brand">
 
 <div class="logo">
 
-<img src="assets/logo.png?v=1"
-alt="Logo">
+<img src="assets/logo.png" alt="Logo">
 
 </div>
 
@@ -486,7 +216,7 @@ alt="Logo">
 
 <h2>Gowind SMM Panel</h2>
 
-<p>Private Multi Provider Platform</p>
+<p>Private Multi Provider Panel</p>
 
 </div>
 
@@ -516,712 +246,214 @@ onclick="logout()">
 
 <div class="stats">
 
-<div class="stat-card glass">
+<div class="card">
 
-<div class="card-head">
+<h4>Total Orders</h4>
 
-<i class="fa-solid fa-cart-shopping"></i>
-
-<span>Total Orders</span>
+<h2 id="totalOrders">0</h2>
 
 </div>
 
-<div
-class="card-value"
-id="totalOrders">
+<div class="card">
 
-0
+<h4>Total Users</h4>
 
-</div>
+<h2 id="totalUsers">0</h2>
 
 </div>
 
-<div class="stat-card glass">
+<div class="card">
 
-<div class="card-head">
+<h4>Total Services</h4>
 
-<i class="fa-solid fa-users"></i>
-
-<span>Total Users</span>
+<h2 id="totalServices">0</h2>
 
 </div>
 
-<div
-class="card-value"
-id="totalUsers">
+<div class="card">
 
-0
+<h4>Total Providers</h4>
 
-</div>
+<h2 id="totalProviders">0</h2>
 
 </div>
 
-<div class="stat-card glass">
+<div class="card wallet">
 
-<div class="card-head">
+<h4>Wallet Balance</h4>
 
-<i class="fa-solid fa-box"></i>
-
-<span>Services</span>
-
-</div>
-
-<div
-class="card-value"
-id="totalServices">
-
-0
+<h2 id="walletBalance">₹0.00</h2>
 
 </div>
 
 </div>
 
-<div class="stat-card glass">
+<div class="stats">
 
-<div class="card-head">
+<div class="card"
+onclick="location.href='new-order.html'"
+style="cursor:pointer">
 
-<i class="fa-solid fa-server"></i>
-
-<span>Providers</span>
-
-</div>
-
-<div
-class="card-value"
-id="totalProviders">
-
-0
+<h4>New Order</h4>
 
 </div>
 
-</div>
+<div class="card"
+onclick="location.href='orders.html'"
+style="cursor:pointer">
 
-<div class="stat-card glass wallet">
-
-<div class="card-head">
-
-<i class="fa-solid fa-wallet"></i>
-
-<span>Wallet Balance</span>
+<h4>Orders</h4>
 
 </div>
 
-<div
-class="card-value"
-id="walletBalance">
+<div class="card"
+onclick="location.href='users.html'"
+style="cursor:pointer">
 
-₹0.00
+<h4>Users</h4>
+
+</div>
+
+<div class="card"
+onclick="location.href='services.html'"
+style="cursor:pointer">
+
+<h4>Services</h4>
+
+</div>
+
+<div class="card"
+onclick="location.href='providers.html'"
+style="cursor:pointer">
+
+<h4>Providers</h4>
+
+</div>
+
+<div class="card"
+onclick="location.href='transactions.html'"
+style="cursor:pointer">
+
+<h4>Transactions</h4>
+
+</div>
+
+<div class="card"
+onclick="location.href='profile.html'"
+style="cursor:pointer">
+
+<h4>Profile</h4>
 
 </div>
 
 </div>
 
-</div>
-/* ===========================
-   MENU
-=========================== */
+<script>
 
-.menu{
+const API="https://gowind-smm-panel-v3.onrender.com";
+   async function loadDashboard(){
 
-display:grid;
+    try{
 
-grid-template-columns:
-repeat(auto-fit,minmax(260px,1fr));
+        const response=await fetch(
+            API+"/api/admin/dashboard"
+        );
 
-gap:18px;
+        const data=await response.json();
 
-margin-bottom:25px;
+        if(!data.success)return;
+
+        document.getElementById("totalOrders").textContent=
+            data.dashboard.orders || 0;
+
+        document.getElementById("totalUsers").textContent=
+            data.dashboard.users || 0;
+
+        document.getElementById("totalServices").textContent=
+            data.dashboard.services || 0;
+
+        document.getElementById("totalProviders").textContent=
+            data.dashboard.providers || 0;
+
+    }catch(error){
+
+        console.error(error);
+
+    }
 
 }
-
-.menu-card{
-
-display:flex;
-
-align-items:center;
-
-justify-content:space-between;
-
-padding:18px;
-
-cursor:pointer;
-
-transition:.35s;
-
-position:relative;
-
-overflow:hidden;
-
-}
-
-.menu-card:hover{
-
-transform:translateY(-5px);
-
-box-shadow:
-
-0 0 25px rgba(59,130,246,.30),
-
-0 0 40px rgba(147,51,234,.25);
-
-}
-
-.menu-card::before{
-
-content:"";
-
-position:absolute;
-
-top:0;
-
-left:-120%;
-
-width:60%;
-
-height:100%;
-
-background:linear-gradient(
-
-90deg,
-
-transparent,
-
-rgba(255,255,255,.12),
-
-transparent
-
-);
-
-transform:skewX(-20deg);
-
-transition:.8s;
-
-}
-
-.menu-card:hover::before{
-
-left:180%;
-
-}
-
-.menu-left{
-
-display:flex;
-
-align-items:center;
-
-gap:15px;
-
-}
-
-.menu-icon{
-
-width:55px;
-
-height:55px;
-
-border-radius:16px;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-background:rgba(255,255,255,.06);
-
-border:1px solid rgba(255,255,255,.08);
-
-color:#60a5fa;
-
-font-size:20px;
-
-}
-
-.menu-title{
-
-font-size:17px;
-
-font-weight:600;
-
-color:#fff;
-
-}
-
-.menu-sub{
-
-font-size:12px;
-
-margin-top:4px;
-
-color:#94a3b8;
-
-}
-
-.menu-arrow{
-
-font-size:18px;
-
-color:#94a3b8;
-
-transition:.3s;
-
-}
-
-.menu-card:hover .menu-arrow{
-
-transform:translateX(6px);
-
-color:#60a5fa;
-
-}
-   /* ===========================
-   LOAD DASHBOARD
-=========================== */
-
-async function loadDashboard(){
-
-try{
-
-const response=await fetch(
-API+"/api/admin/dashboard"
-);
-
-const data=await response.json();
-
-if(!data.success)return;
-
-animateCounter(
-"totalOrders",
-Number(data.dashboard.orders||0)
-);
-
-animateCounter(
-"totalUsers",
-Number(data.dashboard.users||0)
-);
-
-animateCounter(
-"totalServices",
-Number(data.dashboard.services||0)
-);
-
-animateCounter(
-"totalProviders",
-Number(data.dashboard.providers||0)
-);
-
-}catch(err){
-
-console.log(err);
-
-}
-
-}
-
-/* ===========================
-   LOAD WALLET
-=========================== */
 
 async function loadWallet(){
 
-try{
+    try{
+
+        const user=
+        JSON.parse(localStorage.getItem("user"));
+
+        if(!user)return;
+
+        const response=await fetch(
+            API+"/api/wallet/"+user.id
+        );
+
+        const data=await response.json();
+
+        if(data.success){
+
+            document.getElementById("walletBalance").textContent=
+            "₹"+Number(data.wallet).toFixed(2);
+
+        }
+
+    }catch(error){
+
+        console.error(error);
+
+    }
+
+}
+
+function logout(){
+
+    localStorage.removeItem("token");
+
+    localStorage.removeItem("user");
+
+    location.href="login.html";
+
+}
+
+const token=
+localStorage.getItem("token");
 
 const user=
 JSON.parse(localStorage.getItem("user"));
 
-if(!user)return;
-
-const response=await fetch(
-
-API+"/api/wallet/"+user.id
-
-);
-
-const data=await response.json();
-
-if(data.success){
-
-document.getElementById(
-"walletBalance"
-).textContent=
-
-"₹"+Number(
-data.wallet||0
-).toFixed(2);
-
-}
-
-}catch(err){
-
-console.log(err);
-
-}
-
-}
-
-/* ===========================
-   COUNTER
-=========================== */
-
-function animateCounter(id,end){
-
-const el=document.getElementById(id);
-
-const start=
-Number(el.textContent.replace(/,/g,""))||0;
-
-const duration=600;
-
-const startTime=performance.now();
-
-function update(now){
-
-const progress=Math.min(
-
-(now-startTime)/duration,
-
-1
-
-);
-
-const value=Math.floor(
-
-start+(end-start)*progress
-
-);
-
-el.textContent=
-value.toLocaleString();
-
-if(progress<1){
-
-requestAnimationFrame(update);
-
-}
-
-}
-
-requestAnimationFrame(update);
-
-}
-
-/* ===========================
-   LOGIN CHECK
-=========================== */
-
-const TOKEN=
-localStorage.getItem("token");
-
-const USER=
-JSON.parse(
-localStorage.getItem("user")
-);
-
 if(
-!TOKEN||
-!USER||
-USER.role!=="admin"
+    !token||
+    !user||
+    user.role!=="admin"
 ){
 
-location.href="login.html";
+    location.href="login.html";
 
 }
 
-/* ===========================
-   LOGOUT
-=========================== */
+window.onload=function(){
 
-function logout(){
+    loadDashboard();
 
-if(confirm("Logout?")){
-
-localStorage.clear();
-
-location.href="login.html";
-
-}
-
-}
-
-/* ===========================
-   AUTO REFRESH
-=========================== */
-
-window.onload=()=>{
-
-loadDashboard();
-
-loadWallet();
+    loadWallet();
 
 };
 
-setInterval(()=>{
+setInterval(function(){
 
-loadDashboard();
+    loadDashboard();
 
-loadWallet();
+    loadWallet();
 
 },30000);
-
-/* ===========================
-   GALAXY BACKGROUND
-=========================== */
-
-const canvas=
-document.getElementById("bgCanvas");
-
-const ctx=
-canvas.getContext("2d");
-
-function resize(){
-
-canvas.width=
-window.innerWidth;
-
-canvas.height=
-window.innerHeight;
-
-}
-
-resize();
-
-window.addEventListener(
-"resize",
-resize
-);
-
-const stars=[];
-
-for(let i=0;i<180;i++){
-
-stars.push({
-
-x:Math.random()*canvas.width,
-
-y:Math.random()*canvas.height,
-
-r:Math.random()*2,
-
-dx:(Math.random()-.5)*0.2,
-
-dy:(Math.random()-.5)*0.2
-
-});
-
-}
-
-function draw(){
-
-ctx.clearRect(
-0,
-0,
-canvas.width,
-canvas.height
-);
-
-for(const s of stars){
-
-ctx.beginPath();
-
-ctx.arc(
-s.x,
-s.y,
-s.r,
-0,
-Math.PI*2
-);
-
-ctx.fillStyle="#ffffff";
-
-ctx.fill();
-
-s.x+=s.dx;
-
-s.y+=s.dy;
-
-if(s.x<0||s.x>canvas.width)
-s.dx*=-1;
-
-if(s.y<0||s.y>canvas.height)
-s.dy*=-1;
-
-}
-
-requestAnimationFrame(draw);
-
-}
-
-draw();
-   /* ===========================
-   PLEXUS NETWORK
-=========================== */
-
-function drawLines(){
-
-for(let i=0;i<stars.length;i++){
-
-for(let j=i+1;j<stars.length;j++){
-
-const dx=stars[i].x-stars[j].x;
-const dy=stars[i].y-stars[j].y;
-
-const dist=Math.sqrt(dx*dx+dy*dy);
-
-if(dist<120){
-
-ctx.beginPath();
-
-ctx.moveTo(
-stars[i].x,
-stars[i].y
-);
-
-ctx.lineTo(
-stars[j].x,
-stars[j].y
-);
-
-ctx.strokeStyle=
-"rgba(59,130,246,"+(1-dist/120)*0.20+")";
-
-ctx.lineWidth=1;
-
-ctx.stroke();
-
-}
-
-}
-
-}
-
-}
-
-const oldDraw=draw;
-
-draw=function(){
-
-ctx.clearRect(
-0,
-0,
-canvas.width,
-canvas.height
-);
-
-drawLines();
-
-for(const s of stars){
-
-ctx.beginPath();
-
-ctx.arc(
-s.x,
-s.y,
-s.r,
-0,
-Math.PI*2
-);
-
-ctx.fillStyle="#ffffff";
-
-ctx.fill();
-
-s.x+=s.dx;
-s.y+=s.dy;
-
-if(s.x<0||s.x>canvas.width)
-s.dx*=-1;
-
-if(s.y<0||s.y>canvas.height)
-s.dy*=-1;
-
-}
-
-requestAnimationFrame(draw);
-
-};
-
-draw();
-
-/* ===========================
-   MOBILE
-=========================== */
-
-const media=document.createElement("style");
-
-media.innerHTML=`
-
-@media(max-width:768px){
-
-.container{
-
-width:95%;
-
-padding:12px;
-
-}
-
-.header{
-
-flex-direction:column;
-
-align-items:flex-start;
-
-gap:15px;
-
-}
-
-.actions{
-
-width:100%;
-
-justify-content:flex-end;
-
-}
-
-.stats{
-
-grid-template-columns:1fr;
-
-}
-
-.menu{
-
-grid-template-columns:1fr;
-
-}
-
-.logo{
-
-width:56px;
-
-height:56px;
-
-}
-
-.title h2{
-
-font-size:22px;
-
-}
-
-.card-value{
-
-font-size:28px;
-
-}
-
-}
-
-`;
-
-document.head.appendChild(media);
-
-/* ===========================
-   PAGE READY
-=========================== */
-
-console.log("Admin Dashboard Loaded");
 
 </script>
 
