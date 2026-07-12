@@ -1818,6 +1818,109 @@ app.delete("/api/orders/:id", async (req, res) => {
 
 });
 /* ===========================
+   USER PROFILE
+=========================== */
+
+app.get("/api/profile/:id", async (req, res) => {
+
+    try{
+
+        const userId = req.params.id;
+
+        const profile = await db.query(
+
+            `SELECT
+                id,
+                username,
+                role,
+                wallet,
+                status,
+                created_at
+             FROM users
+             WHERE id = $1`,
+
+            [userId]
+
+        );
+
+        if(profile.rows.length === 0){
+
+            return res.status(404).json({
+
+                success:false,
+                message:"User not found"
+
+            });
+
+        }
+
+        const orders = await db.query(
+
+            `SELECT
+
+                COUNT(*) AS total,
+
+                COUNT(*) FILTER
+                (WHERE status='Pending')
+                AS pending,
+
+                COUNT(*) FILTER
+                (WHERE status='Completed')
+                AS completed,
+
+                COUNT(*) FILTER
+                (WHERE status='Cancelled')
+                AS cancelled
+
+             FROM orders
+
+             WHERE user_id = $1`,
+
+            [userId]
+
+        );
+
+        res.json({
+
+            success:true,
+
+            profile:{
+
+                ...profile.rows[0],
+
+                total_orders:Number(
+                    orders.rows[0].total
+                ),
+
+                pending_orders:Number(
+                    orders.rows[0].pending
+                ),
+
+                completed_orders:Number(
+                    orders.rows[0].completed
+                ),
+
+                cancelled_orders:Number(
+                    orders.rows[0].cancelled
+                )
+
+            }
+
+        });
+
+    }catch(err){
+
+        res.status(500).json({
+
+            success:false,
+            error:err.message
+
+        });
+
+    }
+
+});
+/* ===========================
    USER ORDER HISTORY
 =========================== */
 
