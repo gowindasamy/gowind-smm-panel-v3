@@ -298,9 +298,7 @@ color:#22c55e;
 
 <div class="title">
 
-<h1>Gowind SMM Panel</h1>
-
-<p>Private Multi Provider Panel</p>
+<h1 id="siteName">Loading...</h1>
 
 </div>
 
@@ -595,7 +593,29 @@ console.error(error);
 }
 
 }
+async function loadSettings(){
 
+    try{
+
+        const response = await fetch(API + "/api/settings");
+
+        const data = await response.json();
+
+        if(!data.success) return;
+
+        document.getElementById("siteName").textContent =
+            data.settings.site_name;
+
+        document.getElementById("siteDescription").textContent =
+            data.settings.site_description || "";
+
+    }catch(error){
+
+        console.error(error);
+
+    }
+
+    }
 function logout(){
 
 localStorage.removeItem("token");
@@ -621,7 +641,7 @@ window.location.href="login.html";
 window.onload=function(){
 
 loadDashboard();
-
+loadDashboard();
 loadWallet();
 
 };
