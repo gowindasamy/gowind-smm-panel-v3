@@ -1076,15 +1076,16 @@ max
 VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)
 ON CONFLICT DO NOTHING`,
                 [
-                    provider.id,
-                    Number(service.service),
-                    Number(service.service),
-                    service.name,
-                    service.category,
-                    Number(service.rate),
-                    Number(service.min),
-                    Number(service.max)
-                ]
+provider.id,
+Number(service.service),
+Number(service.service),
+service.name,
+service.category,
+Number(service.rate),   // Panel Rate
+Number(service.rate),   // Provider Rate
+Number(service.min),
+Number(service.max)
+]
             );
 
             imported++;
