@@ -270,40 +270,6 @@ box-shadow:0 0 20px rgba(59,130,246,.35);
 
 }
 
-.delete{
-
-width:100%;
-
-padding:14px;
-
-margin-top:12px;
-
-border:none;
-
-border-radius:12px;
-
-cursor:pointer;
-
-font-size:16px;
-
-font-weight:600;
-
-color:#fff;
-
-background:#ef4444;
-
-transition:.3s;
-
-}
-
-.delete:hover{
-
-background:#dc2626;
-
-transform:translateY(-2px);
-
-}
-
 #result{
 
 margin-top:18px;
@@ -451,13 +417,6 @@ onclick="updateService()">
 
 </button>
 
-<button
-class="delete"
-onclick="deleteService()">
-
-🗑 Delete Service
-
-</button>
 
 <div id="result"></div>
 
@@ -663,50 +622,6 @@ err.message;
 
 }
 
-/* ===========================
-   DELETE SERVICE
-=========================== */
-
-async function deleteService(){
-
-if(!confirm("Delete this service?"))
-return;
-
-try{
-
-const response = await fetch(
-
-API + "/api/services/" + serviceId,
-
-{
-
-method:"DELETE"
-
-}
-
-);
-
-const data = await response.json();
-
-if(data.success){
-
-location.href="services.html";
-
-}else{
-
-document.getElementById("result").textContent =
-data.error || data.message;
-
-}
-
-}catch(err){
-
-document.getElementById("result").textContent =
-err.message;
-
-}
-
-}
 
 /* ===========================
    LOGOUT
