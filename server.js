@@ -1081,8 +1081,8 @@ Number(service.service),
 Number(service.service),
 service.name,
 service.category,
-Number(service.rate),   // Panel Rate
-Number(service.rate),   // Provider Rate
+Number(service.rate) + 2,   // Panel Rate
+Number(service.rate),       // Provider Rate
 Number(service.min),
 Number(service.max)
 ]
