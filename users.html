@@ -10,101 +10,130 @@ content="width=device-width,initial-scale=1.0">
 
 <title>Users Management</title>
 
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
 <style>
 
 *{
+
 margin:0;
+
 padding:0;
+
 box-sizing:border-box;
+
 font-family:Arial,sans-serif;
+
 }
 
 body{
-background:#0b1120;
+
+background:#08111f;
+
+background-image:
+radial-gradient(circle at top left,
+rgba(147,51,234,.18),
+transparent 35%),
+
+radial-gradient(circle at top right,
+rgba(6,182,212,.15),
+transparent 35%),
+
+radial-gradient(circle at bottom right,
+rgba(37,99,235,.18),
+transparent 40%);
+
 color:#fff;
+
+min-height:100vh;
+
 }
 
 .container{
+
 width:95%;
+
 max-width:1500px;
-margin:20px auto;
+
+margin:18px auto;
+
 }
 
 .header{
-display:flex;
-flex-direction:column;
-gap:15px;
-background:#1e293b;
-padding:20px;
-border-radius:18px;
-margin-bottom:20px;
-box-shadow:0 10px 25px rgba(0,0,0,.35);
-}
 
-.brand{
 display:flex;
+
+justify-content:space-between;
+
 align-items:center;
-gap:15px;
-width:100%;
-}
 
-.brand h2{
-font-size:28px;
-flex:1;
-line-height:1.2;
-word-break:break-word;
-}
+padding:16px 18px;
 
-.actions{
-display:flex;
-gap:10px;
-width:100%;
-}
-
-.actions button{
-flex:1;
-}
-
-background:#1e293b;
-
-padding:20px;
+margin-bottom:18px;
 
 border-radius:18px;
 
-margin-bottom:20px;
+background:rgba(255,255,255,.05);
 
-box-shadow:0 10px 25px rgba(0,0,0,.35);
+backdrop-filter:blur(18px);
+
+-webkit-backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
+
+box-shadow:
+0 10px 30px rgba(0,0,0,.25),
+0 0 20px rgba(37,99,235,.18);
 
 }
 
-.brand{
+.title h2{
+
+font-size:26px;
+
+font-weight:700;
+
+background:linear-gradient(
+90deg,
+#3b82f6,
+#06b6d4);
+
+-webkit-background-clip:text;
+
+-webkit-text-fill-color:transparent;
+
+}
+
+.status{
 
 display:flex;
+
 align-items:center;
-gap:15px;
+
+gap:6px;
+
+margin-top:6px;
+
+font-size:12px;
+
+font-weight:600;
+
+color:#22c55e;
 
 }
 
-.logo{
+.status-dot{
 
-width:55px;
-height:55px;
+width:8px;
 
-border-radius:14px;
+height:8px;
 
-background:linear-gradient(135deg,#7c3aed,#2563eb);
+border-radius:50%;
 
-display:flex;
-justify-content:center;
-align-items:center;
+background:#22c55e;
 
-font-size:30px;
-
-}
-
-.brand h2{
-
-font-size:28px;
+box-shadow:0 0 10px #22c55e;
 
 }
 
@@ -116,73 +145,92 @@ gap:10px;
 
 }
 
-.actions button{
+.action-btn{
 
-padding:12px 18px;
+width:44px;
+
+height:44px;
 
 border:none;
 
-border-radius:10px;
+border-radius:50%;
+
+background:rgba(255,255,255,.06);
+
+border:1px solid rgba(255,255,255,.08);
+
+color:#fff;
+
+font-size:17px;
 
 cursor:pointer;
 
-font-size:15px;
-
-font-weight:bold;
-
-color:white;
-
-transition:.2s;
+transition:.3s;
 
 }
 
-.refresh{
+.action-btn:hover{
 
-background:#7c3aed;
+background:#2563eb;
 
-}
+transform:scale(1.08);
 
-.register{
-
-background:#16a34a;
+box-shadow:0 0 18px rgba(37,99,235,.35);
 
 }
 
-.search-box{
-
-margin-bottom:20px;
-
-}
-
-.search-box input{
+.search{
 
 width:100%;
 
-padding:14px;
+padding:15px;
 
-border:none;
+margin-bottom:18px;
 
-border-radius:12px;
+background:rgba(255,255,255,.05);
 
-font-size:16px;
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:14px;
 
 outline:none;
 
-background:#1e293b;
+font-size:16px;
 
-color:white;
+color:#fff;
+
+transition:.3s;
 
 }
 
-.table-box{
+.search::placeholder{
 
-background:#1e293b;
+color:#94a3b8;
+
+}
+
+.search:focus{
+
+border-color:#3b82f6;
+
+box-shadow:0 0 18px rgba(59,130,246,.35);
+
+}
+  .table-box{
+
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(18px);
+
+-webkit-backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
 
 border-radius:18px;
 
 overflow:auto;
 
-box-shadow:0 10px 25px rgba(0,0,0,.35);
+box-shadow:0 10px 30px rgba(0,0,0,.25);
 
 }
 
@@ -190,7 +238,7 @@ table{
 
 width:100%;
 
-min-width:900px;
+min-width:950px;
 
 border-collapse:collapse;
 
@@ -198,19 +246,25 @@ border-collapse:collapse;
 
 th{
 
-background:#334155;
-
 padding:16px;
+
+background:rgba(59,130,246,.18);
+
+font-size:15px;
+
+font-weight:600;
+
+text-align:center;
 
 }
 
 td{
 
-padding:16px;
+padding:15px;
 
 text-align:center;
 
-border-bottom:1px solid #334155;
+border-top:1px solid rgba(255,255,255,.08);
 
 }
 
@@ -220,17 +274,21 @@ background:#2563eb;
 
 padding:6px 12px;
 
-border-radius:6px;
+border-radius:8px;
+
+font-weight:bold;
 
 }
 
 .role-user{
 
-background:#16a34a;
+background:#22c55e;
 
 padding:6px 12px;
 
-border-radius:6px;
+border-radius:8px;
+
+font-weight:bold;
 
 }
 
@@ -252,11 +310,13 @@ border-radius:8px;
 
 cursor:pointer;
 
-font-weight:bold;
+color:#fff;
 
-color:white;
+font-weight:600;
 
 margin:2px;
+
+transition:.3s;
 
 }
 
@@ -274,7 +334,13 @@ background:#3b82f6;
 
 .delete{
 
-background:#dc2626;
+background:#ef4444;
+
+}
+
+.btn:hover{
+
+transform:translateY(-2px);
 
 }
 
@@ -285,14 +351,17 @@ display:none;
 position:fixed;
 
 left:0;
+
 top:0;
 
 width:100%;
+
 height:100%;
 
-background:rgba(0,0,0,.6);
+background:rgba(0,0,0,.55);
 
 justify-content:center;
+
 align-items:center;
 
 z-index:999;
@@ -301,14 +370,19 @@ z-index:999;
 
 .modal-content{
 
-background:#1e293b;
-
-padding:25px;
-
-border-radius:15px;
-
 width:95%;
-max-width:430px;
+
+max-width:420px;
+
+padding:22px;
+
+border-radius:18px;
+
+background:rgba(255,255,255,.06);
+
+backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
 
 }
 
@@ -316,7 +390,7 @@ max-width:430px;
 
 text-align:center;
 
-margin-bottom:20px;
+margin-bottom:18px;
 
 }
 
@@ -325,17 +399,19 @@ margin-bottom:20px;
 
 width:100%;
 
-padding:13px;
+padding:14px;
 
-margin-bottom:12px;
+margin-bottom:14px;
 
 border:none;
 
-border-radius:10px;
-
 outline:none;
 
-font-size:15px;
+border-radius:12px;
+
+background:rgba(255,255,255,.05);
+
+color:#fff;
 
 }
 
@@ -351,63 +427,38 @@ gap:10px;
 
 flex:1;
 
-padding:12px;
+padding:13px;
 
 border:none;
 
-border-radius:10px;
+border-radius:12px;
 
 cursor:pointer;
 
 font-weight:bold;
 
-color:white;
+color:#fff;
 
 }
 
 .save{
 
-background:#16a34a;
+background:#22c55e;
 
 }
 
 .cancel{
 
-background:#dc2626;
+background:#ef4444;
 
 }
 
-/* ===========================
-   MOBILE RESPONSIVE
-=========================== */
-
-@media(max-width:600px){
-
-.container{
-width:98%;
-margin:10px auto;
-}
-
-.brand h2{
-font-size:24px;
-}
-
-.logo{
-width:50px;
-height:50px;
-font-size:26px;
-}
-
-.actions{
-flex-direction:column;
-}
-
-.actions button{
-width:100%;
-}
+@media(max-width:768px){
 
 table{
-min-width:700px;
+
+min-width:900px;
+
 }
 
 }
@@ -422,13 +473,7 @@ min-width:700px;
 
 <div class="header">
 
-<div class="brand">
-
-<div class="logo">
-
-👥
-
-</div>
+<div class="title">
 
 <h2 id="siteName">
 
@@ -436,23 +481,39 @@ Loading...
 
 </h2>
 
+<div class="status">
+
+<div class="status-dot"></div>
+
+<span>ACTIVE</span>
+
+</div>
+
 </div>
 
 <div class="actions">
 
 <button
-class="refresh"
-onclick="loadUsers()">
+class="action-btn"
+onclick="history.back()">
 
-🔄 Refresh
+<i class="fa-solid fa-arrow-left"></i>
 
 </button>
 
 <button
-class="register"
-onclick="openRegister()">
+class="action-btn"
+onclick="loadUsers()">
 
-➕ Register
+<i class="fa-solid fa-rotate-right"></i>
+
+</button>
+
+<button
+class="action-btn"
+onclick="logout()">
+
+<i class="fa-solid fa-right-from-bracket"></i>
 
 </button>
 
@@ -460,9 +521,9 @@ onclick="openRegister()">
 
 </div>
 
-<div class="search-box">
-
 <input
+
+class="search"
 
 id="search"
 
@@ -472,11 +533,8 @@ placeholder="Search Username / Role"
 
 onkeyup="searchUsers()">
 
-</div>
-
 <div class="table-box">
-
-<table>
+   <table>
 
 <thead>
 
@@ -514,22 +572,15 @@ Loading...
 
 </table>
 
-  </div>
-  <!-- ===========================
-     REGISTER MODAL
-=========================== -->
+</div>
 
-<div
-class="modal"
-id="registerModal">
+<!-- Register Modal -->
+
+<div class="modal" id="registerModal">
 
 <div class="modal-content">
 
-<h3>
-
-➕ Register User
-
-</h3>
+<h3>Register User</h3>
 
 <input
 id="username"
@@ -569,7 +620,7 @@ placeholder="Wallet Balance">
 class="save"
 onclick="registerUser()">
 
-✅ Register
+Register
 
 </button>
 
@@ -577,7 +628,7 @@ onclick="registerUser()">
 class="cancel"
 onclick="closeRegister()">
 
-❌ Cancel
+Cancel
 
 </button>
 
@@ -587,21 +638,13 @@ onclick="closeRegister()">
 
 </div>
 
-<!-- ===========================
-     BALANCE MODAL
-=========================== -->
+<!-- Balance Modal -->
 
-<div
-class="modal"
-id="balanceModal">
+<div class="modal" id="balanceModal">
 
 <div class="modal-content">
 
-<h3>
-
-💰 Set Wallet Balance
-
-</h3>
+<h3>Set Wallet Balance</h3>
 
 <p>
 
@@ -618,7 +661,7 @@ Current Balance :
 <input
 id="newBalance"
 type="number"
-placeholder="Enter Balance">
+placeholder="Wallet Balance">
 
 <div class="modal-buttons">
 
@@ -626,7 +669,7 @@ placeholder="Enter Balance">
 class="save"
 onclick="saveBalance()">
 
-💾 Save
+Save
 
 </button>
 
@@ -634,7 +677,7 @@ onclick="saveBalance()">
 class="cancel"
 onclick="closeBalanceModal()">
 
-❌ Cancel
+Cancel
 
 </button>
 
@@ -644,21 +687,13 @@ onclick="closeBalanceModal()">
 
 </div>
 
-<!-- ===========================
-     PASSWORD MODAL
-=========================== -->
+<!-- Password Modal -->
 
-<div
-class="modal"
-id="passwordModal">
+<div class="modal" id="passwordModal">
 
 <div class="modal-content">
 
-<h3>
-
-🔑 Change Password
-
-</h3>
+<h3>Change Password</h3>
 
 <p>
 
@@ -675,7 +710,7 @@ User ID :
 <input
 id="newPassword"
 type="text"
-placeholder="Enter New Password">
+placeholder="New Password">
 
 <div class="modal-buttons">
 
@@ -683,7 +718,7 @@ placeholder="Enter New Password">
 class="save"
 onclick="changePassword()">
 
-💾 Save
+Save
 
 </button>
 
@@ -691,7 +726,7 @@ onclick="changePassword()">
 class="cancel"
 onclick="closePasswordModal()">
 
-❌ Cancel
+Cancel
 
 </button>
 
@@ -709,15 +744,11 @@ const API =
 const USER =
 JSON.parse(localStorage.getItem("user"));
 
-let allUsers = [];
+let allUsers=[];
 
-let selectedUserId = null;
+let selectedUserId=null;
 
-let passwordUserId = null;
-
-/* ===========================
-   LOGIN CHECK
-=========================== */
+let passwordUserId=null;
 
 if(!localStorage.getItem("token")){
 
@@ -730,23 +761,20 @@ if(!USER || USER.role!=="admin"){
 location.href="login.html";
 
 }
-  /* ===========================
-   LOAD SITE NAME
-=========================== */
 
-async function loadSiteName(){
+async function loadSettings(){
 
 try{
 
-const response = await fetch(
-API + "/api/settings"
-);
+const response=
+await fetch(API+"/api/settings");
 
-const data = await response.json();
+const data=
+await response.json();
 
 if(data.success){
 
-document.getElementById("siteName").innerHTML =
+document.getElementById("siteName").textContent=
 data.settings.site_name;
 
 }
@@ -758,63 +786,36 @@ console.log(err);
 }
 
 }
-
-/* ===========================
-   LOAD USERS
-=========================== */
-
-async function loadUsers(){
+   async function loadUsers(){
 
 try{
 
-const response = await fetch(
-API + "/api/users"
-);
+const response=await fetch(API+"/api/users");
 
-const data = await response.json();
+const data=await response.json();
 
-const table =
-document.getElementById("usersTable");
-
-table.innerHTML = "";
-
-if(!data.success){
-
-table.innerHTML =
-"<tr><td colspan='6'>No Users Found</td></tr>";
-
-return;
-
-}
-
-allUsers = data.users;
+allUsers=data.users||[];
 
 renderUsers(allUsers);
 
 }catch(err){
 
-document.getElementById("usersTable").innerHTML =
-
-"<tr><td colspan='6'>"+err.message+"</td></tr>";
-
-}
+document.getElementById("usersTable").innerHTML=
+"<tr><td colspan='6'>Failed to load users</td></tr>";
 
 }
 
-/* ===========================
-   RENDER USERS
-=========================== */
+}
 
 function renderUsers(list){
 
-const table =
-document.getElementById("usersTable");
+const table=document.getElementById("usersTable");
 
-table.innerHTML = "";
+table.innerHTML="";
 
 if(list.length===0){
 
-table.innerHTML =
+table.innerHTML=
 "<tr><td colspan='6'>No Users Found</td></tr>";
 
 return;
@@ -823,7 +824,7 @@ return;
 
 list.forEach(user=>{
 
-table.innerHTML += `
+table.innerHTML+=`
 
 <tr>
 
@@ -831,19 +832,11 @@ table.innerHTML += `
 
 <td>${user.username}</td>
 
-<td>
-
-${user.show_password || "-"}
-
-</td>
+<td>${user.show_password||"-"}</td>
 
 <td>
 
-<span class="${
-user.role==="admin"
-? "role-admin"
-: "role-user"
-}">
+<span class="${user.role==="admin"?"role-admin":"role-user"}">
 
 ${user.role}
 
@@ -859,27 +852,24 @@ ${user.role}
 
 <td>
 
-<button
-class="btn balance"
+<button class="btn balance"
 onclick="openBalanceModal(${user.id},${user.wallet})">
 
-💰 Balance
+Balance
 
 </button>
 
-<button
-class="btn password"
+<button class="btn password"
 onclick="openPasswordModal(${user.id})">
 
-🔑 Password
+Password
 
 </button>
 
-<button
-class="btn delete"
+<button class="btn delete"
 onclick="deleteUser(${user.id})">
 
-🗑 Delete
+Delete
 
 </button>
 
@@ -893,42 +883,29 @@ onclick="deleteUser(${user.id})">
 
 }
 
-/* ===========================
-   SEARCH USERS
-=========================== */
-
 function searchUsers(){
 
-const keyword =
-document.getElementById("search")
-.value
-.toLowerCase();
+const keyword=document.getElementById("search").value.toLowerCase();
 
-const filtered = allUsers.filter(user=>
+renderUsers(
 
-user.username
-.toLowerCase()
-.includes(keyword)
+allUsers.filter(user=>
+
+String(user.id).includes(keyword)
 
 ||
 
-user.role
-.toLowerCase()
-.includes(keyword)
+user.username.toLowerCase().includes(keyword)
 
 ||
 
-String(user.id)
-.includes(keyword)
+user.role.toLowerCase().includes(keyword)
+
+)
 
 );
 
-renderUsers(filtered);
-
-  }
-  /* ===========================
-   OPEN REGISTER
-=========================== */
+}
 
 function openRegister(){
 
@@ -936,40 +913,33 @@ document.getElementById("registerModal").style.display="flex";
 
 }
 
-/* ===========================
-   CLOSE REGISTER
-=========================== */
-
 function closeRegister(){
 
 document.getElementById("registerModal").style.display="none";
 
-document.getElementById("username").value="";
-document.getElementById("password").value="";
-document.getElementById("wallet").value="0";
-document.getElementById("role").value="user";
+username.value="";
+
+password.value="";
+
+wallet.value="0";
+
+role.value="user";
 
 }
 
-/* ===========================
-   REGISTER USER
-=========================== */
-
 async function registerUser(){
 
-const username=
-document.getElementById("username").value.trim();
+const body={
 
-const password=
-document.getElementById("password").value;
+username:username.value.trim(),
 
-const role=
-document.getElementById("role").value;
+password:password.value,
 
-const wallet=
-Number(document.getElementById("wallet").value);
+role:role.value
 
-if(!username || !password){
+};
+
+if(!body.username||!body.password){
 
 alert("Enter Username & Password");
 
@@ -977,31 +947,19 @@ return;
 
 }
 
-try{
-
-const response=await fetch(
-
-API+"/api/register",
-
-{
+const response=await fetch(API+"/api/register",{
 
 method:"POST",
 
 headers:{
+
 "Content-Type":"application/json"
+
 },
 
-body:JSON.stringify({
+body:JSON.stringify(body)
 
-username,
-password,
-role
-
-})
-
-}
-
-);
+});
 
 const data=await response.json();
 
@@ -1013,30 +971,27 @@ return;
 
 }
 
-if(wallet>0){
+if(Number(wallet.value)>0){
 
-await fetch(
-
-API+"/api/wallet/add",
-
-{
+await fetch(API+"/api/wallet/add",{
 
 method:"POST",
 
 headers:{
+
 "Content-Type":"application/json"
+
 },
 
 body:JSON.stringify({
 
 user_id:data.user.id,
-amount:wallet
+
+amount:Number(wallet.value)
 
 })
 
-}
-
-);
+});
 
 }
 
@@ -1046,69 +1001,47 @@ closeRegister();
 
 loadUsers();
 
-}catch(err){
-
-alert(err.message);
-
 }
-
-}
-
-/* ===========================
-   BALANCE MODAL
-=========================== */
 
 function openBalanceModal(id,balance){
 
 selectedUserId=id;
 
-document.getElementById("balanceModal").style.display="flex";
+balanceModal.style.display="flex";
 
-document.getElementById("currentBalance").innerHTML=
+currentBalance.innerHTML="₹"+Number(balance).toFixed(2);
 
-"₹"+Number(balance).toFixed(2);
-
-document.getElementById("newBalance").value=balance;
+newBalance.value=balance;
 
 }
 
 function closeBalanceModal(){
 
-document.getElementById("balanceModal").style.display="none";
-
-selectedUserId=null;
+balanceModal.style.display="none";
 
 }
 
 async function saveBalance(){
 
-const balance=
-
-Number(document.getElementById("newBalance").value);
-
-const response=await fetch(
-
-API+"/api/users/set-balance",
-
-{
+const response=await fetch(API+"/api/users/set-balance",{
 
 method:"POST",
 
 headers:{
+
 "Content-Type":"application/json"
+
 },
 
 body:JSON.stringify({
 
 user_id:selectedUserId,
 
-balance
+balance:Number(newBalance.value)
 
 })
 
-}
-
-);
+});
 
 const data=await response.json();
 
@@ -1120,37 +1053,27 @@ loadUsers();
 
 }
 
-/* ===========================
-   PASSWORD MODAL
-=========================== */
-
 function openPasswordModal(id){
 
 passwordUserId=id;
 
-document.getElementById("passwordModal").style.display="flex";
+passwordModal.style.display="flex";
 
-document.getElementById("passwordUserId").innerHTML=id;
+document.getElementById("passwordUserId").textContent=id;
 
-document.getElementById("newPassword").value="";
+newPassword.value="";
 
 }
 
 function closePasswordModal(){
 
-document.getElementById("passwordModal").style.display="none";
-
-passwordUserId=null;
+passwordModal.style.display="none";
 
 }
 
 async function changePassword(){
 
-const password=
-
-document.getElementById("newPassword").value.trim();
-
-if(password===""){
+if(newPassword.value.trim()===""){
 
 alert("Enter Password");
 
@@ -1158,29 +1081,25 @@ return;
 
 }
 
-const response=await fetch(
-
-API+"/api/users/change-password",
-
-{
+const response=await fetch(API+"/api/users/change-password",{
 
 method:"POST",
 
 headers:{
+
 "Content-Type":"application/json"
+
 },
 
 body:JSON.stringify({
 
 user_id:passwordUserId,
 
-password
+password:newPassword.value
 
 })
 
-}
-
-);
+});
 
 const data=await response.json();
 
@@ -1190,123 +1109,55 @@ closePasswordModal();
 
 loadUsers();
 
-  }
-/* ===========================
-   DELETE USER
-=========================== */
+}
 
 async function deleteUser(id){
 
-const ok = confirm("Delete this user?");
+if(!confirm("Delete this user?")) return;
 
-if(!ok){
+const response=await fetch(API+"/api/users/"+id,{
 
-return;
-
-}
-
-try{
-
-const response = await fetch(
-
-API + "/api/users/" + id,
-
-{
 method:"DELETE"
-}
 
-);
+});
 
-const data = await response.json();
+const data=await response.json();
 
-alert(data.message || data.error);
+alert(data.message);
 
 loadUsers();
 
-}catch(err){
+}
 
-alert(err.message);
+function logout(){
+
+localStorage.removeItem("token");
+
+localStorage.removeItem("user");
+
+location.href="login.html";
 
 }
 
-}
+window.onclick=function(e){
 
-/* ===========================
-   CLOSE MODALS
-=========================== */
+if(e.target===registerModal) closeRegister();
 
-window.onclick = function(e){
+if(e.target===balanceModal) closeBalanceModal();
 
-if(e.target===document.getElementById("registerModal")){
-
-closeRegister();
-
-}
-
-if(e.target===document.getElementById("balanceModal")){
-
-closeBalanceModal();
-
-}
-
-if(e.target===document.getElementById("passwordModal")){
-
-closePasswordModal();
-
-}
+if(e.target===passwordModal) closePasswordModal();
 
 };
-
-/* ===========================
-   WINDOW LOAD
-=========================== */
 
 window.onload=function(){
 
-loadSiteName();
+loadSettings();
 
 loadUsers();
 
 };
 
-/* ===========================
-   AUTO REFRESH
-=========================== */
-
-setInterval(function(){
-
-loadUsers();
-
-},30000);
-
-/* ===========================
-   BUTTON ANIMATION
-=========================== */
-
-document.addEventListener("mouseover",function(e){
-
-if(e.target.tagName==="BUTTON"){
-
-e.target.style.transform="scale(1.05)";
-e.target.style.transition=".2s";
-
-}
-
-});
-
-document.addEventListener("mouseout",function(e){
-
-if(e.target.tagName==="BUTTON"){
-
-e.target.style.transform="scale(1)";
-
-}
-
-});
-
-/* ===========================
-   SHORTCUT KEYS
-=========================== */
+setInterval(loadUsers,30000);
 
 document.addEventListener("keydown",function(e){
 
@@ -1320,7 +1171,7 @@ closePasswordModal();
 
 }
 
-if(e.ctrlKey && e.key==="r"){
+if(e.ctrlKey&&e.key==="r"){
 
 e.preventDefault();
 
@@ -1328,21 +1179,7 @@ loadUsers();
 
 }
 
-if(e.ctrlKey && e.key==="n"){
-
-e.preventDefault();
-
-openRegister();
-
-}
-
 });
-
-/* ===========================
-   PAGE READY
-=========================== */
-
-console.log("Users Management Ready");
 
 </script>
 
