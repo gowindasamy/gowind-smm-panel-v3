@@ -191,7 +191,8 @@ ADD COLUMN IF NOT EXISTS provider_id INT;
 
 await db.query(`
 ALTER TABLE services
-ADD COLUMN IF NOT EXISTS provider_service_id INT;
+ADD COLUMN IF NOT EXISTS provider_service_id INT,
+ADD COLUMN IF NOT EXISTS provider_rate DECIMAL(10,4);
 `);
 await db.query(`
 CREATE TABLE IF NOT EXISTS transactions(
