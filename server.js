@@ -869,6 +869,7 @@ p.name AS provider_name,
 o.link,
 o.quantity,
 o.charge,
+s.rate AS provider_rate,
 o.provider_order_id,
 o.status,
 o.created_at
@@ -876,13 +877,13 @@ o.created_at
 FROM orders o
 
 LEFT JOIN users u
-ON o.user_id = u.id
+ON o.user_id=u.id
 
 LEFT JOIN services s
-ON o.service_id = s.id
+ON o.service_id=s.id
 
 LEFT JOIN providers p
-ON o.provider_id = p.id
+ON o.provider_id=p.id
 
 ORDER BY o.id DESC
 
