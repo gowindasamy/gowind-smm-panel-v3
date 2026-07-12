@@ -810,6 +810,10 @@ app.post("/api/orders", async (req, res) => {
 
         const providerOrderId =
             providerResponse.data.order;
+       await db.query(`
+ALTER TABLE orders
+ADD COLUMN IF NOT EXISTS provider_rate DECIMAL(10,2);
+`);
 
         // Wallet Deduct
         await db.query(
@@ -833,28 +837,30 @@ app.post("/api/orders", async (req, res) => {
         await db.query(
 
             `INSERT INTO orders
-            (
-                user_id,
-                provider_id,
-                provider_order_id,
-                service_id,
-                link,
-                quantity,
-                charge,
-                status
-            )
-            VALUES($1,$2,$3,$4,$5,$6,$7,$8)`,
+(
+    user_id,
+    provider_id,
+    provider_order_id,
+    service_id,
+    link,
+    quantity,
+    charge,
+    provider_rate,
+    status
+)
+VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
 
             [
-                user_id,
-                provider.id,
-                providerOrderId,
-                service.id,
-                link,
-                quantity,
-                charge,
-                "Pending"
-            ]
+    user_id,
+    provider.id,
+    providerOrderId,
+    service.id,
+    link,
+    quantity,
+    charge,
+    service.provider_rate,
+    "Pending"
+]
 
         );
 
