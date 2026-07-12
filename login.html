@@ -10,6 +10,9 @@ content="width=device-width, initial-scale=1.0">
 
 <title>Login</title>
 
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
 <style>
 
 *{
@@ -21,88 +24,261 @@ font-family:Arial,sans-serif;
 
 body{
 
-background:#0f172a;
+min-height:100vh;
+
 display:flex;
+
 justify-content:center;
+
 align-items:center;
-height:100vh;
+
+padding:20px;
+
+background:#08111f;
+
+background-image:
+radial-gradient(circle at top left,
+rgba(147,51,234,.25),
+transparent 35%),
+
+radial-gradient(circle at top right,
+rgba(6,182,212,.18),
+transparent 35%),
+
+radial-gradient(circle at bottom right,
+rgba(37,99,235,.22),
+transparent 40%);
+
+color:#fff;
+
+overflow:hidden;
 
 }
 
 .container{
 
-width:400px;
-max-width:95%;
-background:#1e293b;
+width:100%;
+
+max-width:430px;
+
 padding:30px;
-border-radius:12px;
-box-shadow:0 0 20px rgba(0,0,0,.4);
+
+border-radius:24px;
+
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(18px);
+
+-webkit-backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
+
+box-shadow:
+0 10px 35px rgba(0,0,0,.35),
+0 0 30px rgba(37,99,235,.18);
+
+animation:fade .5s ease;
+
+}
+
+@keyframes fade{
+
+from{
+
+opacity:0;
+
+transform:translateY(20px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+.logo{
+
+font-size:58px;
+
+text-align:center;
+
+margin-bottom:15px;
+
+color:#3b82f6;
 
 }
 
 h2{
 
 text-align:center;
-color:white;
-margin-bottom:25px;
+
+font-size:34px;
+
+font-weight:700;
+
+margin-bottom:8px;
+
+background:linear-gradient(90deg,#3b82f6,#8b5cf6,#06b6d4);
+
+-webkit-background-clip:text;
+
+-webkit-text-fill-color:transparent;
+
+}
+
+.subtitle{
+
+text-align:center;
+
+color:#94a3b8;
+
+font-size:15px;
+
+margin-bottom:28px;
 
 }
 
 label{
 
 display:block;
-color:white;
+
 margin-bottom:8px;
-font-weight:bold;
+
+font-size:15px;
+
+font-weight:600;
+
+color:#fff;
 
 }
 
-input{
+.input-box{
+
+position:relative;
+
+margin-bottom:20px;
+
+}
+
+.input-box i{
+
+position:absolute;
+
+left:16px;
+
+top:50%;
+
+transform:translateY(-50%);
+
+color:#60a5fa;
+
+font-size:17px;
+
+}
+
+.input-box input{
 
 width:100%;
-padding:13px;
-margin-bottom:18px;
-border:none;
-border-radius:8px;
+
+padding:15px 18px 15px 48px;
+
+border-radius:14px;
+
+border:1px solid rgba(255,255,255,.08);
+
+background:rgba(255,255,255,.05);
+
+color:#fff;
+
 font-size:16px;
+
 outline:none;
+
+transition:.3s;
+
+}
+
+.input-box input::placeholder{
+
+color:#94a3b8;
+
+}
+
+.input-box input:focus{
+
+border-color:#3b82f6;
+
+box-shadow:0 0 18px rgba(59,130,246,.35);
 
 }
 
 button{
 
 width:100%;
-padding:14px;
-background:#22c55e;
-color:white;
+
+padding:15px;
+
+margin-top:10px;
+
 border:none;
-border-radius:8px;
-font-size:17px;
+
+border-radius:14px;
+
 cursor:pointer;
+
+font-size:18px;
+
+font-weight:600;
+
+color:#fff;
+
+background:linear-gradient(
+90deg,
+#2563eb,
+#8b5cf6,
+#06b6d4
+);
+
+transition:.3s;
 
 }
 
 button:hover{
 
-background:#16a34a;
+transform:translateY(-2px);
+
+box-shadow:0 0 25px rgba(59,130,246,.35);
 
 }
 
 #result{
 
 margin-top:15px;
+
 text-align:center;
-font-weight:bold;
-color:#ef4444;
+
+font-size:15px;
+
+font-weight:600;
+
+color:#f87171;
 
 }
 
 .version{
 
+margin-top:24px;
+
 text-align:center;
-margin-top:20px;
-color:#94a3b8;
+
 font-size:14px;
+
+color:#94a3b8;
 
 }
 
@@ -114,22 +290,35 @@ font-size:14px;
 
 <div class="container">
 
-<h2>
+<div class="logo">
 
-Login
+<i class="fa-solid fa-shield-halved"></i>
 
-</h2>
+</div>
 
+<h2>Login</h2>
+
+<p class="subtitle">
+
+Private Multi Provider SMM Panel
+
+</p>
 <label>
 
 Username
 
 </label>
 
+<div class="input-box">
+
+<i class="fa-solid fa-user"></i>
+
 <input
 type="text"
 id="username"
 placeholder="Enter Username">
+
+</div>
 
 <label>
 
@@ -137,13 +326,23 @@ Password
 
 </label>
 
+<div class="input-box">
+
+<i class="fa-solid fa-lock"></i>
+
 <input
 type="password"
 id="password"
 placeholder="Enter Password">
 
+</div>
+
 <button
 onclick="login()">
+
+<i class="fa-solid fa-right-to-bracket"></i>
+
+&nbsp;
 
 Login
 
@@ -157,36 +356,34 @@ Gowind SMM Panel v3.1
 
 </div>
 
+</div>
+
 <script>
 
 const API =
 "https://gowind-smm-panel-v3.onrender.com";
-   /* ===========================
-   LOGIN
-=========================== */
-
-async function login(){
+   async function login(){
 
 try{
 
-const username=
+const username =
 document.getElementById("username").value.trim();
 
-const password=
+const password =
 document.getElementById("password").value;
 
 if(username==="" || password===""){
 
-document.getElementById("result").innerHTML=
+document.getElementById("result").textContent =
 "Please enter username and password";
 
 return;
 
 }
 
-const response=await fetch(
+const response = await fetch(
 
-API+"/api/login",
+API + "/api/login",
 
 {
 
@@ -198,9 +395,9 @@ headers:{
 
 body:JSON.stringify({
 
-username:username,
+username,
 
-password:password
+password
 
 })
 
@@ -208,60 +405,64 @@ password:password
 
 );
 
-const data=await response.json();
+const data = await response.json();
 
 if(
 data.message &&
-data.message.includes("maintenance")
+data.message.toLowerCase().includes("maintenance")
 ){
 
 document.body.innerHTML=`
 
-<div style="height:100vh;
+<div style="
+height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-background:#0f172a;
-font-family:Arial,sans-serif;">
+background:#08111f;
+padding:20px;">
 
-<div style="width:420px;
-max-width:95%;
-background:#1e293b;
+<div style="
+max-width:420px;
+width:100%;
+background:rgba(255,255,255,.05);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,.08);
+border-radius:22px;
 padding:35px;
-border-radius:15px;
 text-align:center;
-box-shadow:0 10px 25px rgba(0,0,0,.35);
-color:white;">
+color:#fff;">
 
-<div style="font-size:70px;">
-🚧
-</div>
+<h2 style="
+margin-bottom:15px;
+color:#60a5fa;">
 
-<h1 style="margin:15px 0;">
 Panel Under Maintenance
-</h1>
 
-<p style="color:#94a3b8;
-line-height:1.8;
-margin-bottom:25px;">
+</h2>
 
-We are performing scheduled maintenance.<br>
+<p style="
+color:#94a3b8;
+line-height:1.8;">
+
 Please try again later.
 
 </p>
 
 <button
 onclick="location.reload()"
-style="width:100%;
-padding:14px;
-background:#2563eb;
+style="
+margin-top:25px;
+width:100%;
+padding:15px;
 border:none;
-border-radius:10px;
-color:white;
-font-size:17px;
+border-radius:14px;
+background:linear-gradient(90deg,#2563eb,#8b5cf6,#06b6d4);
+color:#fff;
+font-size:16px;
 cursor:pointer;">
 
-🔄 Refresh
+Refresh
 
 </button>
 
@@ -275,10 +476,14 @@ return;
 
 }
 
-document.getElementById("result").innerHTML=
-data.message || data.error || "Login Failed";
+if(!data.success){
 
-/* SAVE LOGIN */
+document.getElementById("result").textContent =
+data.message || "Login Failed";
+
+return;
+
+}
 
 localStorage.setItem(
 
@@ -296,8 +501,6 @@ JSON.stringify(data.user)
 
 );
 
-/* REDIRECT */
-
 if(data.user.role==="admin"){
 
 location.href="admindashboard.html";
@@ -308,17 +511,14 @@ location.href="userdashboard.html";
 
 }
 
-}catch(err){
+}catch(error){
 
-document.getElementById("result").innerHTML=
-err.message;
+document.getElementById("result").textContent =
+error.message;
 
 }
 
-   }
-   /* ===========================
-   ALREADY LOGGED IN
-=========================== */
+}
 
 const savedUser =
 JSON.parse(localStorage.getItem("user"));
@@ -337,10 +537,6 @@ location.href="userdashboard.html";
 
 }
 
-/* ===========================
-   ENTER KEY LOGIN
-=========================== */
-
 document.addEventListener("keydown",function(e){
 
 if(e.key==="Enter"){
@@ -350,31 +546,6 @@ login();
 }
 
 });
-
-/* ===========================
-   BUTTON ANIMATION
-=========================== */
-
-const btn=document.querySelector("button");
-
-btn.addEventListener("mouseenter",function(){
-
-btn.style.transform="scale(1.03)";
-btn.style.transition=".2s";
-
-});
-
-btn.addEventListener("mouseleave",function(){
-
-btn.style.transform="scale(1)";
-
-});
-
-/* ===========================
-   PAGE READY
-=========================== */
-
-console.log("Login Page Ready");
 
 </script>
 
