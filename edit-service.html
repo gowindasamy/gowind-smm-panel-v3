@@ -4,9 +4,12 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <title>Edit Service</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 <style>
 
@@ -18,79 +21,310 @@ font-family:Arial,sans-serif;
 }
 
 body{
-background:#0f172a;
-color:white;
+
+background:#08111f;
+
+background-image:
+
+radial-gradient(circle at top left,
+rgba(147,51,234,.18),
+transparent 35%),
+
+radial-gradient(circle at top right,
+rgba(6,182,212,.15),
+transparent 35%),
+
+radial-gradient(circle at bottom right,
+rgba(37,99,235,.18),
+transparent 40%);
+
+color:#fff;
+
+min-height:100vh;
+
 }
 
 .container{
 
-width:400px;
-max-width:95%;
-margin:40px auto;
-background:#1e293b;
-padding:20px;
-border-radius:10px;
+width:95%;
+max-width:700px;
+margin:20px auto;
 
 }
 
-h2{
+.header{
 
-text-align:center;
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+padding:16px 18px;
+
 margin-bottom:20px;
 
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(18px);
+-webkit-backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:18px;
+
+box-shadow:
+0 10px 30px rgba(0,0,0,.25),
+0 0 20px rgba(37,99,235,.18);
+
 }
 
-input{
+.title h2{
 
-width:100%;
-padding:12px;
-margin-bottom:15px;
+font-size:28px;
+
+font-weight:700;
+
+background:linear-gradient(
+90deg,
+#3b82f6,
+#06b6d4);
+
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+
+}
+
+.status{
+
+display:flex;
+align-items:center;
+gap:6px;
+
+margin-top:6px;
+
+font-size:12px;
+font-weight:600;
+
+color:#22c55e;
+
+}
+
+.status-dot{
+
+width:8px;
+height:8px;
+
+border-radius:50%;
+
+background:#22c55e;
+
+box-shadow:0 0 10px #22c55e;
+
+}
+
+.actions{
+
+display:flex;
+gap:10px;
+
+}
+
+.action-btn{
+
+width:44px;
+height:44px;
+
 border:none;
-border-radius:6px;
+
+border-radius:50%;
+
+background:rgba(255,255,255,.06);
+
+border:1px solid rgba(255,255,255,.08);
+
+color:#fff;
+
+font-size:17px;
+
+cursor:pointer;
+
+transition:.3s;
 
 }
 
+.action-btn:hover{
+
+background:#2563eb;
+
+transform:scale(1.08);
+
+box-shadow:0 0 18px rgba(37,99,235,.35);
+
+}
+
+.form-card{
+
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(18px);
+
+-webkit-backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:18px;
+
+padding:24px;
+
+box-shadow:
+0 10px 30px rgba(0,0,0,.25);
+
+}
+
+label{
+
+display:block;
+
+margin-top:16px;
+margin-bottom:8px;
+
+font-size:14px;
+font-weight:600;
+
+color:#cbd5e1;
+
+}
+
+input,
 select{
 
 width:100%;
-padding:12px;
-margin-bottom:15px;
+
+padding:14px;
+
 border:none;
-border-radius:6px;
+outline:none;
+
+border-radius:12px;
+
+background:rgba(255,255,255,.06);
+
+border:1px solid rgba(255,255,255,.08);
+
+color:#fff;
+
+font-size:15px;
+
+transition:.3s;
 
 }
 
-button{
+input:focus,
+select:focus{
+
+border-color:#3b82f6;
+
+box-shadow:0 0 15px rgba(59,130,246,.35);
+
+}
+
+input::placeholder{
+
+color:#94a3b8;
+
+}
+  .save{
 
 width:100%;
-padding:12px;
+
+padding:14px;
+
+margin-top:24px;
+
 border:none;
-border-radius:6px;
+
+border-radius:12px;
+
 cursor:pointer;
+
 font-size:16px;
 
+font-weight:600;
+
+color:#fff;
+
+background:linear-gradient(
+90deg,
+#2563eb,
+#8b5cf6,
+#06b6d4);
+
+transition:.3s;
+
 }
 
-.save{
+.save:hover{
 
-background:#22c55e;
-color:white;
+transform:translateY(-2px);
+
+box-shadow:0 0 20px rgba(59,130,246,.35);
 
 }
 
-.back{
+.delete{
 
-background:#3b82f6;
-color:white;
-margin-top:10px;
+width:100%;
+
+padding:14px;
+
+margin-top:12px;
+
+border:none;
+
+border-radius:12px;
+
+cursor:pointer;
+
+font-size:16px;
+
+font-weight:600;
+
+color:#fff;
+
+background:#ef4444;
+
+transition:.3s;
+
+}
+
+.delete:hover{
+
+background:#dc2626;
+
+transform:translateY(-2px);
 
 }
 
 #result{
 
-margin-top:15px;
+margin-top:18px;
+
 text-align:center;
+
 font-weight:bold;
+
+color:#22c55e;
+
+}
+
+@media(max-width:768px){
+
+.header{
+
+flex-direction:column;
+
+gap:15px;
+
+}
 
 }
 
@@ -102,32 +336,100 @@ font-weight:bold;
 
 <div class="container">
 
-<h2>✏ Edit Service</h2>
+<div class="header">
+
+<div class="title">
+
+<h2>Edit Service</h2>
+
+<div class="status">
+
+<div class="status-dot"></div>
+
+<span>ADMIN PANEL</span>
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<button class="action-btn"
+onclick="history.back()">
+
+<i class="fa-solid fa-arrow-left"></i>
+
+</button>
+
+<button class="action-btn"
+onclick="loadService()">
+
+<i class="fa-solid fa-rotate-right"></i>
+
+</button>
+
+<button class="action-btn"
+onclick="logout()">
+
+<i class="fa-solid fa-right-from-bracket"></i>
+
+</button>
+
+</div>
+
+</div>
+
+<div class="form-card">
+
+<label>Provider</label>
+
+<select id="provider_id">
+</select>
+
+<label>Provider Service ID</label>
+
+<input
+type="number"
+id="provider_service_id"
+placeholder="Provider Service ID">
+
+<label>Service Name</label>
 
 <input
 type="text"
 id="name"
 placeholder="Service Name">
 
+<label>Category</label>
+
 <input
 type="text"
 id="category"
 placeholder="Category">
 
+<label>Panel Rate</label>
+
 <input
 type="number"
+step="0.01"
 id="rate"
-placeholder="Rate">
+placeholder="Panel Rate">
+
+<label>Minimum</label>
 
 <input
 type="number"
 id="min"
-placeholder="Minimum">
+placeholder="Minimum Order">
+
+<label>Maximum</label>
 
 <input
 type="number"
 id="max"
-placeholder="Maximum">
+placeholder="Maximum Order">
+
+<label>Status</label>
 
 <select id="status">
 
@@ -150,26 +452,81 @@ onclick="updateService()">
 </button>
 
 <button
-class="back"
-onclick="history.back()">
+class="delete"
+onclick="deleteService()">
 
-⬅ Back
+🗑 Delete Service
 
 </button>
 
 <div id="result"></div>
+
+</div>
 
 <script>
 
 const API =
 "https://gowind-smm-panel-v3.onrender.com";
 
-const params =
-new URLSearchParams(location.search);
-
 const serviceId =
-params.get("id");
+new URLSearchParams(location.search).get("id");
   /* ===========================
+   LOGIN CHECK
+=========================== */
+
+const USER =
+JSON.parse(localStorage.getItem("user"));
+
+if(!localStorage.getItem("token") ||
+!USER ||
+USER.role!=="admin"){
+
+location.href="login.html";
+
+}
+
+/* ===========================
+   LOAD PROVIDERS
+=========================== */
+
+async function loadProviders(){
+
+try{
+
+const response =
+await fetch(API+"/api/providers");
+
+const data =
+await response.json();
+
+const select =
+document.getElementById("provider_id");
+
+select.innerHTML="";
+
+data.providers.forEach(provider=>{
+
+select.innerHTML+=`
+
+<option value="${provider.id}">
+
+${provider.name}
+
+</option>
+
+`;
+
+});
+
+}catch(err){
+
+console.log(err);
+
+}
+
+}
+
+/* ===========================
    LOAD SERVICE
 =========================== */
 
@@ -177,22 +534,29 @@ async function loadService(){
 
 try{
 
-const response = await fetch(
-API + "/api/services/" + serviceId
-);
+const response =
+await fetch(API+"/api/services/"+serviceId);
 
-const data = await response.json();
+const data =
+await response.json();
 
 if(!data.success){
 
-document.getElementById("result").innerHTML =
-"Service Not Found";
+document.getElementById("result").textContent =
+"Service not found";
 
 return;
 
 }
 
-const service = data.service;
+const service =
+data.service;
+
+document.getElementById("provider_id").value =
+service.provider_id;
+
+document.getElementById("provider_service_id").value =
+service.provider_service_id;
 
 document.getElementById("name").value =
 service.name;
@@ -214,7 +578,7 @@ String(service.status);
 
 }catch(err){
 
-document.getElementById("result").innerHTML =
+document.getElementById("result").textContent =
 err.message;
 
 }
@@ -242,18 +606,32 @@ headers:{
 
 body:JSON.stringify({
 
+provider_id:Number(
+document.getElementById("provider_id").value
+),
+
+provider_service_id:Number(
+document.getElementById("provider_service_id").value
+),
+
 name:document.getElementById("name").value,
 
 category:document.getElementById("category").value,
 
-rate:Number(document.getElementById("rate").value),
+rate:Number(
+document.getElementById("rate").value
+),
 
-min:Number(document.getElementById("min").value),
+min:Number(
+document.getElementById("min").value
+),
 
-max:Number(document.getElementById("max").value),
+max:Number(
+document.getElementById("max").value
+),
 
 status:
-document.getElementById("status").value === "true"
+document.getElementById("status").value==="true"
 
 })
 
@@ -263,7 +641,7 @@ document.getElementById("status").value === "true"
 
 const data = await response.json();
 
-document.getElementById("result").innerHTML =
+document.getElementById("result").textContent =
 data.message || data.error;
 
 if(data.success){
@@ -278,7 +656,7 @@ location.href="services.html";
 
 }catch(err){
 
-document.getElementById("result").innerHTML =
+document.getElementById("result").textContent =
 err.message;
 
 }
@@ -286,52 +664,77 @@ err.message;
 }
 
 /* ===========================
-   PAGE LOAD
+   DELETE SERVICE
 =========================== */
 
-loadService();
-  /* ===========================
-   LOGIN CHECK
-=========================== */
+async function deleteService(){
 
-if (!localStorage.getItem("token")) {
+if(!confirm("Delete this service?"))
+return;
 
-    location.href = "login.html";
+try{
+
+const response = await fetch(
+
+API + "/api/services/" + serviceId,
+
+{
+
+method:"DELETE"
+
+}
+
+);
+
+const data = await response.json();
+
+if(data.success){
+
+location.href="services.html";
+
+}else{
+
+document.getElementById("result").textContent =
+data.error || data.message;
+
+}
+
+}catch(err){
+
+document.getElementById("result").textContent =
+err.message;
+
+}
 
 }
 
 /* ===========================
-   WINDOW LOAD
+   LOGOUT
 =========================== */
 
-window.onload = function () {
+function logout(){
 
-    loadService();
+localStorage.removeItem("token");
+localStorage.removeItem("user");
 
-};
+location.href="login.html";
+
+}
 
 /* ===========================
-   BUTTON ANIMATION
+   PAGE LOAD
 =========================== */
 
-document.querySelectorAll("button").forEach(btn => {
+window.onload = async function(){
 
-    btn.addEventListener("mouseenter", () => {
+await loadProviders();
 
-        btn.style.transform = "scale(1.05)";
-        btn.style.transition = ".2s";
+await loadService();
 
-    });
-
-    btn.addEventListener("mouseleave", () => {
-
-        btn.style.transform = "scale(1)";
-
-    });
-
-});
+};
 
 </script>
 
 </body>
+
 </html>
