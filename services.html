@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -32,6 +33,7 @@ body{
 background:#08111f;
 
 background-image:
+
 radial-gradient(circle at top left,
 rgba(147,51,234,.18),
 transparent 35%),
@@ -54,7 +56,7 @@ min-height:100vh;
 
 width:95%;
 
-max-width:1450px;
+max-width:1500px;
 
 margin:18px auto;
 
@@ -72,8 +74,6 @@ padding:16px 18px;
 
 margin-bottom:18px;
 
-border-radius:18px;
-
 background:rgba(255,255,255,.05);
 
 backdrop-filter:blur(18px);
@@ -82,15 +82,19 @@ backdrop-filter:blur(18px);
 
 border:1px solid rgba(255,255,255,.08);
 
+border-radius:18px;
+
 box-shadow:
+
 0 10px 30px rgba(0,0,0,.25),
+
 0 0 20px rgba(37,99,235,.18);
 
 }
 
 .title h2{
 
-font-size:26px;
+font-size:28px;
 
 font-weight:700;
 
@@ -187,17 +191,19 @@ padding:15px;
 
 margin-bottom:18px;
 
+border:none;
+
+outline:none;
+
+border-radius:14px;
+
 background:rgba(255,255,255,.05);
 
 border:1px solid rgba(255,255,255,.08);
 
-border-radius:14px;
-
-outline:none;
+color:#fff;
 
 font-size:16px;
-
-color:#fff;
 
 transition:.3s;
 
@@ -216,7 +222,8 @@ border-color:#3b82f6;
 box-shadow:0 0 18px rgba(59,130,246,.35);
 
 }
-  .refresh-btn{
+
+.add-btn{
 
 width:100%;
 
@@ -228,11 +235,11 @@ border:none;
 
 border-radius:14px;
 
-font-size:17px;
+cursor:pointer;
+
+font-size:16px;
 
 font-weight:600;
-
-cursor:pointer;
 
 color:#fff;
 
@@ -244,17 +251,19 @@ background:linear-gradient(
 
 transition:.3s;
 
+box-shadow:0 10px 25px rgba(0,0,0,.25);
+
 }
 
-.refresh-btn:hover{
+
+.add-btn:hover{
 
 transform:translateY(-2px);
 
-box-shadow:0 0 25px rgba(59,130,246,.35);
+box-shadow:0 0 20px rgba(59,130,246,.35);
 
 }
-
-.table-card{
+  .table-card{
 
 background:rgba(255,255,255,.05);
 
@@ -276,7 +285,7 @@ table{
 
 width:100%;
 
-min-width:1100px;
+min-width:1450px;
 
 border-collapse:collapse;
 
@@ -288,7 +297,7 @@ padding:16px;
 
 background:rgba(59,130,246,.18);
 
-text-align:left;
+text-align:center;
 
 font-size:15px;
 
@@ -300,52 +309,65 @@ td{
 
 padding:15px;
 
+text-align:center;
+
 border-top:1px solid rgba(255,255,255,.08);
+
+}
+
+.enabled{
+
+display:inline-block;
+
+padding:6px 12px;
+
+border-radius:8px;
+
+background:#22c55e;
+
+font-weight:600;
+
+}
+
+.disabled{
+
+display:inline-block;
+
+padding:6px 12px;
+
+border-radius:8px;
+
+background:#ef4444;
+
+font-weight:600;
 
 }
 
 .edit{
 
+padding:8px 14px;
+
+margin-right:6px;
+
+border:none;
+
+border-radius:8px;
+
 background:#2563eb;
 
 color:#fff;
 
-border:none;
-
-padding:8px 14px;
-
-border-radius:8px;
-
-cursor:pointer;
-
-margin-right:6px;
-
-transition:.3s;
-
-}
-
-.remove{
-
-background:#ef4444;
-
-color:#fff;
-
-border:none;
-
-padding:8px 14px;
-
-border-radius:8px;
-
 cursor:pointer;
 
 transition:.3s;
 
 }
 
-.edit:hover,
-.remove:hover{
+.edit:hover{
 
 transform:translateY(-2px);
+
+box-shadow:0 0 18px rgba(37,99,235,.35);
 
 }
 
@@ -353,7 +375,7 @@ transform:translateY(-2px);
 
 table{
 
-min-width:1100px;
+min-width:1450px;
 
 }
 
@@ -430,7 +452,9 @@ placeholder="Search Service..."
 onkeyup="searchService()">
 
 <button
-class="refresh-btn"
+
+class="add-btn"
+
 onclick="openAddService()">
 
 <i class="fa-solid fa-plus"></i>
@@ -440,7 +464,8 @@ Add Service
 </button>
 
 <div class="table-card">
-  <table>
+
+<table>
 
 <thead>
 
@@ -449,6 +474,8 @@ Add Service
 <th>ID</th>
 
 <th>Provider</th>
+
+<th>Provider Service ID</th>
 
 <th>Service</th>
 
@@ -460,6 +487,8 @@ Add Service
 
 <th>Max</th>
 
+<th>Status</th>
+
 <th>Action</th>
 
 </tr>
@@ -470,7 +499,7 @@ Add Service
 
 <tr>
 
-<td colspan="8">
+<td colspan="10">
 
 Loading...
 
@@ -492,11 +521,9 @@ const API =
 "https://gowind-smm-panel-v3.onrender.com";
 
 const USER =
-JSON.parse(
-localStorage.getItem("user")
-);
+JSON.parse(localStorage.getItem("user"));
 
-let SERVICES = [];
+let SERVICES=[];
 
 if(!localStorage.getItem("token")){
 
@@ -508,21 +535,20 @@ if(!USER || USER.role!=="admin"){
 
 location.href="login.html";
 
-}
-
-async function loadSettings(){
+  }
+  async function loadSettings(){
 
 try{
 
-const response =
+const response=
 await fetch(API+"/api/settings");
 
-const data =
+const data=
 await response.json();
 
 if(data.success){
 
-document.getElementById("siteName").textContent =
+document.getElementById("siteName").textContent=
 data.settings.site_name;
 
 }
@@ -539,29 +565,29 @@ async function loadServices(){
 
 try{
 
-const response =
+const response=
 await fetch(API+"/api/services");
 
-const data =
+const data=
 await response.json();
 
-SERVICES =
-data.services || [];
+SERVICES=data.services||[];
 
 renderTable(SERVICES);
 
 }catch(err){
 
-document.getElementById("serviceTable").innerHTML =
+document.getElementById("serviceTable").innerHTML=
 
-"<tr><td colspan='8'>Failed to load services</td></tr>";
+"<tr><td colspan='10'>Failed to load services</td></tr>";
+
+}
 
 }
 
-}
-  function renderTable(list){
+function renderTable(list){
 
-const table =
+const table=
 document.getElementById("serviceTable");
 
 table.innerHTML="";
@@ -569,7 +595,8 @@ table.innerHTML="";
 if(list.length===0){
 
 table.innerHTML=
-"<tr><td colspan='8'>No Services Found</td></tr>";
+
+"<tr><td colspan='10'>No Services Found</td></tr>";
 
 return;
 
@@ -585,11 +612,17 @@ table.innerHTML+=`
 
 <td>${item.provider_name||"-"}</td>
 
+<td>${item.provider_service_id||"-"}</td>
+
 <td>${item.name}</td>
 
 <td>${item.category}</td>
 
-<td>₹${Number(item.rate).toFixed(2)}</td>
+<td>
+
+₹${Number(item.rate).toFixed(2)}
+
+</td>
 
 <td>${item.min}</td>
 
@@ -597,19 +630,31 @@ table.innerHTML+=`
 
 <td>
 
+<span class="${
+item.status
+? "enabled"
+: "disabled"
+}">
+
+${
+item.status
+? "Enabled"
+: "Disabled"
+}
+
+</span>
+
+</td>
+
+<td>
+
 <button
+
 class="edit"
+
 onclick="editService(${item.id})">
 
 Edit
-
-</button>
-
-<button
-class="remove"
-onclick="deleteService(${item.id})">
-
-Delete
 
 </button>
 
@@ -621,9 +666,8 @@ Delete
 
 });
 
-}
-
-function searchService(){
+            }
+  function searchService(){
 
 const key=
 document.getElementById("search")
@@ -632,21 +676,32 @@ document.getElementById("search")
 
 renderTable(
 
-SERVICES.filter(service=>
+SERVICES.filter(item=>
 
-String(service.name)
+String(item.name)
 .toLowerCase()
 .includes(key)
 
 ||
 
-String(service.category)
+String(item.category)
 .toLowerCase()
 .includes(key)
 
 ||
 
-String(service.provider_name||"")
+String(item.provider_name||"")
+.toLowerCase()
+.includes(key)
+
+||
+
+String(item.provider_service_id||"")
+.includes(key)
+
+||
+
+String(item.status)
 .toLowerCase()
 .includes(key)
 
@@ -664,63 +719,8 @@ location.href="add-service.html";
 
 function editService(id){
 
-location.href="edit-service.html?id="+id;
-
-}
-
-async function deleteService(id){
-
-if(!confirm("Delete this service?")) return;
-
-try{
-
-const response=
-await fetch(API+"/api/services/"+id,{
-
-method:"DELETE"
-
-});
-
-const data=
-await response.json();
-
-alert(data.message);
-
-loadServices();
-
-}catch(err){
-
-alert(err.message);
-
-}
-
-}
-
-async function deleteAllServices(){
-
-if(!confirm("Delete all services?")) return;
-
-try{
-
-const response=
-await fetch(API+"/api/services",{
-
-method:"DELETE"
-
-});
-
-const data=
-await response.json();
-
-alert(data.message);
-
-loadServices();
-
-}catch(err){
-
-alert(err.message);
-
-}
+location.href=
+"edit-service.html?id="+id;
 
 }
 
