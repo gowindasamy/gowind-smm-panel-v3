@@ -4,10 +4,14 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+content="width=device-width,initial-scale=1.0">
 
 <title>Profile</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 <style>
 
@@ -19,67 +23,213 @@ font-family:Arial,sans-serif;
 }
 
 body{
-background:#0f172a;
-color:white;
+
+background:#08111f;
+
+background-image:
+radial-gradient(circle at top left,
+rgba(147,51,234,.18),
+transparent 35%),
+
+radial-gradient(circle at top right,
+rgba(6,182,212,.15),
+transparent 35%),
+
+radial-gradient(circle at bottom right,
+rgba(37,99,235,.18),
+transparent 40%);
+
+color:#fff;
+
+min-height:100vh;
+
 }
 
 .container{
 
-width:420px;
-max-width:95%;
-margin:40px auto;
-background:#1e293b;
-padding:20px;
-border-radius:10px;
+width:95%;
+
+max-width:520px;
+
+margin:18px auto;
 
 }
 
-h2{
+.header{
 
-text-align:center;
-margin-bottom:20px;
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:16px 18px;
+
+margin-bottom:18px;
+
+border-radius:18px;
+
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
+
+box-shadow:
+0 10px 30px rgba(0,0,0,.25),
+0 0 20px rgba(37,99,235,.18);
+
+}
+
+.title h2{
+
+font-size:24px;
+
+font-weight:700;
+
+background:linear-gradient(
+90deg,
+#3b82f6,
+#06b6d4
+);
+
+-webkit-background-clip:text;
+
+-webkit-text-fill-color:transparent;
+
+}
+
+.status{
+
+display:flex;
+
+align-items:center;
+
+gap:6px;
+
+margin-top:6px;
+
+font-size:12px;
+
+font-weight:600;
+
+color:#22c55e;
+
+}
+
+.status-dot{
+
+width:8px;
+
+height:8px;
+
+border-radius:50%;
+
+background:#22c55e;
+
+box-shadow:0 0 10px #22c55e;
+
+}
+
+.actions{
+
+display:flex;
+
+gap:10px;
+
+}
+
+.action-btn{
+
+width:44px;
+
+height:44px;
+
+border:none;
+
+border-radius:50%;
+
+background:rgba(255,255,255,.06);
+
+border:1px solid rgba(255,255,255,.08);
+
+color:#fff;
+
+font-size:17px;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.action-btn:hover{
+
+background:#2563eb;
+
+transform:scale(1.08);
 
 }
 
 .card{
 
-background:#334155;
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:18px;
+
 padding:20px;
-border-radius:8px;
+
+margin-bottom:18px;
+
+box-shadow:0 8px 25px rgba(0,0,0,.20);
 
 }
 
 .row{
 
-margin-bottom:15px;
+padding:14px 0;
+
+border-bottom:1px solid rgba(255,255,255,.08);
+
+}
+
+.row:last-child{
+
+border-bottom:none;
 
 }
 
 .label{
 
-font-weight:bold;
-color:#cbd5e1;
+font-size:13px;
+
+color:#94a3b8;
+
+margin-bottom:6px;
 
 }
 
 .value{
 
 font-size:18px;
-margin-top:5px;
+
+font-weight:600;
+
+color:#fff;
 
 }
 
-button{
+.wallet{
 
-width:100%;
-padding:12px;
-margin-top:20px;
-background:#ef4444;
-color:white;
-border:none;
-border-radius:6px;
-cursor:pointer;
-font-size:16px;
+color:#22c55e;
+
+font-size:28px;
+
+font-weight:bold;
 
 }
 
@@ -91,15 +241,54 @@ font-size:16px;
 
 <div class="container">
 
-<h2>👤 My Profile</h2>
+<div class="header">
 
+<div class="title">
+
+<h2 id="siteName">
+
+Loading...
+
+</h2>
+
+<div class="status">
+
+<div class="status-dot"></div>
+
+<span>ACTIVE</span>
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<button
+class="action-btn"
+onclick="history.back()">
+
+<i class="fa-solid fa-arrow-left"></i>
+
+</button>
+
+<button
+class="action-btn"
+onclick="logout()">
+
+<i class="fa-solid fa-right-from-bracket"></i>
+
+</button>
+
+</div>
+
+</div>
 <div class="card">
 
 <div class="row">
 
 <div class="label">
 
-Username
+👤 Username
 
 </div>
 
@@ -117,7 +306,25 @@ Loading...
 
 <div class="label">
 
-Role
+🆔 User ID
+
+</div>
+
+<div
+class="value"
+id="userId">
+
+Loading...
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="label">
+
+👑 Role
 
 </div>
 
@@ -135,12 +342,30 @@ Loading...
 
 <div class="label">
 
-Wallet Balance
+🟢 Status
 
 </div>
 
 <div
 class="value"
+id="accountStatus">
+
+Loading...
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="label">
+
+💰 Wallet Balance
+
+</div>
+
+<div
+class="wallet"
 id="wallet">
 
 ₹0.00
@@ -151,11 +376,101 @@ id="wallet">
 
 </div>
 
-<button onclick="logout()">
+<div class="card">
 
-🚪 Logout
+<div class="row">
 
-</button>
+<div class="label">
+
+📦 Total Orders
+
+</div>
+
+<div
+class="value"
+id="totalOrders">
+
+0
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="label">
+
+⏳ Pending Orders
+
+</div>
+
+<div
+class="value"
+id="pendingOrders">
+
+0
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="label">
+
+✅ Completed Orders
+
+</div>
+
+<div
+class="value"
+id="completedOrders">
+
+0
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="label">
+
+❌ Cancelled Orders
+
+</div>
+
+<div
+class="value"
+id="cancelledOrders">
+
+0
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="label">
+
+📅 Joined Date
+
+</div>
+
+<div
+class="value"
+id="joinedDate">
+
+Loading...
+
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 <script>
 
@@ -163,113 +478,125 @@ const API =
 "https://gowind-smm-panel-v3.onrender.com";
 
 const USER =
-JSON.parse(localStorage.getItem("user"));
-  /* ===========================
-   LOAD PROFILE
-=========================== */
-
-async function loadProfile(){
-
-try{
-
-if(!USER){
+JSON.parse(
+localStorage.getItem("user")
+);
+  if(!localStorage.getItem("token") || !USER){
 
 location.href="login.html";
-return;
 
 }
 
-document.getElementById("username").innerHTML =
-USER.username;
+async function loadSettings(){
 
-document.getElementById("role").innerHTML =
-USER.role;
+try{
 
-const response = await fetch(
-API + "/api/wallet/" + USER.id
-);
+const response=
+await fetch(API+"/api/settings");
 
-const data = await response.json();
+const data=
+await response.json();
 
 if(data.success){
 
-document.getElementById("wallet").innerHTML =
-"₹" + Number(data.wallet).toFixed(2);
-
-}else{
-
-document.getElementById("wallet").innerHTML =
-"₹0.00";
+document.getElementById("siteName").textContent=
+data.settings.site_name;
 
 }
 
 }catch(err){
 
-console.log(err.message);
+console.log(err);
 
 }
 
-  }
-  /* ===========================
-   LOGOUT
-=========================== */
+}
+
+async function loadProfile(){
+
+try{
+
+const response=
+await fetch(API+"/api/profile/"+USER.id);
+
+const data=
+await response.json();
+
+if(!data.success){
+
+return;
+
+}
+
+const p=data.profile;
+
+document.getElementById("username").textContent=
+p.username;
+
+document.getElementById("userId").textContent=
+p.id;
+
+document.getElementById("role").textContent=
+p.role;
+
+document.getElementById("accountStatus").textContent=
+p.status ? "Active" : "Inactive";
+
+document.getElementById("wallet").textContent=
+"₹"+Number(p.wallet).toFixed(2);
+
+document.getElementById("totalOrders").textContent=
+p.total_orders;
+
+document.getElementById("pendingOrders").textContent=
+p.pending_orders;
+
+document.getElementById("completedOrders").textContent=
+p.completed_orders;
+
+document.getElementById("cancelledOrders").textContent=
+p.cancelled_orders;
+
+document.getElementById("joinedDate").textContent=
+new Date(p.created_at).toLocaleDateString();
+
+}catch(err){
+
+console.log(err);
+
+}
+
+}
 
 function logout(){
 
 localStorage.removeItem("token");
+
 localStorage.removeItem("user");
 
 location.href="login.html";
 
 }
 
-/* ===========================
-   LOGIN CHECK
-=========================== */
-
-if(!localStorage.getItem("token")){
-
-location.href="login.html";
-
-}
-
-/* ===========================
-   AUTO REFRESH
-=========================== */
-
-setInterval(loadProfile,30000);
-
-/* ===========================
-   WINDOW LOAD
-=========================== */
-
 window.onload=function(){
+
+loadSettings();
 
 loadProfile();
 
 };
-  /* ===========================
-   BUTTON ANIMATION
-=========================== */
 
-document.querySelector("button").addEventListener("mouseenter",function(){
+setInterval(loadProfile,30000);
 
-    this.style.transform="scale(1.05)";
-    this.style.transition=".2s";
+document.addEventListener("keydown",function(e){
 
-});
+if(e.key==="Escape"){
 
-document.querySelector("button").addEventListener("mouseleave",function(){
+history.back();
 
-    this.style.transform="scale(1)";
+}
 
 });
-
-/* ===========================
-   PAGE READY
-=========================== */
-
-console.log("Profile Page Loaded");
 
 </script>
 
