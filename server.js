@@ -1062,18 +1062,19 @@ app.post("/api/providers/import", async (req, res) => {
 
             await db.query(
                 `INSERT INTO services
-                (
-                    provider_id,
-                    provider_service_id,
-                    service_id,
-                    name,
-                    category,
-                    rate,
-                    min,
-                    max
-                )
-                VALUES($1,$2,$3,$4,$5,$6,$7,$8)
-                ON CONFLICT DO NOTHING`,
+(
+provider_id,
+provider_service_id,
+service_id,
+name,
+category,
+rate,
+provider_rate,
+min,
+max
+)
+VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)
+ON CONFLICT DO NOTHING`,
                 [
                     provider.id,
                     Number(service.service),
