@@ -8,7 +8,13 @@
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>Login</title>
+<title>Gowind SMM Panel - Official Login</title>
+
+<meta name="description"
+content="Official Login Portal for Gowind SMM Panel">
+
+<meta name="robots"
+content="noindex,nofollow">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
@@ -16,10 +22,12 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
 <style>
 
 *{
+
 margin:0;
 padding:0;
 box-sizing:border-box;
 font-family:Arial,sans-serif;
+
 }
 
 body{
@@ -37,8 +45,9 @@ padding:20px;
 background:#08111f;
 
 background-image:
+
 radial-gradient(circle at top left,
-rgba(147,51,234,.25),
+rgba(147,51,234,.20),
 transparent 35%),
 
 radial-gradient(circle at top right,
@@ -51,6 +60,8 @@ transparent 40%);
 
 color:#fff;
 
+overflow:hidden;
+
 }
 
 .container{
@@ -59,7 +70,7 @@ width:100%;
 
 max-width:430px;
 
-padding:30px;
+padding:32px;
 
 border-radius:24px;
 
@@ -72,8 +83,10 @@ backdrop-filter:blur(18px);
 border:1px solid rgba(255,255,255,.08);
 
 box-shadow:
-0 10px 35px rgba(0,0,0,.35),
-0 0 30px rgba(37,99,235,.15);
+
+0 12px 35px rgba(0,0,0,.35),
+
+0 0 30px rgba(37,99,235,.18);
 
 animation:fade .5s ease;
 
@@ -99,15 +112,43 @@ transform:translateY(0);
 
 }
 
+.logo{
+
+width:78px;
+
+height:78px;
+
+margin:0 auto 18px;
+
+border-radius:50%;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:34px;
+
+background:linear-gradient(
+135deg,
+#2563eb,
+#8b5cf6,
+#06b6d4);
+
+box-shadow:
+
+0 0 25px rgba(37,99,235,.35);
+
+}
+
 h2{
 
 text-align:center;
 
-font-size:36px;
+font-size:30px;
 
 font-weight:700;
-
-margin-bottom:10px;
 
 background:linear-gradient(
 90deg,
@@ -119,17 +160,21 @@ background:linear-gradient(
 
 -webkit-text-fill-color:transparent;
 
+margin-bottom:10px;
+
 }
 
 .subtitle{
 
 text-align:center;
 
-font-size:15px;
+font-size:14px;
 
 color:#94a3b8;
 
-margin-bottom:30px;
+margin-bottom:26px;
+
+line-height:1.6;
 
 }
 
@@ -155,7 +200,7 @@ margin-bottom:22px;
 
 }
 
-.input-box .left-icon{
+.left-icon{
 
 position:absolute;
 
@@ -177,13 +222,15 @@ width:100%;
 
 padding:15px 55px 15px 48px;
 
-background:rgba(255,255,255,.05);
+border:none;
 
-border:1px solid rgba(255,255,255,.08);
+outline:none;
 
 border-radius:14px;
 
-outline:none;
+background:rgba(255,255,255,.05);
+
+border:1px solid rgba(255,255,255,.08);
 
 color:#fff;
 
@@ -193,22 +240,22 @@ transition:.3s;
 
 }
 
-.input-box input::placeholder{
-
-color:#94a3b8;
-
-}
-
 .input-box input:focus{
 
 border-color:#3b82f6;
 
 box-shadow:
+
 0 0 18px rgba(59,130,246,.35);
 
 }
 
-.toggle-password{
+.input-box input::placeholder{
+
+color:#94a3b8;
+
+}
+   .toggle-password{
 
 position:absolute;
 
@@ -218,7 +265,7 @@ top:50%;
 
 transform:translateY(-50%);
 
-font-size:24px;
+font-size:22px;
 
 cursor:pointer;
 
@@ -236,7 +283,7 @@ color:#ffffff;
 
 }
 
-button{
+.login-btn{
 
 width:100%;
 
@@ -250,7 +297,7 @@ border-radius:14px;
 
 cursor:pointer;
 
-font-size:18px;
+font-size:17px;
 
 font-weight:600;
 
@@ -266,7 +313,7 @@ transition:.3s;
 
 }
 
-button:hover{
+.login-btn:hover{
 
 transform:translateY(-2px);
 
@@ -277,7 +324,7 @@ box-shadow:
 
 #result{
 
-margin-top:15px;
+margin-top:16px;
 
 text-align:center;
 
@@ -289,15 +336,39 @@ color:#ef4444;
 
 }
 
-.version{
+.login-note{
 
 margin-top:22px;
 
+padding:14px;
+
+border-radius:14px;
+
+background:rgba(255,255,255,.05);
+
+border:1px solid rgba(255,255,255,.08);
+
+font-size:13px;
+
+line-height:1.7;
+
 text-align:center;
 
-font-size:14px;
+color:#cbd5e1;
+
+}
+
+.version{
+
+margin-top:20px;
+
+text-align:center;
+
+font-size:13px;
 
 color:#94a3b8;
+
+line-height:1.8;
 
 }
 
@@ -309,24 +380,22 @@ color:#94a3b8;
 
 <div class="container">
 
-<h2>
+<div class="logo">
 
-Login
+<i class="fa-solid fa-shield-halved"></i>
 
-</h2>
+</div>
 
-<p
-class="subtitle"
-id="siteName">
+<h2>Gowind SMM Panel</h2>
 
-Loading...
+<p class="subtitle">
+
+Official Login Portal for
+Administrators and Users
 
 </p>
-<label>
 
-Username
-
-</label>
+<label>Username</label>
 
 <div class="input-box">
 
@@ -339,11 +408,7 @@ placeholder="Enter Username">
 
 </div>
 
-<label>
-
-Password
-
-</label>
+<label>Password</label>
 
 <div class="input-box">
 
@@ -358,30 +423,46 @@ placeholder="Enter Password">
 class="toggle-password"
 onclick="togglePassword()">
 
-𓁹
+👁
 
 </span>
 
 </div>
 
 <button
+class="login-btn"
 onclick="login()">
 
 <i class="fa-solid fa-right-to-bracket"></i>
 
-&nbsp;
-
-Login
+&nbsp;Login to Dashboard
 
 </button>
 
 <div id="result"></div>
 
-<div class="version">
+<div class="login-note">
 
-Gowind SMM Panel v3.1
+<b>Official Notice</b><br><br>
+
+This is the official login portal for
+<b>Gowind SMM Panel</b>.
+
+Only registered users and
+authorized administrators
+may access this system.
+
+Unauthorized access is prohibited.
 
 </div>
+
+<div class="version">
+
+© 2026 Gowind SMM Panel
+
+<br>
+
+Version 3.1
 
 </div>
 
@@ -389,20 +470,21 @@ Gowind SMM Panel v3.1
 
 const API =
 "https://gowind-smm-panel-v3.onrender.com";
-
-async function loadSettings(){
+   async function loadSettings(){
 
 try{
 
 const response =
-await fetch(API+"/api/settings");
+await fetch(API + "/api/settings");
 
 const data =
 await response.json();
 
-if(data.success){
+if(data.success &&
+data.settings &&
+data.settings.site_name){
 
-document.getElementById("siteName").textContent =
+document.querySelector("h2").textContent =
 data.settings.site_name;
 
 }
@@ -427,41 +509,44 @@ if(password.type==="password"){
 
 password.type="text";
 
-eye.textContent="𓁺";
+eye.innerHTML="🙈";
 
 }else{
 
 password.type="password";
 
-eye.textContent="𓁹";
+eye.innerHTML="👁";
 
 }
 
 }
-   async function login(){
 
-try{
+async function login(){
 
-const username=
+const username =
 document.getElementById("username").value.trim();
 
-const password=
+const password =
 document.getElementById("password").value;
+
+const result =
+document.getElementById("result");
+
+result.textContent="";
 
 if(username==="" || password===""){
 
-document.getElementById("result").textContent=
-"Please enter username and password";
+result.textContent =
+"Please enter Username and Password";
 
 return;
 
 }
 
-const response=await fetch(
+try{
 
-API+"/api/login",
-
-{
+const response =
+await fetch(API + "/api/login",{
 
 method:"POST",
 
@@ -474,32 +559,18 @@ headers:{
 body:JSON.stringify({
 
 username,
-
 password
 
 })
 
-}
+});
 
-);
-
-const data=await response.json();
-
-if(
-data.message &&
-data.message.toLowerCase().includes("maintenance")
-){
-
-document.getElementById("result").textContent=
-"Panel is under maintenance";
-
-return;
-
-}
+const data =
+await response.json();
 
 if(!data.success){
 
-document.getElementById("result").textContent=
+result.textContent =
 data.message || "Login Failed";
 
 return;
@@ -507,22 +578,15 @@ return;
 }
 
 localStorage.setItem(
-
 "token",
-
 data.token
-
 );
 
 localStorage.setItem(
-
 "user",
-
 JSON.stringify(data.user)
-
 );
-
-if(data.user.role==="admin"){
+   if(data.user.role==="admin"){
 
 location.href="admindashboard.html";
 
@@ -534,14 +598,18 @@ location.href="userdashboard.html";
 
 }catch(error){
 
-document.getElementById("result").textContent=
-error.message;
+document.getElementById("result").textContent =
+error.message || "Unable to connect to server";
 
 }
 
 }
 
-const savedUser=
+/* ===========================
+   AUTO LOGIN
+=========================== */
+
+const savedUser =
 JSON.parse(localStorage.getItem("user"));
 
 if(localStorage.getItem("token") && savedUser){
@@ -558,6 +626,10 @@ location.href="userdashboard.html";
 
 }
 
+/* ===========================
+   ENTER KEY LOGIN
+=========================== */
+
 document.addEventListener("keydown",function(e){
 
 if(e.key==="Enter"){
@@ -567,6 +639,10 @@ login();
 }
 
 });
+
+/* ===========================
+   PAGE LOAD
+=========================== */
 
 window.onload=function(){
 
