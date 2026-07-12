@@ -10,137 +10,312 @@ content="width=device-width,initial-scale=1.0">
 
 <title>Orders Management</title>
 
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
 <style>
 
 *{
+
 margin:0;
+
 padding:0;
+
 box-sizing:border-box;
+
 font-family:Arial,sans-serif;
+
 }
 
 body{
 
-background:#0f172a;
-color:white;
+background:#08111f;
+
+background-image:
+radial-gradient(circle at top left,
+rgba(147,51,234,.18),
+transparent 35%),
+
+radial-gradient(circle at top right,
+rgba(6,182,212,.15),
+transparent 35%),
+
+radial-gradient(circle at bottom right,
+rgba(37,99,235,.18),
+transparent 40%);
+
+color:#fff;
+
+min-height:100vh;
 
 }
 
 .container{
 
-width:98%;
+width:95%;
+
 max-width:1400px;
-margin:20px auto;
-padding:15px;
+
+margin:18px auto;
 
 }
 
 .header{
 
-background:#1e293b;
-padding:20px;
-border-radius:10px;
-text-align:center;
-margin-bottom:20px;
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:16px 18px;
+
+margin-bottom:18px;
+
+border-radius:18px;
+
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(18px);
+
+-webkit-backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
+
+box-shadow:
+0 10px 30px rgba(0,0,0,.25),
+0 0 20px rgba(37,99,235,.18);
 
 }
 
-.header h2{
+.title h2{
 
-font-size:32px;
+font-size:26px;
+
+font-weight:700;
+
+background:linear-gradient(
+90deg,
+#3b82f6,
+#06b6d4
+);
+
+-webkit-background-clip:text;
+
+-webkit-text-fill-color:transparent;
 
 }
 
-.search{
+.status{
 
-width:100%;
-padding:14px;
-border:none;
-border-radius:8px;
-font-size:16px;
-margin-bottom:15px;
+display:flex;
+
+align-items:center;
+
+gap:6px;
+
+margin-top:6px;
+
+font-size:12px;
+
+font-weight:600;
+
+color:#22c55e;
+
+}
+
+.status-dot{
+
+width:8px;
+
+height:8px;
+
+border-radius:50%;
+
+background:#22c55e;
+
+box-shadow:0 0 10px #22c55e;
 
 }
 
 .actions{
 
 display:flex;
+
 gap:10px;
-flex-wrap:wrap;
-margin-bottom:20px;
 
 }
 
-.actions button{
+.action-btn{
 
-flex:1;
-min-width:140px;
-padding:13px;
+width:44px;
+
+height:44px;
+
 border:none;
-border-radius:8px;
-color:white;
-font-size:16px;
+
+border-radius:50%;
+
+background:rgba(255,255,255,.06);
+
+border:1px solid rgba(255,255,255,.08);
+
+color:#fff;
+
+font-size:17px;
+
 cursor:pointer;
 
-}
-
-.refresh{
-
-background:#7c3aed;
+transition:.3s;
 
 }
 
-.logout{
+.action-btn:hover{
 
-background:#dc2626;
+background:#2563eb;
+
+transform:scale(1.08);
+
+box-shadow:0 0 18px rgba(37,99,235,.35);
 
 }
 
-.table-container{
+.search{
 
 width:100%;
-overflow-x:auto;
--webkit-overflow-scrolling:touch;
+
+padding:15px;
+
+margin-bottom:18px;
+
+background:rgba(255,255,255,.05);
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:14px;
+
+outline:none;
+
+font-size:16px;
+
+color:#fff;
+
+transition:.3s;
+
+}
+
+.search::placeholder{
+
+color:#94a3b8;
+
+}
+
+.search:focus{
+
+border-color:#3b82f6;
+
+box-shadow:0 0 18px rgba(59,130,246,.35);
+
+}
+  .refresh-btn{
+
+width:100%;
+
+padding:15px;
+
+margin-bottom:18px;
+
+border:none;
+
+border-radius:14px;
+
+font-size:17px;
+
+font-weight:600;
+
+cursor:pointer;
+
+color:#fff;
+
+background:linear-gradient(
+90deg,
+#2563eb,
+#8b5cf6,
+#06b6d4);
+
+transition:.3s;
+
+}
+
+.refresh-btn:hover{
+
+transform:translateY(-2px);
+
+box-shadow:0 0 25px rgba(59,130,246,.35);
+
+}
+
+.table-card{
+
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(18px);
+
+-webkit-backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:18px;
+
+overflow:auto;
 
 }
 
 table{
 
 width:100%;
+
 min-width:1200px;
+
 border-collapse:collapse;
-background:#1e293b;
 
 }
 
 th{
 
-background:#334155;
-padding:14px;
+padding:16px;
+
+background:rgba(59,130,246,.18);
+
+font-size:15px;
+
+font-weight:600;
+
 text-align:center;
 
 }
 
 td{
 
-padding:14px;
+padding:15px;
+
 text-align:center;
-border-bottom:1px solid #334155;
 
-}
-
-.status{
-
-padding:6px 10px;
-border-radius:6px;
-font-weight:bold;
+border-top:1px solid rgba(255,255,255,.08);
 
 }
 
 .pending{
 
 background:#f59e0b;
-color:black;
+
+color:#000;
+
+padding:6px 12px;
+
+border-radius:8px;
+
+font-weight:bold;
 
 }
 
@@ -148,17 +323,69 @@ color:black;
 
 background:#3b82f6;
 
+padding:6px 12px;
+
+border-radius:8px;
+
+font-weight:bold;
+
 }
 
 .completed{
 
 background:#22c55e;
 
+padding:6px 12px;
+
+border-radius:8px;
+
+font-weight:bold;
+
 }
 
 .cancelled{
 
 background:#ef4444;
+
+padding:6px 12px;
+
+border-radius:8px;
+
+font-weight:bold;
+
+}
+
+.delete-btn{
+
+background:#dc2626;
+
+color:#fff;
+
+border:none;
+
+padding:8px 14px;
+
+border-radius:8px;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.delete-btn:hover{
+
+background:#b91c1c;
+
+}
+
+@media(max-width:768px){
+
+table{
+
+min-width:1150px;
+
+}
 
 }
 
@@ -172,47 +399,63 @@ background:#ef4444;
 
 <div class="header">
 
-<h2>
+<div class="title">
 
-<h2>📦 Orders Management</h2>
+<h2 id="siteName">
+
+Loading...
+
+</h2>
+
+<div class="status">
+
+<div class="status-dot"></div>
+
+<span>ACTIVE</span>
 
 </div>
 
-<input
-
-class="search"
-
-id="search"
-
-type="text"
-
-placeholder="Search Order..."
-
-onkeyup="searchOrders()">
+</div>
 
 <div class="actions">
 
 <button
-class="refresh"
-onclick="loadOrders()">
+class="action-btn"
+onclick="history.back()">
 
-Refresh
+<i class="fa-solid fa-arrow-left"></i>
 
 </button>
 
 <button
-class="logout"
+class="action-btn"
+onclick="loadOrders()">
+
+<i class="fa-solid fa-rotate-right"></i>
+
+</button>
+
+<button
+class="action-btn"
 onclick="logout()">
 
-Logout
+<i class="fa-solid fa-right-from-bracket"></i>
 
 </button>
 
 </div>
 
-<div class="table-container">
+</div>
 
-<table>
+<input
+class="search"
+id="search"
+type="text"
+placeholder="Search Orders..."
+onkeyup="searchOrders()">
+
+<div class="table-card">
+  <table>
 
 <thead>
 
@@ -222,7 +465,7 @@ Logout
 
 <th>Username</th>
 
-<th>Service Name</th>
+<th>Service</th>
 
 <th>Link</th>
 
@@ -236,9 +479,9 @@ Logout
 
 <th>Status</th>
 
-<th>Created At</th>
+<th>Date</th>
 
-<th>Actions</th>
+<th>Action</th>
 
 </tr>
 
@@ -262,16 +505,19 @@ Loading...
 
 </div>
 
+</div>
+
 <script>
 
-const API="https://gowind-smm-panel-v3.onrender.com";
+const API =
+"https://gowind-smm-panel-v3.onrender.com";
 
-let allOrders=[];
-  /* ===========================
-   LOGIN CHECK
-=========================== */
+const USER =
+JSON.parse(
+localStorage.getItem("user")
+);
 
-const USER = JSON.parse(localStorage.getItem("user"));
+let allOrders = [];
 
 if(!localStorage.getItem("token")){
 
@@ -285,21 +531,43 @@ location.href="login.html";
 
 }
 
-/* ===========================
-   LOAD ORDERS
-=========================== */
+async function loadSettings(){
+
+try{
+
+const response=
+await fetch(API+"/api/settings");
+
+const data=
+await response.json();
+
+if(data.success){
+
+document.getElementById("siteName").textContent=
+data.settings.site_name;
+
+}
+
+}catch(err){
+
+console.log(err);
+
+}
+
+}
 
 async function loadOrders(){
 
 try{
 
-const response = await fetch(
-API+"/api/orders"
-);
+const response=
+await fetch(API+"/api/orders");
 
-const data = await response.json();
+const data=
+await response.json();
 
-allOrders = data.orders || [];
+allOrders=
+data.orders || [];
 
 renderOrders(allOrders);
 
@@ -307,27 +575,22 @@ renderOrders(allOrders);
 
 document.getElementById("ordersTable").innerHTML=
 
-"<tr><td colspan='7'>Failed to load orders</td></tr>";
+"<tr><td colspan='11'>Failed to load orders</td></tr>";
 
 }
 
 }
+  function renderOrders(list){
 
-/* ===========================
-   RENDER TABLE
-=========================== */
-
-function renderOrders(list){
-
-const table=document.getElementById("ordersTable");
+const table=
+document.getElementById("ordersTable");
 
 table.innerHTML="";
 
 if(list.length===0){
 
 table.innerHTML=
-
-"<tr><td colspan='11' style='text-align:center;'>No Orders Found</td></tr>";
+"<tr><td colspan='11'>No Orders Found</td></tr>";
 
 return;
 
@@ -337,13 +600,13 @@ list.forEach(order=>{
 
 let statusClass="pending";
 
-if(order.status==="Completed"){
-
-statusClass="completed";
-
-}else if(order.status==="Processing"){
+if(order.status==="Processing"){
 
 statusClass="processing";
+
+}else if(order.status==="Completed"){
+
+statusClass="completed";
 
 }else if(order.status==="Cancelled"){
 
@@ -351,27 +614,40 @@ statusClass="cancelled";
 
 }
 
+const date=new Date(order.created_at);
+
+const day=
+String(date.getDate()).padStart(2,"0");
+
+const month=
+String(date.getMonth()+1).padStart(2,"0");
+
+const year=
+String(date.getFullYear()).slice(-2);
+
 table.innerHTML+=`
 
 <tr>
 
 <td>${order.id}</td>
 
-<td>${order.username || "-"}</td>
+<td>${order.username||"-"}</td>
 
-<td>${order.service_name || "-"}</td>
+<td>${order.service_name||"-"}</td>
 
 <td style="max-width:220px;word-break:break-all;">
-${order.link || "-"}
+
+${order.link||"-"}
+
 </td>
 
 <td>${order.quantity}</td>
 
 <td>₹${Number(order.charge).toFixed(2)}</td>
 
-<td>${order.provider_name || "-"}</td>
+<td>${order.provider_name||"-"}</td>
 
-<td>${order.provider_order_id || "-"}</td>
+<td>${order.provider_order_id||"-"}</td>
 
 <td>
 
@@ -383,19 +659,15 @@ ${order.status}
 
 </td>
 
-<td>
-
-${new Date(order.created_at).toLocaleString()}
-
-</td>
+<td>${day}/${month}/${year}</td>
 
 <td>
 
 <button
-style="background:#dc2626;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;"
+class="delete-btn"
 onclick="deleteOrder(${order.id})">
 
-🗑 Delete
+Delete
 
 </button>
 
@@ -409,176 +681,75 @@ onclick="deleteOrder(${order.id})">
 
 }
 
-/* ===========================
-   SEARCH
-=========================== */
-
 function searchOrders(){
 
-const keyword=document
-.getElementById("search")
+const keyword=
+
+document.getElementById("search")
+
 .value
+
 .toLowerCase();
 
-const filtered=allOrders.filter(order=>
+const filtered=
+
+allOrders.filter(order=>
 
 String(order.id).includes(keyword)
 
 ||
 
-String(order.username || "")
+String(order.username||"")
+
 .toLowerCase()
+
 .includes(keyword)
 
 ||
 
-String(order.service_name || "")
+String(order.service_name||"")
+
 .toLowerCase()
+
 .includes(keyword)
 
 ||
 
-String(order.provider_name || "")
+String(order.provider_name||"")
+
 .toLowerCase()
+
 .includes(keyword)
 
 ||
 
-String(order.status || "")
+String(order.status||"")
+
 .toLowerCase()
+
 .includes(keyword)
 
 );
+
 renderOrders(filtered);
 
-  }
-  /* ===========================
-   AUTO REFRESH
-=========================== */
-
-setInterval(loadOrders,30000);
-
-/* ===========================
-   LOGOUT
-=========================== */
-
-function logout(){
-
-localStorage.removeItem("token");
-localStorage.removeItem("user");
-
-location.href="login.html";
-
 }
-
-
-
-/* ===========================
-   WINDOW LOAD
-=========================== */
-
-window.onload=function(){
-
-loadOrders();
-
-};
-
-/* ===========================
-   BUTTON ANIMATION
-=========================== */
-
-document.querySelectorAll("button").forEach(btn=>{
-
-btn.addEventListener("mouseenter",function(){
-
-this.style.transform="scale(1.03)";
-this.style.transition=".2s";
-
-});
-
-btn.addEventListener("mouseleave",function(){
-
-this.style.transform="scale(1)";
-
-});
-
-});
-
-/* ===========================
-   SHORTCUT KEYS
-=========================== */
-
-document.addEventListener("keydown",function(e){
-
-if(e.key==="Escape"){
-
-location.href="admindashboard.html";
-
-}
-
-if(e.ctrlKey && e.key==="r"){
-
-e.preventDefault();
-
-loadOrders();
-
-}
-
-});
-  /* ===========================
-   STATUS STYLE
-=========================== */
-
-document.querySelectorAll(".status").forEach(status=>{
-
-status.style.fontWeight="bold";
-status.style.padding="8px 12px";
-status.style.borderRadius="6px";
-
-});
-
-/* ===========================
-   TABLE ROW HOVER
-=========================== */
-
-document.querySelectorAll("#ordersTable tr").forEach(row=>{
-
-row.addEventListener("mouseenter",function(){
-
-this.style.background="#273449";
-
-});
-
-row.addEventListener("mouseleave",function(){
-
-this.style.background="transparent";
-
-});
-
-});
-/* ===========================
-   DELETE ORDER
-=========================== */
 
 async function deleteOrder(id){
 
-if(!confirm("Delete this order?")){
-return;
-}
+if(!confirm("Delete this order?")) return;
 
 try{
 
-const response = await fetch(
+const response=
+await fetch(API+"/api/orders/"+id,{
 
-API + "/api/orders/" + id,
-
-{
 method:"DELETE"
-}
 
-);
+});
 
-const data = await response.json();
+const data=
+await response.json();
 
 alert(data.message);
 
@@ -591,65 +762,44 @@ alert(err.message);
 }
 
 }
-  /* ===========================
-   SYNC SINGLE ORDER
-=========================== */
 
-async function syncOrder(providerId, providerOrderId){
+function logout(){
 
-try{
+localStorage.removeItem("token");
 
-const response = await fetch(
+localStorage.removeItem("user");
 
-API + "/api/providers/status",
-
-{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-
-provider_id:providerId,
-
-order:providerOrderId
-
-})
+location.href="login.html";
 
 }
 
-);
+window.onload=function(){
 
-const data = await response.json();
-
-if(data.status){
-
-alert("Current Status : " + data.status);
+loadSettings();
 
 loadOrders();
 
-}else{
+};
 
-alert(data.error || data.message || "Unable to fetch status");
+setInterval(loadOrders,30000);
+
+document.addEventListener("keydown",function(e){
+
+if(e.key==="Escape"){
+
+history.back();
 
 }
 
-}catch(err){
+if(e.ctrlKey && e.key==="r"){
 
-alert(err.message);
+e.preventDefault();
+
+loadOrders();
 
 }
 
-} 
-
-/* ===========================
-   PAGE READY
-=========================== */
-
-console.log("Orders Management Ready");
+});
 
 </script>
 
