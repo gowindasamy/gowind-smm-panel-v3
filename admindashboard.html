@@ -606,9 +606,7 @@ async function loadSettings(){
         document.getElementById("siteName").textContent =
             data.settings.site_name;
 
-        document.getElementById("siteDescription").textContent =
-            data.settings.site_description || "";
-
+      
     }catch(error){
 
         console.error(error);
