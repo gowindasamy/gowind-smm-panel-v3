@@ -463,7 +463,6 @@ SELECT
 FROM services s
 LEFT JOIN providers p
 ON s.provider_id = p.id
-WHERE s.status = TRUE
 ORDER BY s.id ASC
 `);
 
