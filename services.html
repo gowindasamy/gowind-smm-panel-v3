@@ -6,152 +6,356 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+content="width=device-width,initial-scale=1.0">
 
 <title>Services Management</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 <style>
 
 *{
+
 margin:0;
+
 padding:0;
+
 box-sizing:border-box;
+
 font-family:Arial,sans-serif;
+
 }
 
 body{
 
-background:#0f172a;
-color:white;
+background:#08111f;
+
+background-image:
+radial-gradient(circle at top left,
+rgba(147,51,234,.18),
+transparent 35%),
+
+radial-gradient(circle at top right,
+rgba(6,182,212,.15),
+transparent 35%),
+
+radial-gradient(circle at bottom right,
+rgba(37,99,235,.18),
+transparent 40%);
+
+color:#fff;
+
+min-height:100vh;
 
 }
 
 .container{
 
-width:98%;
-max-width:1400px;
-margin:20px auto;
+width:95%;
+
+max-width:1450px;
+
+margin:18px auto;
 
 }
 
 .header{
 
-background:#1e293b;
-padding:20px;
-border-radius:10px;
-text-align:center;
-margin-bottom:20px;
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:16px 18px;
+
+margin-bottom:18px;
+
+border-radius:18px;
+
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(18px);
+
+-webkit-backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
+
+box-shadow:
+0 10px 30px rgba(0,0,0,.25),
+0 0 20px rgba(37,99,235,.18);
 
 }
 
-.header h2{
+.title h2{
 
-font-size:32px;
+font-size:26px;
+
+font-weight:700;
+
+background:linear-gradient(
+90deg,
+#3b82f6,
+#06b6d4);
+
+-webkit-background-clip:text;
+
+-webkit-text-fill-color:transparent;
 
 }
 
-.search{
+.status{
 
-width:100%;
-padding:14px;
-border:none;
-border-radius:8px;
-font-size:16px;
-margin-bottom:15px;
+display:flex;
+
+align-items:center;
+
+gap:6px;
+
+margin-top:6px;
+
+font-size:12px;
+
+font-weight:600;
+
+color:#22c55e;
+
+}
+
+.status-dot{
+
+width:8px;
+
+height:8px;
+
+border-radius:50%;
+
+background:#22c55e;
+
+box-shadow:0 0 10px #22c55e;
 
 }
 
 .actions{
 
 display:flex;
+
 gap:10px;
-flex-wrap:wrap;
-margin-bottom:20px;
 
 }
 
-.actions button{
+.action-btn{
 
-flex:1;
-min-width:140px;
-padding:13px;
+width:44px;
+
+height:44px;
+
 border:none;
-border-radius:8px;
-color:white;
-font-size:16px;
+
+border-radius:50%;
+
+background:rgba(255,255,255,.06);
+
+border:1px solid rgba(255,255,255,.08);
+
+color:#fff;
+
+font-size:17px;
+
 cursor:pointer;
 
-}
-
-.refresh{
-
-background:#7c3aed;
+transition:.3s;
 
 }
 
-.add{
+.action-btn:hover{
 
-background:#22c55e;
+background:#2563eb;
 
-}
+transform:scale(1.08);
 
-.delete{
-
-background:#dc2626;
+box-shadow:0 0 18px rgba(37,99,235,.35);
 
 }
 
-.table-container{
+.search{
 
 width:100%;
-overflow-x:auto;
--webkit-overflow-scrolling:touch;
+
+padding:15px;
+
+margin-bottom:18px;
+
+background:rgba(255,255,255,.05);
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:14px;
+
+outline:none;
+
+font-size:16px;
+
+color:#fff;
+
+transition:.3s;
+
+}
+
+.search::placeholder{
+
+color:#94a3b8;
+
+}
+
+.search:focus{
+
+border-color:#3b82f6;
+
+box-shadow:0 0 18px rgba(59,130,246,.35);
+
+}
+  .refresh-btn{
+
+width:100%;
+
+padding:15px;
+
+margin-bottom:18px;
+
+border:none;
+
+border-radius:14px;
+
+font-size:17px;
+
+font-weight:600;
+
+cursor:pointer;
+
+color:#fff;
+
+background:linear-gradient(
+90deg,
+#2563eb,
+#8b5cf6,
+#06b6d4);
+
+transition:.3s;
+
+}
+
+.refresh-btn:hover{
+
+transform:translateY(-2px);
+
+box-shadow:0 0 25px rgba(59,130,246,.35);
+
+}
+
+.table-card{
+
+background:rgba(255,255,255,.05);
+
+backdrop-filter:blur(18px);
+
+-webkit-backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:18px;
+
+overflow:auto;
+
+box-shadow:0 10px 30px rgba(0,0,0,.25);
 
 }
 
 table{
 
 width:100%;
+
 min-width:1100px;
+
 border-collapse:collapse;
-background:#1e293b;
 
 }
 
 th{
 
-background:#334155;
-padding:14px;
+padding:16px;
+
+background:rgba(59,130,246,.18);
+
 text-align:left;
+
+font-size:15px;
+
+font-weight:600;
 
 }
 
 td{
 
-padding:14px;
-border-bottom:1px solid #334155;
+padding:15px;
+
+border-top:1px solid rgba(255,255,255,.08);
 
 }
 
 .edit{
 
 background:#2563eb;
-padding:8px 12px;
+
+color:#fff;
+
 border:none;
-border-radius:6px;
-color:white;
+
+padding:8px 14px;
+
+border-radius:8px;
+
 cursor:pointer;
+
+margin-right:6px;
+
+transition:.3s;
 
 }
 
 .remove{
 
-background:#dc2626;
-padding:8px 12px;
+background:#ef4444;
+
+color:#fff;
+
 border:none;
-border-radius:6px;
-color:white;
+
+padding:8px 14px;
+
+border-radius:8px;
+
 cursor:pointer;
+
+transition:.3s;
+
+}
+
+.edit:hover,
+.remove:hover{
+
+transform:translateY(-2px);
+
+}
+
+@media(max-width:768px){
+
+table{
+
+min-width:1100px;
+
+}
 
 }
 
@@ -165,11 +369,51 @@ cursor:pointer;
 
 <div class="header">
 
-<h2>
+<div class="title">
 
-Services Management
+<h2 id="siteName">
+
+Loading...
 
 </h2>
+
+<div class="status">
+
+<div class="status-dot"></div>
+
+<span>ACTIVE</span>
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<button
+class="action-btn"
+onclick="history.back()">
+
+<i class="fa-solid fa-arrow-left"></i>
+
+</button>
+
+<button
+class="action-btn"
+onclick="loadServices()">
+
+<i class="fa-solid fa-rotate-right"></i>
+
+</button>
+
+<button
+class="action-btn"
+onclick="logout()">
+
+<i class="fa-solid fa-right-from-bracket"></i>
+
+</button>
+
+</div>
 
 </div>
 
@@ -185,43 +429,18 @@ placeholder="Search Service..."
 
 onkeyup="searchService()">
 
-<div class="actions">
-
 <button
-
-class="refresh"
-
-onclick="loadServices()">
-
-Refresh
-
-</button>
-
-<button
-
-class="add"
-
+class="refresh-btn"
 onclick="openAddService()">
+
+<i class="fa-solid fa-plus"></i>
 
 Add Service
 
 </button>
 
-<button
-
-class="delete"
-
-onclick="deleteAllServices()">
-
-Delete All Services
-
-</button>
-
-</div>
-
-<div class="table-container">
-
-<table>
+<div class="table-card">
+  <table>
 
 <thead>
 
@@ -251,8 +470,7 @@ Delete All Services
 
 <tr>
 
-<td colspan="8"
-style="text-align:center;">
+<td colspan="8">
 
 Loading...
 
@@ -266,17 +484,19 @@ Loading...
 
 </div>
 
+</div>
+
 <script>
 
 const API =
 "https://gowind-smm-panel-v3.onrender.com";
 
-let SERVICES=[];
-  /* ===========================
-   LOGIN CHECK
-=========================== */
+const USER =
+JSON.parse(
+localStorage.getItem("user")
+);
 
-const USER = JSON.parse(localStorage.getItem("user"));
+let SERVICES = [];
 
 if(!localStorage.getItem("token")){
 
@@ -290,49 +510,66 @@ location.href="login.html";
 
 }
 
-/* ===========================
-   LOAD SERVICES
-=========================== */
+async function loadSettings(){
+
+try{
+
+const response =
+await fetch(API+"/api/settings");
+
+const data =
+await response.json();
+
+if(data.success){
+
+document.getElementById("siteName").textContent =
+data.settings.site_name;
+
+}
+
+}catch(err){
+
+console.log(err);
+
+}
+
+}
 
 async function loadServices(){
 
 try{
 
-const response=await fetch(
-API+"/api/services"
-);
+const response =
+await fetch(API+"/api/services");
 
-const data=await response.json();
+const data =
+await response.json();
 
-SERVICES=data.services || [];
+SERVICES =
+data.services || [];
 
 renderTable(SERVICES);
 
 }catch(err){
 
-document.getElementById("serviceTable").innerHTML=
+document.getElementById("serviceTable").innerHTML =
 
-"<tr><td colspan='8'>"+err.message+"</td></tr>";
-
-}
+"<tr><td colspan='8'>Failed to load services</td></tr>";
 
 }
 
-/* ===========================
-   RENDER TABLE
-=========================== */
+}
+  function renderTable(list){
 
-function renderTable(list){
-
-const table=document.getElementById("serviceTable");
+const table =
+document.getElementById("serviceTable");
 
 table.innerHTML="";
 
 if(list.length===0){
 
 table.innerHTML=
-
-"<tr><td colspan='8' style='text-align:center;'>No Services Found</td></tr>";
+"<tr><td colspan='8'>No Services Found</td></tr>";
 
 return;
 
@@ -346,13 +583,13 @@ table.innerHTML+=`
 
 <td>${item.id}</td>
 
-<td>${item.provider_name || "-"}</td>
+<td>${item.provider_name||"-"}</td>
 
 <td>${item.name}</td>
 
 <td>${item.category}</td>
 
-<td>₹${item.rate}</td>
+<td>₹${Number(item.rate).toFixed(2)}</td>
 
 <td>${item.min}</td>
 
@@ -361,9 +598,7 @@ table.innerHTML+=`
 <td>
 
 <button
-
 class="edit"
-
 onclick="editService(${item.id})">
 
 Edit
@@ -371,9 +606,7 @@ Edit
 </button>
 
 <button
-
 class="remove"
-
 onclick="deleteService(${item.id})">
 
 Delete
@@ -390,33 +623,38 @@ Delete
 
 }
 
-/* ===========================
-   SEARCH
-=========================== */
-
 function searchService(){
 
 const key=
-
 document.getElementById("search")
-.value.toLowerCase();
+.value
+.toLowerCase();
 
-const result=
+renderTable(
 
 SERVICES.filter(service=>
 
-service.name.toLowerCase().includes(key) ||
+String(service.name)
+.toLowerCase()
+.includes(key)
 
-service.category.toLowerCase().includes(key)
+||
+
+String(service.category)
+.toLowerCase()
+.includes(key)
+
+||
+
+String(service.provider_name||"")
+.toLowerCase()
+.includes(key)
+
+)
 
 );
 
-renderTable(result);
-
-      }
-  /* ===========================
-   ADD SERVICE
-=========================== */
+}
 
 function openAddService(){
 
@@ -424,89 +662,27 @@ location.href="add-service.html";
 
 }
 
-/* ===========================
-   EDIT SERVICE
-=========================== */
-
 function editService(id){
 
 location.href="edit-service.html?id="+id;
 
 }
 
-/* ===========================
-   DELETE SERVICE
-=========================== */
-
 async function deleteService(id){
 
-const ok=confirm(
-"Delete this service?"
-);
-
-if(!ok) return;
+if(!confirm("Delete this service?")) return;
 
 try{
 
-const response=await fetch(
-
-API+"/api/services/"+id,
-
-{
+const response=
+await fetch(API+"/api/services/"+id,{
 
 method:"DELETE"
 
-}
+});
 
-);
-
-const data=await response.json();
-
-alert(data.message || "Service Deleted");
-
-loadServices();
-
-}catch(err){
-
-alert(err.message);
-
-}
-
-}
-
-/* ===========================
-   DELETE ALL SERVICES
-=========================== */
-
-async function deleteAllServices(){
-
-const ok=confirm(
-
-"⚠️ Are you sure?\n\nThis will permanently delete ALL services."
-
-);
-
-if(!ok){
-
-return;
-
-}
-
-try{
-
-const response=await fetch(
-
-API+"/api/services",
-
-{
-
-method:"DELETE"
-
-}
-
-);
-
-const data=await response.json();
+const data=
+await response.json();
 
 alert(data.message);
 
@@ -520,51 +696,59 @@ alert(err.message);
 
 }
 
-/* ===========================
-   AUTO REFRESH
-=========================== */
+async function deleteAllServices(){
 
-setInterval(loadServices,30000);
+if(!confirm("Delete all services?")) return;
 
-/* ===========================
-   PAGE LOAD
-=========================== */
+try{
+
+const response=
+await fetch(API+"/api/services",{
+
+method:"DELETE"
+
+});
+
+const data=
+await response.json();
+
+alert(data.message);
+
+loadServices();
+
+}catch(err){
+
+alert(err.message);
+
+}
+
+}
+
+function logout(){
+
+localStorage.removeItem("token");
+
+localStorage.removeItem("user");
+
+location.href="login.html";
+
+}
 
 window.onload=function(){
+
+loadSettings();
 
 loadServices();
 
 };
-  /* ===========================
-   BUTTON ANIMATION
-=========================== */
 
-document.querySelectorAll("button").forEach(btn=>{
-
-btn.addEventListener("mouseenter",function(){
-
-this.style.transform="scale(1.03)";
-this.style.transition=".2s";
-
-});
-
-btn.addEventListener("mouseleave",function(){
-
-this.style.transform="scale(1)";
-
-});
-
-});
-
-/* ===========================
-   SHORTCUT KEYS
-=========================== */
+setInterval(loadServices,30000);
 
 document.addEventListener("keydown",function(e){
 
 if(e.key==="Escape"){
 
-location.href="admindashboard.html";
+history.back();
 
 }
 
@@ -577,12 +761,6 @@ loadServices();
 }
 
 });
-
-/* ===========================
-   PAGE READY
-=========================== */
-
-console.log("Services Page Ready");
 
 </script>
 
