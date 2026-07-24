@@ -5,19 +5,25 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
+<meta
+name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>Multi Add Provider & Service</title>
+<title>
+SMM Panel • Multi Add
+</title>
 
-<link rel="preconnect"
+<link
+rel="preconnect"
 href="https://fonts.googleapis.com">
 
-<link rel="preconnect"
+<link
+rel="preconnect"
 href="https://fonts.gstatic.com"
 crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+<link
+href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
 rel="stylesheet">
 
 <style>
@@ -35,8 +41,8 @@ background:
 linear-gradient(
 135deg,
 #0f172a,
-#1e293b,
-#0f172a
+#111827,
+#1e293b
 );
 
 min-height:100vh;
@@ -49,7 +55,7 @@ color:#fff;
 
 .container{
 
-max-width:900px;
+max-width:1100px;
 
 margin:auto;
 
@@ -57,11 +63,11 @@ background:#111827;
 
 border-radius:18px;
 
-padding:25px;
+overflow:hidden;
 
 box-shadow:
 
-0 0 25px
+0 0 35px
 rgba(0,0,0,.45);
 
 border:
@@ -73,59 +79,7 @@ rgba(255,255,255,.08);
 
 .header{
 
-text-align:center;
-
-margin-bottom:25px;
-
-}
-
-.header h1{
-
-font-size:32px;
-
-font-weight:700;
-
-color:#fff;
-
-}
-
-.header p{
-
-margin-top:8px;
-
-color:#94a3b8;
-
-font-size:14px;
-
-}
-
-.toggle{
-
-display:flex;
-
-justify-content:center;
-
-margin-bottom:25px;
-
-}
-
-.toggle button{
-
-width:220px;
-
-height:48px;
-
-border:none;
-
-border-radius:30px;
-
-font-size:16px;
-
-font-weight:600;
-
-cursor:pointer;
-
-transition:.3s;
+padding:25px;
 
 background:
 
@@ -135,7 +89,67 @@ linear-gradient(
 #06b6d4
 );
 
-color:#fff;
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+flex-wrap:wrap;
+
+}
+
+.logo{
+
+font-size:30px;
+
+font-weight:700;
+
+}
+
+.version{
+
+font-size:14px;
+
+background:
+rgba(255,255,255,.18);
+
+padding:8px 15px;
+
+border-radius:30px;
+
+}
+
+.content{
+
+padding:25px;
+
+}
+
+.card{
+
+background:#1f2937;
+
+border-radius:15px;
+
+padding:20px;
+
+margin-bottom:25px;
+
+border:
+
+1px solid
+#374151;
+
+}
+
+.card-title{
+
+font-size:20px;
+
+font-weight:600;
+
+margin-bottom:20px;
 
 }
 
@@ -145,9 +159,9 @@ display:flex;
 
 gap:15px;
 
-margin-bottom:18px;
-
 flex-wrap:wrap;
+
+margin-bottom:18px;
 
 }
 
@@ -155,7 +169,7 @@ flex-wrap:wrap;
 
 flex:1;
 
-min-width:220px;
+min-width:250px;
 
 }
 
@@ -184,16 +198,16 @@ padding:12px;
 
 border-radius:10px;
 
-border:
-
-1px solid
-#374151;
-
-background:#1f2937;
+background:#111827;
 
 color:#fff;
 
 font-size:15px;
+
+border:
+
+1px solid
+#374151;
 
 outline:none;
 
@@ -208,37 +222,12 @@ border-color:#3b82f6;
 
 box-shadow:
 
-0 0 10px
+0 0 12px
 rgba(59,130,246,.35);
 
 }
 
-.section{
-
-margin-top:28px;
-
-padding-top:22px;
-
-border-top:
-
-1px solid
-#374151;
-
-}
-
-.section h2{
-
-font-size:20px;
-
-margin-bottom:18px;
-
-color:#fff;
-
-}
-
 .btn{
-
-width:100%;
 
 height:50px;
 
@@ -246,38 +235,27 @@ border:none;
 
 border-radius:12px;
 
-font-size:16px;
+cursor:pointer;
+
+font-size:15px;
 
 font-weight:600;
 
-cursor:pointer;
-
-transition:.3s;
+transition:.25s;
 
 }
 
 .btn:hover{
 
-transform:translateY(-2px);
+transform:
+translateY(-2px);
 
 }
 
-.green{
+.primary{
 
 background:
-linear-gradient(
-90deg,
-#22c55e,
-#16a34a
-);
 
-color:#fff;
-
-}
-
-.blue{
-
-background:
 linear-gradient(
 90deg,
 #2563eb,
@@ -288,17 +266,113 @@ color:#fff;
 
 }
 
-@media(max-width:700px){
+.success{
 
-.header h1{
+background:
 
-font-size:26px;
+linear-gradient(
+90deg,
+#22c55e,
+#16a34a
+);
+
+color:#fff;
+
+}
+
+.warning{
+
+background:
+
+linear-gradient(
+90deg,
+#f59e0b,
+#d97706
+);
+
+color:#fff;
+
+}
+
+.danger{
+
+background:
+
+linear-gradient(
+90deg,
+#ef4444,
+#dc2626
+);
+
+color:#fff;
+
+}
+
+.toggle{
+
+display:flex;
+
+justify-content:center;
+
+margin-bottom:20px;
+
+}
+
+.toggle button{
+
+width:230px;
+
+height:50px;
+
+border:none;
+
+border-radius:30px;
+
+font-size:16px;
+
+font-weight:700;
+
+cursor:pointer;
+
+background:
+
+linear-gradient(
+90deg,
+#22c55e,
+#16a34a
+);
+
+color:#fff;
+
+}
+
+@media(max-width:768px){
+
+.header{
+
+justify-content:center;
+
+text-align:center;
+
+gap:12px;
+
+}
+
+.logo{
+
+font-size:24px;
 
 }
 
 .row{
 
 flex-direction:column;
+
+}
+
+.col{
+
+min-width:100%;
 
 }
 
@@ -314,9 +388,31 @@ flex-direction:column;
 
 <div class="header">
 
-<h1>Multi Add Provider & Service</h1>
+<div class="logo">
+ SMM Panel
+</div>
 
-<p>Professional SMM Panel Manager</p>
+<div class="version">
+Professional v2.0
+</div>
+
+</div>
+
+<div class="content">
+  <div class="card">
+
+<div
+style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+gap:15px;
+margin-bottom:20px;">
+
+<div class="card-title">
+
+📦 Service Manager
 
 </div>
 
@@ -330,15 +426,27 @@ id="modeBtn">
 </button>
 
 </div>
+
+</div>
+
 <div class="row">
 
 <div class="col">
 
-<label>Provider</label>
+<label>
 
-<select id="provider">
+Provider
 
-<option value="">Select Provider</option>
+</label>
+
+<select
+id="provider">
+
+<option value="">
+
+Select Provider
+
+</option>
 
 </select>
 
@@ -346,12 +454,16 @@ id="modeBtn">
 
 <div class="col">
 
-<label>Provider Service ID</label>
+<label>
+
+Provider Service ID
+
+</label>
 
 <input
 type="number"
 id="provider_service_id"
-placeholder="Service ID">
+placeholder="5025">
 
 </div>
 
@@ -361,23 +473,31 @@ placeholder="Service ID">
 
 <div class="col">
 
-<label>Service Name</label>
+<label>
+
+Service Name
+
+</label>
 
 <input
 type="text"
 id="name"
-placeholder="Service Name">
+placeholder=".view">
 
 </div>
 
 <div class="col">
 
-<label>Category</label>
+<label>
+
+Category
+
+</label>
 
 <input
 type="text"
 id="category"
-placeholder="Category">
+placeholder=".view">
 
 </div>
 
@@ -387,18 +507,27 @@ placeholder="Category">
 
 <div class="col">
 
-<label>Rate</label>
+<label>
+
+Rate
+
+</label>
 
 <input
 type="number"
+step="0.0001"
 id="rate"
-placeholder="0.00">
+placeholder="0">
 
 </div>
 
 <div class="col">
 
-<label>Minimum</label>
+<label>
+
+Minimum
+
+</label>
 
 <input
 type="number"
@@ -409,7 +538,11 @@ placeholder="500">
 
 <div class="col">
 
-<label>Maximum</label>
+<label>
+
+Maximum
+
+</label>
 
 <input
 type="number"
@@ -425,7 +558,7 @@ placeholder="1000">
 <div class="col">
 
 <button
-class="btn blue"
+class="btn primary"
 id="saveService">
 
 💾 Save Service
@@ -437,9 +570,8 @@ id="saveService">
 <div class="col">
 
 <button
-class="btn"
-id="updateService"
-style="background:#f59e0b;color:#fff;">
+class="btn warning"
+id="updateService">
 
 ✏️ Update Service
 
@@ -450,9 +582,8 @@ style="background:#f59e0b;color:#fff;">
 <div class="col">
 
 <button
-class="btn"
-id="deleteService"
-style="background:#ef4444;color:#fff;">
+class="btn danger"
+id="deleteService">
 
 🗑 Delete Service
 
@@ -462,15 +593,24 @@ style="background:#ef4444;color:#fff;">
 
 </div>
 
-<div class="section">
+</div>
 
-<h2>Add Provider</h2>
+<div class="card">
 
+<div class="card-title">
+
+🔗 Provider Manager
+
+</div>
 <div class="row">
 
 <div class="col">
 
-<label>Provider Name</label>
+<label>
+
+Provider Name
+
+</label>
 
 <input
 type="text"
@@ -481,7 +621,11 @@ placeholder="HyperPanel">
 
 <div class="col">
 
-<label>API URL</label>
+<label>
+
+API URL
+
+</label>
 
 <input
 type="text"
@@ -496,12 +640,16 @@ value="https://hyperpanel.in/api/v2">
 
 <div class="col">
 
-<label>API Key</label>
+<label>
+
+API Key
+
+</label>
 
 <input
-type="text"
+type="password"
 id="api_key"
-placeholder="Enter API Key">
+placeholder="Enter HyperPanel API Key">
 
 </div>
 
@@ -512,12 +660,85 @@ placeholder="Enter API Key">
 <div class="col">
 
 <button
-class="btn green"
+class="btn success"
 id="addProvider">
 
 ➕ Add Provider
 
 </button>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div
+style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+gap:15px;
+margin-bottom:20px;">
+
+<div class="card-title">
+
+📋 Service Search
+
+</div>
+
+<button
+class="btn primary"
+id="refreshServices"
+style="width:180px;">
+
+🔄 Refresh
+
+</button>
+
+</div>
+
+<div class="row">
+
+<div class="col">
+
+<label>
+
+Search Service
+
+</label>
+
+<input
+type="text"
+id="searchService"
+placeholder="Search by ID, Name or Category...">
+
+</div>
+
+</div>
+
+<div
+id="serviceList"
+style="
+max-height:450px;
+overflow:auto;
+border-radius:12px;
+border:1px solid #374151;
+background:#111827;
+padding:10px;">
+
+<p
+style="
+text-align:center;
+color:#94a3b8;
+padding:30px;">
+
+No services loaded.
+
+</p>
 
 </div>
 
@@ -529,14 +750,18 @@ const API =
 "https://gowind-smm-panel-v3.onrender.com";
 
 let mode = "auto";
+
+let allServices = [];
+
+let selectedService = null;
   /* ===========================
-   JavaScript
+   AUTO / MANUAL MODE
 =========================== */
 
 const modeBtn =
 document.getElementById("modeBtn");
 
-modeBtn.onclick = ()=>{
+modeBtn.onclick=()=>{
 
 if(mode==="auto"){
 
@@ -545,12 +770,18 @@ mode="manual";
 modeBtn.innerHTML=
 "⚪ Manual Fill";
 
-document.getElementById("provider_service_id").value="";
-document.getElementById("name").value="";
-document.getElementById("category").value="";
-document.getElementById("rate").value="";
-document.getElementById("min").value="";
-document.getElementById("max").value="";
+[
+"provider_service_id",
+"name",
+"category",
+"rate",
+"min",
+"max"
+].forEach(id=>{
+
+document.getElementById(id).value="";
+
+});
 
 }else{
 
@@ -559,89 +790,313 @@ mode="auto";
 modeBtn.innerHTML=
 "🟢 Auto Fill";
 
+if(selectedService){
+
+fillForm(selectedService);
+
+}
+
 }
 
 };
 
 /* ===========================
-   Live Category Update
+   LIVE CATEGORY UPDATE
 =========================== */
 
 document
 .getElementById("name")
-.addEventListener("input",()=>{
+.addEventListener(
+"input",
+e=>{
+
+if(mode==="manual"){
 
 document
 .getElementById("category")
 .value=
-document
-.getElementById("name")
-.value;
+e.target.value;
 
-});
+}
+
+}
+);
 
 /* ===========================
-   Load Providers
+   LOAD PROVIDERS
 =========================== */
 
 async function loadProviders(){
 
 try{
 
-const res =
+const res=
 await fetch(
 API+"/api/providers"
 );
 
-const data =
+const data=
 await res.json();
 
-const select =
+const provider=
 document.getElementById(
 "provider"
 );
 
-select.innerHTML =
+provider.innerHTML=
 '<option value="">Select Provider</option>';
 
 (data.providers||[])
 .forEach(p=>{
 
-select.innerHTML +=
+provider.innerHTML+=`
 
-`<option value="${p.id}">
+<option value="${p.id}">
 ${p.name}
-</option>`;
+</option>
+
+`;
 
 });
 
 }catch(err){
 
-console.log(err);
+console.error(err);
 
 }
 
 }
 
 /* ===========================
-   Auto Fill
+   FILL FORM
+=========================== */
+
+function fillForm(service){
+
+selectedService=service;
+
+document.getElementById(
+"provider"
+).value=
+service.provider_id||"";
+
+document.getElementById(
+"provider_service_id"
+).value=
+service.provider_service_id||"";
+
+document.getElementById(
+"name"
+).value=
+service.name||"";
+
+document.getElementById(
+"category"
+).value=
+service.category||"";
+
+document.getElementById(
+"rate"
+).value=
+service.rate||0;
+
+document.getElementById(
+"min"
+).value=
+service.min||"";
+
+document.getElementById(
+"max"
+).value=
+service.max||"";
+
+}
+  /* ===========================
+   LOAD SERVICES
+=========================== */
+
+async function loadServices(){
+
+try{
+
+const res=
+await fetch(
+API+"/api/services"
+);
+
+const data=
+await res.json();
+
+allServices=
+data.services||[];
+
+renderServices(
+allServices
+);
+
+}catch(err){
+
+console.error(err);
+
+}
+
+}
+
+/* ===========================
+   RENDER SERVICES
+=========================== */
+
+function renderServices(list){
+
+const box=
+document.getElementById(
+"serviceList"
+);
+
+if(list.length===0){
+
+box.innerHTML=`
+
+<p style="
+text-align:center;
+padding:30px;
+color:#94a3b8;
+">
+
+No Services Found
+
+</p>
+
+`;
+
+return;
+
+}
+
+box.innerHTML="";
+
+list.forEach(service=>{
+
+box.innerHTML+=`
+
+<div
+class="service-item"
+onclick="fillForm(${JSON.stringify(service).replace(/"/g,'&quot;')})"
+style="
+background:#1f2937;
+border:1px solid #374151;
+border-radius:12px;
+padding:15px;
+margin-bottom:12px;
+cursor:pointer;
+transition:.25s;
+">
+
+<b>
+
+${service.provider_service_id}
+
+</b>
+
+<br>
+
+${service.name}
+
+<br>
+
+<small
+style="color:#94a3b8;">
+
+${service.category}
+
+</small>
+
+</div>
+
+`;
+
+});
+
+}
+
+/* ===========================
+   SEARCH SERVICE
+=========================== */
+
+document
+.getElementById(
+"searchService"
+)
+.addEventListener(
+"input",
+e=>{
+
+const key=
+e.target.value
+.toLowerCase()
+.trim();
+
+const filtered=
+allServices.filter(s=>
+
+String(
+s.provider_service_id
+)
+.includes(key)
+
+||
+
+(s.name||"")
+.toLowerCase()
+.includes(key)
+
+||
+
+(s.category||"")
+.toLowerCase()
+.includes(key)
+
+);
+
+renderServices(
+filtered
+);
+
+}
+);
+
+/* ===========================
+   REFRESH SERVICES
+=========================== */
+
+document
+.getElementById(
+"refreshServices"
+)
+.onclick=()=>{
+
+loadServices();
+
+};
+  /* ===========================
+   AUTO FILL FROM PROVIDER
 =========================== */
 
 async function autoFill(){
 
 if(mode!=="auto") return;
 
-const provider =
+const provider=
 document.getElementById("provider").value;
 
-const serviceId =
+const serviceId=
 document.getElementById("provider_service_id").value;
 
 if(!provider || !serviceId) return;
 
 try{
 
-const res =
+const res=
 await fetch(
 
 API+
@@ -651,12 +1106,11 @@ provider+
 
 );
 
-const data =
+const data=
 await res.json();
 
-const item =
+const item=
 (data.services||[])
-
 .find(x=>
 
 String(x.service)===
@@ -671,24 +1125,24 @@ return;
 
 }
 
-document.getElementById("name").value =
-item.name || "";
+document.getElementById("name").value=
+item.name||"";
 
-document.getElementById("category").value =
-item.category || "";
+document.getElementById("category").value=
+item.category||"";
 
-document.getElementById("rate").value =
-item.rate || 0;
+document.getElementById("rate").value=
+item.rate||0;
 
-document.getElementById("min").value =
-item.min || "";
+document.getElementById("min").value=
+item.min||"";
 
-document.getElementById("max").value =
-item.max || "";
+document.getElementById("max").value=
+item.max||"";
 
 }catch(err){
 
-console.log(err);
+console.error(err);
 
 }
 
@@ -696,28 +1150,33 @@ console.log(err);
 
 document
 .getElementById("provider")
-.onchange = autoFill;
+.onchange=autoFill;
 
 document
 .getElementById("provider_service_id")
-.oninput = autoFill;
-  /* ===========================
-   Add Provider
+.oninput=autoFill;
+
+/* ===========================
+   ADD PROVIDER
 =========================== */
 
 document
 .getElementById("addProvider")
-.onclick = async()=>{
+.onclick=async()=>{
 
 try{
 
-const res = await fetch(
+const res=
+await fetch(
 API+"/api/providers",
 {
+
 method:"POST",
+
 headers:{
 "Content-Type":"application/json"
 },
+
 body:JSON.stringify({
 
 name:
@@ -730,11 +1189,19 @@ api_key:
 document.getElementById("api_key").value.trim()
 
 })
+
 });
 
-const data = await res.json();
+const data=
+await res.json();
 
-alert(data.message || "Provider Added");
+alert(
+data.message||
+"Provider Added Successfully"
+);
+
+document.getElementById("provider_name").value="";
+document.getElementById("api_key").value="";
 
 loadProviders();
 
@@ -747,22 +1214,26 @@ alert(err.message);
 };
 
 /* ===========================
-   Save Service
+   SAVE SERVICE
 =========================== */
 
 document
 .getElementById("saveService")
-.onclick = async()=>{
+.onclick=async()=>{
 
 try{
 
-const res = await fetch(
+const res=
+await fetch(
 API+"/api/services",
 {
+
 method:"POST",
+
 headers:{
 "Content-Type":"application/json"
 },
+
 body:JSON.stringify({
 
 provider_id:Number(
@@ -789,14 +1260,105 @@ document.getElementById("min").value
 
 max:Number(
 document.getElementById("max").value
+)
 
 })
 
 });
 
-const data = await res.json();
+const data=
+await res.json();
 
-alert(data.message || "Service Saved");
+alert(
+data.message||
+"Service Saved Successfully"
+);
+
+loadServices();
+
+}catch(err){
+
+alert(err.message);
+
+}
+
+};
+  /* ===========================
+   UPDATE SERVICE
+=========================== */
+
+document
+.getElementById("updateService")
+.onclick=async()=>{
+
+if(!selectedService){
+
+alert("Select a service first");
+
+return;
+
+}
+
+try{
+
+const res=
+await fetch(
+
+API+
+"/api/services/"+
+selectedService.id,
+
+{
+
+method:"PUT",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+provider_id:Number(
+document.getElementById("provider").value
+),
+
+provider_service_id:Number(
+document.getElementById("provider_service_id").value
+),
+
+name:
+document.getElementById("name").value.trim(),
+
+category:
+document.getElementById("category").value.trim(),
+
+rate:Number(
+document.getElementById("rate").value
+),
+
+min:Number(
+document.getElementById("min").value
+),
+
+max:Number(
+document.getElementById("max").value
+),
+
+status:true
+
+})
+
+});
+
+const data=
+await res.json();
+
+alert(
+data.message||
+"Service Updated Successfully"
+);
+
+loadServices();
 
 }catch(err){
 
@@ -807,35 +1369,83 @@ alert(err.message);
 };
 
 /* ===========================
-   Update Service
-=========================== */
-
-document
-.getElementById("updateService")
-.onclick=()=>{
-
-alert(
-"Update API Pending"
-);
-
-};
-
-/* ===========================
-   Delete Service
+   DELETE SERVICE
 =========================== */
 
 document
 .getElementById("deleteService")
-.onclick=()=>{
+.onclick=async()=>{
+
+if(!selectedService){
+
+alert("Select a service first");
+
+return;
+
+}
+
+if(
+!confirm(
+"Delete this service?"
+)
+){
+
+return;
+
+}
+
+try{
+
+const res=
+await fetch(
+
+API+
+"/api/services/"+
+selectedService.id,
+
+{
+
+method:"DELETE"
+
+}
+
+);
+
+const data=
+await res.json();
 
 alert(
-"Delete API Pending"
+data.message||
+"Service Deleted Successfully"
 );
+
+selectedService=null;
+
+[
+"provider_service_id",
+"name",
+"category",
+"rate",
+"min",
+"max"
+].forEach(id=>{
+
+document.getElementById(id).value="";
+
+});
+
+loadServices();
+
+}catch(err){
+
+alert(err.message);
+
+}
 
 };
 
 /* ===========================
-   Page Load
+   PAGE LOAD
 =========================== */
 
 window.onload=()=>{
@@ -845,6 +1455,8 @@ document
 "https://hyperpanel.in/api/v2";
 
 loadProviders();
+
+loadServices();
 
 };
 
