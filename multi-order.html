@@ -653,6 +653,8 @@ quantity:quantity
 }
 );
 
+const data = await res.json();
+
 if(res.ok){
 
 success++;
@@ -661,7 +663,9 @@ success++;
 
 failed++;
 
-}
+alert(data.message || JSON.stringify(data));
+
+    }
 
 }
 
