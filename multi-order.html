@@ -315,10 +315,16 @@ await fetch(API+"/api/services/user");
 const data =
 await res.json();
 
-allServices =
-data.services || [];
+allServices = data.services || [];
 
-renderServices(allServices);
+const value = search.value.toLowerCase();
+
+const filtered = allServices.filter(service =>
+    service.name.toLowerCase().includes(value) ||
+    (service.category || "").toLowerCase().includes(value)
+);
+
+renderServices(filtered);
 
 }catch(err){
 
