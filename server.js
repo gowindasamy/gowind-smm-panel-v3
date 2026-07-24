@@ -560,33 +560,37 @@ app.put("/api/services/:id", async (req, res) => {
     try {
 
         const {
-            name,
-            category,
-            rate,
-            min,
-            max,
-            status
-        } = req.body;
-
-        await db.query(
-            `UPDATE services
-             SET
-                name = $1,
-                category = $2,
-                rate = $3,
-                min = $4,
-                max = $5,
-                status = $6
-             WHERE id = $7`,
+    provider_id,
+    provider_service_id,
+    name,
+    category,
+    rate,
+    min,
+    max,
+    status
+} = req.body;
+        UPDATE services
+SET
+provider_id=$1,
+provider_service_id=$2,
+name=$3,
+category=$4,
+rate=$5,
+min=$6,
+max=$7,
+status=$8
+WHERE id=$9,
             [
-                name,
-                category,
-                rate,
-                min,
-                max,
-                status,
-                req.params.id
-            ]
+provider_id,
+provider_service_id,
+name,
+category,
+rate,
+min,
+max,
+status,
+req.params.id
+]
         );
 
         res.json({
