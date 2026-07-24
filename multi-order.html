@@ -637,35 +637,13 @@ let failed = 0;
 
 for(const item of selected){
 
-const res = await fetch(
-API + "/api/orders",
-{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-user_id:user.id,
-service_id:item.value,
-link:link,
-quantity:quantity
-})
-}
-);
-
-const data = await res.json();
+const res = await fetch(...);
 
 if(res.ok){
-
-success++;
-
+  success++;
 }else{
-
-failed++;
-
-alert(data.message || JSON.stringify(data));
-
-    }
+  failed++;
+}
 
 }
 
