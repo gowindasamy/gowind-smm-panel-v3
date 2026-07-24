@@ -631,65 +631,52 @@ alert("Select at least one service");
 return;
 
   }
-  for(const item of selected){
+  let success = 0;
 
-const res=
+let failed = 0;
 
-await fetch(
+for(const item of selected){
 
-API+"/api/orders",
-
+const res = await fetch(
+API + "/api/orders",
 {
-
 method:"POST",
-
 headers:{
-
 "Content-Type":"application/json"
-
 },
-
 body:JSON.stringify({
-
 user_id:user.id,
-
 service_id:item.value,
-
 link:link,
-
 quantity:quantity
-
 })
+}
+);
+
+if(res.ok){
+
+success++;
+
+}else{
+
+failed++;
 
 }
 
-);
+}
 
-const data=
+if(failed===0){
 
-await res.json();
+alert("All Orders Placed Successfully");
 
-if(!res.ok){
+}else{
 
 alert(
-
-data.message||
-
-"Order Failed"
-
+"Success : " + success +
+"\nFailed : " + failed
 );
 
-return;
-
 }
-
-}
-
-alert(
-
-"All Orders Placed Successfully"
-
-);
 
 });
 
