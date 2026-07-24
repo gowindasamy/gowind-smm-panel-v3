@@ -14,280 +14,164 @@ content="width=device-width, initial-scale=1.0">
 <style>
 
 *{
-
 margin:0;
-
 padding:0;
-
 box-sizing:border-box;
-
 font-family:Arial,sans-serif;
-
 }
 
 body{
-
 background:#0f172a;
-
 color:#fff;
-
 padding:20px;
-
 }
 
 .container{
-
 max-width:900px;
-
 margin:auto;
-
 background:#1e293b;
-
 padding:25px;
-
 border-radius:20px;
-
 box-shadow:0 0 20px rgba(0,0,0,.35);
-
 }
 
 #siteName{
-
 text-align:center;
-
 margin-bottom:25px;
-
 font-size:30px;
-
 color:#38bdf8;
-
 }
 
 label{
-
 display:block;
-
 margin-top:18px;
-
 margin-bottom:8px;
-
 font-size:15px;
-
 font-weight:bold;
-
 }
 
 input[type="text"],
-
 input[type="number"]{
-
 width:100%;
-
 padding:14px;
-
 border:none;
-
 outline:none;
-
 border-radius:12px;
-
 background:#334155;
-
 color:#fff;
-
 font-size:15px;
-
 }
 
 input::placeholder{
-
 color:#cbd5e1;
-
 }
 
 .search-box{
-
 margin-top:20px;
-
 }
 
 .select-all{
-
 display:flex;
-
 align-items:center;
-
 gap:10px;
-
 margin:20px 0;
-
 }
 
 .switch{
-
 position:relative;
-
 display:inline-block;
-
 width:52px;
-
 height:28px;
-
 }
 
 .switch input{
-
 opacity:0;
-
 width:0;
-
 height:0;
-
 }
 
 .slider{
-
 position:absolute;
-
 cursor:pointer;
-
 top:0;
-
 left:0;
-
 right:0;
-
 bottom:0;
-
 background:#64748b;
-
 transition:.3s;
-
 border-radius:34px;
-
 }
 
 .slider:before{
-
 position:absolute;
-
 content:"";
-
 height:22px;
-
 width:22px;
-
 left:3px;
-
 bottom:3px;
-
 background:#fff;
-
 border-radius:50%;
-
 transition:.3s;
-
 }
 
 .switch input:checked + .slider{
-
 background:#22c55e;
-
 }
 
 .switch input:checked + .slider:before{
-
 transform:translateX(24px);
-
 }
-  .services{
 
+.services{
 margin-top:15px;
-
 background:#0f172a;
-
 border:1px solid #334155;
-
 border-radius:15px;
-
 max-height:400px;
-
 overflow-y:auto;
-
 }
 
 .service-item{
-
 display:flex;
-
 align-items:center;
-
 justify-content:space-between;
-
 padding:14px;
-
 border-bottom:1px solid #334155;
-
 }
 
 .service-item:last-child{
-
 border-bottom:none;
-
 }
 
 .service-name{
-
 flex:1;
-
 font-size:15px;
-
 margin-right:15px;
-
 }
 
 .selected-count{
-
 margin-top:20px;
-
 font-size:16px;
-
 font-weight:bold;
-
 color:#38bdf8;
-
 }
 
 .place-order{
-
 width:100%;
-
 margin-top:25px;
-
 padding:16px;
-
 border:none;
-
 border-radius:14px;
-
 background:#22c55e;
-
 color:#fff;
-
 font-size:17px;
-
 font-weight:bold;
-
 cursor:pointer;
-
 transition:.3s;
-
 }
 
 .place-order:hover{
-
 background:#16a34a;
-
 }
 
 </style>
@@ -299,53 +183,30 @@ background:#16a34a;
 <div class="container">
 
 <h1 id="siteName">
-
 Loading...
-
 </h1>
 
-<label>
-
-Link
-
-</label>
+<label>Link</label>
 
 <input
-
 type="text"
-
 id="link"
-
 placeholder="Paste Link">
 
-<label>
-
-Quantity
-
-</label>
+<label>Quantity</label>
 
 <input
-
 type="number"
-
 id="quantity"
-
 placeholder="Enter Quantity">
 
 <div class="search-box">
 
-<label>
-
-Search Service
-
-</label>
+<label>Search Service</label>
 
 <input
-
 type="text"
-
 id="search"
-
 placeholder="Search Service">
 
 </div>
@@ -353,51 +214,34 @@ placeholder="Search Service">
 <div class="select-all">
 
 <input
-
 type="checkbox"
-
 id="selectAll">
 
 <label for="selectAll">
-
 Select All
-
 </label>
 
 </div>
 
 <div
-
 class="services"
-
 id="services">
-
 </div>
+
 <div
-
 class="selected-count"
-
 id="selectedCount">
-
 Selected : 0 Services
-
 </div>
 
 <button
-
 class="place-order"
-
 id="placeOrder">
-
 Place All Orders
-
 </button>
 
-</div>
-
 <script>
-
-const API =
+  const API =
 "https://gowind-smm-panel-v3.onrender.com";
 
 const siteName =
@@ -420,37 +264,53 @@ document.getElementById("placeOrder");
 
 let allServices = [];
 
+/* ===========================
+   LOAD SETTINGS
+=========================== */
+
 async function loadSettings(){
 
 try{
 
 const res =
-await fetch(
-API + "/api/settings"
-);
+await fetch(API+"/api/settings");
 
 const data =
 await res.json();
 
-siteName.innerText =
-data.site_name ||
-"Multi Order";
+if(data.success){
 
-}catch{
+siteName.innerText =
+data.settings.site_name;
+
+}else{
 
 siteName.innerText =
 "Multi Order";
 
 }
 
+}catch(err){
+
+siteName.innerText =
+"Multi Order";
+
+console.log(err);
+
 }
+
+}
+
+/* ===========================
+   LOAD SERVICES
+=========================== */
 
 async function loadServices(){
 
+try{
+
 const res =
-await fetch(
-API + "/api/services"
-);
+await fetch(API+"/api/services/user");
 
 const data =
 await res.json();
@@ -458,18 +318,38 @@ await res.json();
 allServices =
 data.services || [];
 
-renderServices(
-allServices
-);
+renderServices(allServices);
+
+}catch(err){
+
+servicesDiv.innerHTML =
+"<div style='padding:20px;text-align:center'>Failed to load services</div>";
+
+console.log(err);
+
+}
 
 }
 
 loadSettings();
-
 loadServices();
-  function renderServices(list){
+
+/* ===========================
+   RENDER SERVICES
+=========================== */
+
+function renderServices(list){
 
 servicesDiv.innerHTML="";
+
+if(list.length===0){
+
+servicesDiv.innerHTML=
+"<div style='padding:20px;text-align:center'>No Services Found</div>";
+
+return;
+
+}
 
 list.forEach(service=>{
 
@@ -486,11 +366,8 @@ ${service.name}
 <label class="switch">
 
 <input
-
 type="checkbox"
-
 class="serviceCheck"
-
 value="${service.id}">
 
 <span class="slider"></span>
@@ -505,22 +382,27 @@ value="${service.id}">
 
 updateCount();
 
-}
+  }
+  /* ===========================
+   SEARCH
+=========================== */
 
 search.addEventListener("input",()=>{
 
-const value=
-
+const value =
 search.value.toLowerCase();
 
-const filtered=
-
+const filtered =
 allServices.filter(service=>
 
 service.name
-
 .toLowerCase()
+.includes(value)
 
+||
+
+(service.category||"")
+.toLowerCase()
 .includes(value)
 
 );
@@ -529,16 +411,17 @@ renderServices(filtered);
 
 });
 
+/* ===========================
+   SELECT ALL
+=========================== */
+
 selectAll.addEventListener("change",()=>{
 
 document
-
 .querySelectorAll(".serviceCheck")
-
 .forEach(box=>{
 
-box.checked=
-
+box.checked =
 selectAll.checked;
 
 });
@@ -546,12 +429,11 @@ selectAll.checked;
 updateCount();
 
 });
-  document.addEventListener("change",e=>{
+
+document.addEventListener("change",e=>{
 
 if(
-
 e.target.classList.contains("serviceCheck")
-
 ){
 
 updateCount();
@@ -562,34 +444,29 @@ updateCount();
 
 function updateCount(){
 
-const total=
+const total =
 
-document
-
-.querySelectorAll(
-
+document.querySelectorAll(
 ".serviceCheck:checked"
-
 ).length;
 
-selectedCount.innerText=
-
-"Selected : "+
-
-total+
-
+selectedCount.innerText =
+"Selected : " +
+total +
 " Services";
 
 }
 
+/* ===========================
+   PLACE ORDER
+=========================== */
+
 placeOrder.addEventListener("click",async()=>{
 
-const link=
-
+const link =
 document.getElementById("link").value.trim();
 
-const quantity=
-
+const quantity =
 document.getElementById("quantity").value;
 
 if(!link || !quantity){
@@ -600,12 +477,9 @@ return;
 
 }
 
-const user=
-
+const user =
 JSON.parse(
-
 localStorage.getItem("user")
-
 );
 
 if(!user){
@@ -616,12 +490,10 @@ return;
 
 }
 
-const selected=
+const selected =
 
 document.querySelectorAll(
-
 ".serviceCheck:checked"
-
 );
 
 if(selected.length===0){
@@ -630,37 +502,79 @@ alert("Select at least one service");
 
 return;
 
-  }
-  let success = 0;
+}
 
+let success = 0;
 let failed = 0;
 
 for(const item of selected){
+  const res = await fetch(
+API + "/api/orders",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
 
-const res = await fetch(...);
+user_id:user.id,
 
-if(res.ok){
-  success++;
+service_id:Number(
+item.value
+),
+
+link:link,
+
+quantity:Number(
+quantity
+)
+
+})
+
+});
+
+const data =
+await res.json();
+
+if(data.success){
+
+success++;
+
 }else{
-  failed++;
+
+failed++;
+
+console.log(data);
+
 }
 
 }
 
 if(failed===0){
 
-alert("All Orders Placed Successfully");
+alert(
+"✅ All Orders Placed Successfully"
+);
 
 }else{
 
 alert(
+
 "Success : " + success +
+
 "\nFailed : " + failed
+
 );
 
 }
 
 });
+
+/* ===========================
+   AUTO REFRESH
+=========================== */
+
+setInterval(loadServices,30000);
 
 </script>
 
