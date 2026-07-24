@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Multi Order</title>
+
+<style>
+
+*{
+
+margin:0;
+
+padding:0;
+
+box-sizing:border-box;
+
+font-family:Arial,sans-serif;
+
+}
+
+body{
+
+background:#0f172a;
+
+color:#fff;
+
+padding:20px;
+
+}
+
+.container{
+
+max-width:900px;
+
+margin:auto;
+
+background:#1e293b;
+
+border-radius:20px;
+
+padding:25px;
+
+box-shadow:0 0 20px rgba(0,0,0,.35);
+
+}
+
+h1{
+
+text-align:center;
+
+margin-bottom:25px;
+
+font-size:30px;
+
+color:#38bdf8;
+
+}
+
+label{
+
+display:block;
+
+margin-top:18px;
+
+margin-bottom:8px;
+
+font-size:15px;
+
+font-weight:bold;
+
+}
+
+input{
+
+width:100%;
+
+padding:14px;
+
+border:none;
+
+border-radius:12px;
+
+background:#334155;
+
+color:#fff;
+
+font-size:15px;
+
+outline:none;
+
+}
+
+input::placeholder{
+
+color:#cbd5e1;
+
+}
+
+.search-box{
+
+margin-top:20px;
+
+}
+
+.switch-row{
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+margin-top:25px;
+
+margin-bottom:20px;
+
+}
+
+.switch-row span{
+
+font-size:16px;
+
+font-weight:bold;
+
+}
+
+.switch{
+
+position:relative;
+
+width:70px;
+
+height:36px;
+
+}
+
+.switch input{
+
+display:none;
+
+}
+.switch-slider{
+
+position:absolute;
+
+top:0;
+
+left:0;
+
+right:0;
+
+bottom:0;
+
+background:#94a3b8;
+
+border-radius:50px;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.switch-slider:before{
+
+content:"";
+
+position:absolute;
+
+width:28px;
+
+height:28px;
+
+left:4px;
+
+top:4px;
+
+background:#fff;
+
+border-radius:50%;
+
+transition:.3s;
+
+}
+
+.switch input:checked + .switch-slider{
+
+background:#d400ff;
+
+}
+
+.switch input:checked + .switch-slider:before{
+
+transform:translateX(34px);
+
+}
+
+.services{
+
+background:#0f172a;
+
+border-radius:15px;
+
+padding:15px;
+
+max-height:420px;
+
+overflow-y:auto;
+
+border:1px solid #334155;
+
+}
+
+.service-item{
+
+display:flex;
+
+align-items:center;
+
+padding:12px;
+
+border-bottom:1px solid #334155;
+
+}
+
+.service-item:last-child{
+
+border-bottom:none;
+
+}
+
+.service-item input[type="checkbox"]{
+
+width:22px;
+
+height:22px;
+
+margin-right:15px;
+
+cursor:pointer;
+
+}
+
+.service-name{
+
+flex:1;
+
+font-size:15px;
+
+}
+
+.selected-count{
+
+margin-top:20px;
+
+font-size:16px;
+
+font-weight:bold;
+
+color:#38bdf8;
+
+}
+.place-order{
+
+width:100%;
+
+margin-top:25px;
+
+padding:16px;
+
+border:none;
+
+border-radius:14px;
+
+background:#d400ff;
+
+color:#fff;
+
+font-size:17px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.place-order:hover{
+
+background:#b300d6;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Multi Order</h1>
+
+<label>Link</label>
+
+<input
+type="text"
+id="link"
+placeholder="Paste Link">
+
+<label>Quantity</label>
+
+<input
+type="number"
+id="quantity"
+placeholder="Enter Quantity">
+
+<div class="search-box">
+
+<label>Search Service</label>
+
+<input
+type="text"
+id="search"
+placeholder="Search Service...">
+
+</div>
+
+<div class="switch-row">
+
+<span>Select All</span>
+
+<label class="switch">
+<div class="service-item">
+
+<input
+type="checkbox"
+class="serviceCheck"
+value="1">
+
+<div class="service-name">
+Instagram Followers
+</div>
+
+</div>
+
+<div class="service-item">
+
+<input
+type="checkbox"
+class="serviceCheck"
+value="2">
+
+<div class="service-name">
+Instagram Likes
+</div>
+
+</div>
+
+<div class="service-item">
+
+<input
+type="checkbox"
+class="serviceCheck"
+value="3">
+
+<div class="service-name">
+Instagram Views
+</div>
+
+</div>
+
+<div class="service-item">
+
+<input
+type="checkbox"
+class="serviceCheck"
+value="4">
+
+<div class="service-name">
+Instagram Reel Views
+</div>
+
+</div>
+
+<div class="service-item">
+
+<input
+type="checkbox"
+class="serviceCheck"
+value="5">
+
+<div class="service-name">
+Instagram Saves
+</div>
+
+</div>
+
+<div class="service-item">
+
+<input
+type="checkbox"
+class="serviceCheck"
+value="6">
+
+<div class="service-name">
+Instagram Story Views
+</div>
+
+</div>
+
+<div class="service-item">
+
+<input
+type="checkbox"
+class="serviceCheck"
+value="7">
+
+<div class="service-name">
+YouTube Views
+</div>
+
+</div>
+
+<div class="service-item">
+
+<input
+type="checkbox"
+class="serviceCheck"
+value="8">
+
+<div class="service-name">
+YouTube Likes
+</div>
+
+</div>
+<div class="service-item">
+
+<input
+type="checkbox"
+class="serviceCheck"
+value="9">
+
+<div class="service-name">
+YouTube Subscribers
+</div>
+
+</div>
+
+<div class="service-item">
+
+<input
+type="checkbox"
+class="serviceCheck"
+value="10">
+
+<div class="service-name">
+Telegram Members
+</div>
+
+</div>
+
+<div class="service-item">
+
+<input
+type="checkbox"
+class="serviceCheck"
+value="11">
+
+<div class="service-name">
+Telegram Post Views
+</div>
+
+</div>
+
+<div class="service-item">
+
+<input
+type="checkbox"
+class="serviceCheck"
+value="12">
+
+<div class="service-name">
+Facebook Followers
+</div>
+
+</div>
+
+<div class="service-item">
+
+<input
+type="checkbox"
+class="serviceCheck"
+value="13">
+
+<div class="service-name">
+Facebook Likes
+</div>
+
+</div>
+
+<div class="service-item">
+
+<input
+type="checkbox"
+class="serviceCheck"
+value="14">
+
+<div class="service-name">
+TikTok Followers
+</div>
+
+</div>
+
+<div class="service-item">
+
+<input
+type="checkbox"
+class="serviceCheck"
+value="15">
+
+<div class="service-name">
+TikTok Likes
+</div>
+
+</div>
+
+</div>
+
+<div
+class="selected-count"
+id="selectedCount">
+
+Selected : 0 Services
+
+</div>
+
+<button
+class="place-order"
+id="placeOrder">
+
+Place All Orders
+
+</button>
+
+</div>
+
+<script>
+const API =
+"https://gowind-smm-panel-v3.onrender.com";
+
+const servicesDiv =
+document.getElementById("services");
+
+const search =
+document.getElementById("search");
+
+const selectAll =
+document.getElementById("selectAll");
+
+const selectedCount =
+document.getElementById("selectedCount");
+
+const placeOrder =
+document.getElementById("placeOrder");
+
+async function loadServices(){
+
+try{
+
+const response =
+await fetch(
+API + "/api/services/user"
+);
+
+const data =
+await response.json();
+
+servicesDiv.innerHTML = "";
+
+data.forEach(service=>{
+
+servicesDiv.innerHTML += `
+
+<div class="service-item">
+
+<input
+type="checkbox"
+class="serviceCheck"
+value="${service.id}">
+
+<div
+class="service-name">
+
+${service.name}
+
+</div>
+
+</div>
+
+`;
+
+});
+
+updateCount();
+
+}catch(error){
+
+console.log(error);
+
+}
+
+}
+function updateCount(){
+
+const checked =
+document.querySelectorAll(
+".serviceCheck:checked"
+);
+
+selectedCount.textContent =
+"Selected : " +
+checked.length +
+" Services";
+
+}
+
+document.addEventListener(
+"change",
+function(e){
+
+if(
+e.target.classList.contains(
+"serviceCheck"
+)
+){
+
+updateCount();
+
+}
+
+}
+);
+
+selectAll.addEventListener(
+"change",
+function(){
+
+const checks =
+document.querySelectorAll(
+".serviceCheck"
+);
+
+checks.forEach(function(box){
+
+box.checked =
+selectAll.checked;
+
+});
+
+updateCount();
+
+}
+);
+
+search.addEventListener(
+"input",
+function(){
+
+const value =
+this.value.toLowerCase();
+
+document
+.querySelectorAll(
+".service-item"
+)
+.forEach(function(item){
+
+const text =
+item.innerText
+.toLowerCase();
+
+item.style.display =
+text.includes(value)
+? "flex"
+: "none";
+
+});
+
+}
+);
+
+<input
+type="checkbox"
+id="selectAll">
+
+<span
+class="switch-slider">
+</span>
+
+</label>
+
+</div>
+
+<div
+class="services"
+id="services">
+placeOrder.addEventListener(
+"click",
+async function(){
+
+const link =
+document
+.getElementById("link")
+.value
+.trim();
+
+const quantity =
+document
+.getElementById("quantity")
+.value;
+
+const selected =
+document
+.querySelectorAll(
+".serviceCheck:checked"
+);
+
+if(link===""){
+
+alert(
+"Please Enter Link"
+);
+
+return;
+
+}
+
+if(quantity===""){
+
+alert(
+"Please Enter Quantity"
+);
+
+return;
+
+}
+
+if(selected.length===0){
+
+alert(
+"Please Select Service"
+);
+
+return;
+
+}
+
+placeOrder.disabled =
+true;
+
+placeOrder.innerText =
+"Placing Orders...";
+
+for(const item of selected){
+
+try{
+
+await fetch(
+API + "/api/orders",
+{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":
+"application/json"
+
+},
+
+body:JSON.stringify({
+
+service_id:
+item.value,
+
+link:link,
+
+quantity:
+quantity
+
+})
+
+}
+
+);
+
+}catch(error){
+
+console.log(error);
+
+}
+
+}
+alert(
+selected.length +
+" Orders Placed Successfully"
+);
+
+placeOrder.disabled =
+false;
+
+placeOrder.innerText =
+"Place All Orders";
+
+document
+.getElementById("link")
+.value = "";
+
+document
+.getElementById("quantity")
+.value = "";
+
+document
+.querySelectorAll(
+".serviceCheck"
+)
+.forEach(function(box){
+
+box.checked = false;
+
+});
+
+selectAll.checked =
+false;
+
+updateCount();
+
+}
+);
+
+loadServices();
+
+</script>
+
+</body>
+
+</html>
