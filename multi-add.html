@@ -1,10 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Multi Add Service</title>
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Multi Add Provider & Service</title>
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
 
 <style>
 
@@ -12,80 +26,282 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Arial,sans-serif;
+font-family:"Poppins",sans-serif;
 }
 
 body{
-background:#f5f5f5;
+
+background:
+linear-gradient(
+135deg,
+#0f172a,
+#1e293b,
+#0f172a
+);
+
+min-height:100vh;
+
 padding:20px;
+
+color:#fff;
+
 }
 
 .container{
+
 max-width:900px;
+
 margin:auto;
-background:#fff;
-padding:20px;
-border-radius:10px;
-box-shadow:0 2px 10px rgba(0,0,0,.1);
+
+background:#111827;
+
+border-radius:18px;
+
+padding:25px;
+
+box-shadow:
+
+0 0 25px
+rgba(0,0,0,.45);
+
+border:
+
+1px solid
+rgba(255,255,255,.08);
+
 }
 
-h2{
+.header{
+
 text-align:center;
-margin-bottom:20px;
+
+margin-bottom:25px;
+
+}
+
+.header h1{
+
+font-size:32px;
+
+font-weight:700;
+
+color:#fff;
+
+}
+
+.header p{
+
+margin-top:8px;
+
+color:#94a3b8;
+
+font-size:14px;
+
+}
+
+.toggle{
+
+display:flex;
+
+justify-content:center;
+
+margin-bottom:25px;
+
+}
+
+.toggle button{
+
+width:220px;
+
+height:48px;
+
+border:none;
+
+border-radius:30px;
+
+font-size:16px;
+
+font-weight:600;
+
+cursor:pointer;
+
+transition:.3s;
+
+background:
+
+linear-gradient(
+90deg,
+#2563eb,
+#06b6d4
+);
+
+color:#fff;
+
 }
 
 .row{
+
 display:flex;
-gap:10px;
-margin-bottom:15px;
+
+gap:15px;
+
+margin-bottom:18px;
+
+flex-wrap:wrap;
+
 }
 
 .col{
+
 flex:1;
+
+min-width:220px;
+
 }
 
 label{
+
 display:block;
-margin-bottom:5px;
-font-weight:bold;
+
+margin-bottom:8px;
+
+font-size:14px;
+
+font-weight:600;
+
+color:#cbd5e1;
+
 }
 
 input,
 select{
+
 width:100%;
-padding:10px;
-border:1px solid #ccc;
-border-radius:6px;
-font-size:15px;
-}
 
-button{
+height:48px;
+
 padding:12px;
-border:none;
-border-radius:6px;
-cursor:pointer;
+
+border-radius:10px;
+
+border:
+
+1px solid
+#374151;
+
+background:#1f2937;
+
+color:#fff;
+
 font-size:15px;
+
+outline:none;
+
+transition:.25s;
+
 }
 
-.save{
-background:#2196F3;
+input:focus,
+select:focus{
+
+border-color:#3b82f6;
+
+box-shadow:
+
+0 0 10px
+rgba(59,130,246,.35);
+
+}
+
+.section{
+
+margin-top:28px;
+
+padding-top:22px;
+
+border-top:
+
+1px solid
+#374151;
+
+}
+
+.section h2{
+
+font-size:20px;
+
+margin-bottom:18px;
+
 color:#fff;
+
 }
 
-.provider{
-background:#4CAF50;
+.btn{
+
+width:100%;
+
+height:50px;
+
+border:none;
+
+border-radius:12px;
+
+font-size:16px;
+
+font-weight:600;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.btn:hover{
+
+transform:translateY(-2px);
+
+}
+
+.green{
+
+background:
+linear-gradient(
+90deg,
+#22c55e,
+#16a34a
+);
+
 color:#fff;
+
 }
 
-.mode{
-display:flex;
-gap:20px;
-margin-bottom:20px;
-font-weight:bold;
+.blue{
+
+background:
+linear-gradient(
+90deg,
+#2563eb,
+#06b6d4
+);
+
+color:#fff;
+
 }
 
-hr{
-margin:25px 0;
+@media(max-width:700px){
+
+.header h1{
+
+font-size:26px;
+
+}
+
+.row{
+
+flex-direction:column;
+
+}
+
 }
 
 </style>
@@ -96,29 +312,24 @@ margin:25px 0;
 
 <div class="container">
 
-<h2>Multi Add Provider & Service</h2>
+<div class="header">
 
-<div class="mode">
+<h1>Multi Add Provider & Service</h1>
 
-<label>
-<input
-type="radio"
-name="mode"
-value="auto"
-checked>
-Auto Fill
-</label>
-
-<label>
-<input
-type="radio"
-name="mode"
-value="manual">
-Manual Fill
-</label>
+<p>Professional SMM Panel Manager</p>
 
 </div>
 
+<div class="toggle">
+
+<button
+id="modeBtn">
+
+🟢 Auto Fill
+
+</button>
+
+</div>
 <div class="row">
 
 <div class="col">
@@ -127,9 +338,7 @@ Manual Fill
 
 <select id="provider">
 
-<option value="">
-Select Provider
-</option>
+<option value="">Select Provider</option>
 
 </select>
 
@@ -142,7 +351,7 @@ Select Provider
 <input
 type="number"
 id="provider_service_id"
-value="5025">
+placeholder="Service ID">
 
 </div>
 
@@ -157,7 +366,7 @@ value="5025">
 <input
 type="text"
 id="name"
-value=".view">
+placeholder="Service Name">
 
 </div>
 
@@ -168,7 +377,7 @@ value=".view">
 <input
 type="text"
 id="category"
-value=".view">
+placeholder="Category">
 
 </div>
 
@@ -183,7 +392,7 @@ value=".view">
 <input
 type="number"
 id="rate"
-value="0">
+placeholder="0.00">
 
 </div>
 
@@ -194,7 +403,7 @@ value="0">
 <input
 type="number"
 id="min"
-value="500">
+placeholder="500">
 
 </div>
 
@@ -205,14 +414,57 @@ value="500">
 <input
 type="number"
 id="max"
-value="1000">
+placeholder="1000">
 
 </div>
 
 </div>
-<hr>
 
-<h3>Add Provider</h3>
+<div class="row">
+
+<div class="col">
+
+<button
+class="btn blue"
+id="saveService">
+
+💾 Save Service
+
+</button>
+
+</div>
+
+<div class="col">
+
+<button
+class="btn"
+id="updateService"
+style="background:#f59e0b;color:#fff;">
+
+✏️ Update Service
+
+</button>
+
+</div>
+
+<div class="col">
+
+<button
+class="btn"
+id="deleteService"
+style="background:#ef4444;color:#fff;">
+
+🗑 Delete Service
+
+</button>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<h2>Add Provider</h2>
 
 <div class="row">
 
@@ -257,19 +509,13 @@ placeholder="Enter API Key">
 
 <div class="row">
 
+<div class="col">
+
 <button
-class="provider"
+class="btn green"
 id="addProvider">
 
-Add Provider
-
-</button>
-
-<button
-class="save"
-id="saveService">
-
-Save Service
+➕ Add Provider
 
 </button>
 
@@ -283,20 +529,60 @@ const API =
 "https://gowind-smm-panel-v3.onrender.com";
 
 let mode = "auto";
+  /* ===========================
+   JavaScript
+=========================== */
 
-document
-.querySelectorAll(
-'input[name="mode"]'
-)
-.forEach(r=>{
+const modeBtn =
+document.getElementById("modeBtn");
 
-r.onchange=()=>{
+modeBtn.onclick = ()=>{
 
-mode=r.value;
+if(mode==="auto"){
+
+mode="manual";
+
+modeBtn.innerHTML=
+"⚪ Manual Fill";
+
+document.getElementById("provider_service_id").value="";
+document.getElementById("name").value="";
+document.getElementById("category").value="";
+document.getElementById("rate").value="";
+document.getElementById("min").value="";
+document.getElementById("max").value="";
+
+}else{
+
+mode="auto";
+
+modeBtn.innerHTML=
+"🟢 Auto Fill";
+
+}
 
 };
 
+/* ===========================
+   Live Category Update
+=========================== */
+
+document
+.getElementById("name")
+.addEventListener("input",()=>{
+
+document
+.getElementById("category")
+.value=
+document
+.getElementById("name")
+.value;
+
 });
+
+/* ===========================
+   Load Providers
+=========================== */
 
 async function loadProviders(){
 
@@ -321,8 +607,9 @@ select.innerHTML =
 (data.providers||[])
 .forEach(p=>{
 
-select.innerHTML += `
-<option value="${p.id}">
+select.innerHTML +=
+
+`<option value="${p.id}">
 ${p.name}
 </option>`;
 
@@ -335,81 +622,69 @@ console.log(err);
 }
 
 }
-  async function autoFill(){
+
+/* ===========================
+   Auto Fill
+=========================== */
+
+async function autoFill(){
 
 if(mode!=="auto") return;
 
 const provider =
-document.getElementById(
-"provider"
-).value;
+document.getElementById("provider").value;
 
-const service =
-document.getElementById(
-"provider_service_id"
-).value;
+const serviceId =
+document.getElementById("provider_service_id").value;
 
-if(!provider || !service) return;
+if(!provider || !serviceId) return;
 
 try{
 
 const res =
 await fetch(
+
 API+
-"/api/providers/"
-+
+"/api/providers/"+
 provider+
 "/services"
+
 );
 
 const data =
 await res.json();
 
-const services =
-data.services || [];
-
 const item =
-services.find(s=>
+(data.services||[])
 
-String(s.service)==
-String(service)
+.find(x=>
+
+String(x.service)===
+
+String(serviceId)
 
 );
 
 if(!item){
 
-alert(
-"Service Not Found"
-);
-
 return;
 
 }
 
-document
-.getElementById("name")
-.value =
-item.name || ".view";
+document.getElementById("name").value =
+item.name || "";
 
-document
-.getElementById("category")
-.value =
-item.category || ".view";
+document.getElementById("category").value =
+item.category || "";
 
-document
-.getElementById("rate")
-.value =
+document.getElementById("rate").value =
 item.rate || 0;
 
-document
-.getElementById("min")
-.value =
-item.min || 500;
+document.getElementById("min").value =
+item.min || "";
 
-document
-.getElementById("max")
-.value =
-item.max || 1000;
+document.getElementById("max").value =
+item.max || "";
 
 }catch(err){
 
@@ -421,68 +696,45 @@ console.log(err);
 
 document
 .getElementById("provider")
-.addEventListener(
-"change",
-autoFill
-);
+.onchange = autoFill;
 
 document
-.getElementById(
-"provider_service_id"
-)
-.addEventListener(
-"input",
-autoFill
-);
+.getElementById("provider_service_id")
+.oninput = autoFill;
+  /* ===========================
+   Add Provider
+=========================== */
 
 document
-.getElementById(
-"addProvider"
-)
+.getElementById("addProvider")
 .onclick = async()=>{
 
 try{
 
-const res =
-await fetch(
+const res = await fetch(
 API+"/api/providers",
 {
-
 method:"POST",
-
 headers:{
-"Content-Type":
-"application/json"
+"Content-Type":"application/json"
 },
-
 body:JSON.stringify({
 
 name:
-document.getElementById(
-"provider_name"
-).value,
+document.getElementById("provider_name").value.trim(),
 
 api_url:
-document.getElementById(
-"api_url"
-).value,
+document.getElementById("api_url").value.trim(),
 
 api_key:
-document.getElementById(
-"api_key"
-).value
+document.getElementById("api_key").value.trim()
 
 })
-
 });
 
-const data =
-await res.json();
+const data = await res.json();
 
-alert(
-data.message ||
-"Provider Added"
-);
+alert(data.message || "Provider Added");
 
 loadProviders();
 
@@ -493,8 +745,9 @@ alert(err.message);
 }
 
 };
-  /* ===========================
-   SAVE SERVICE
+
+/* ===========================
+   Save Service
 =========================== */
 
 document
@@ -543,22 +796,7 @@ document.getElementById("max").value
 
 const data = await res.json();
 
-alert(
-data.message ||
-data.error ||
-"Service Saved"
-);
-
-if(data.success){
-
-document.getElementById("provider_service_id").value="5025";
-document.getElementById("name").value=".view";
-document.getElementById("category").value=".view";
-document.getElementById("rate").value="0";
-document.getElementById("min").value="500";
-document.getElementById("max").value="1000";
-
-}
+alert(data.message || "Service Saved");
 
 }catch(err){
 
@@ -569,32 +807,44 @@ alert(err.message);
 };
 
 /* ===========================
-   AUTO CATEGORY
+   Update Service
 =========================== */
 
 document
-.getElementById("name")
-.addEventListener("input",()=>{
+.getElementById("updateService")
+.onclick=()=>{
 
-if(mode==="auto"){
+alert(
+"Update API Pending"
+);
 
-document.getElementById("category").value=
-document.getElementById("name").value;
-
-}
-
-});
+};
 
 /* ===========================
-   PAGE LOAD
+   Delete Service
+=========================== */
+
+document
+.getElementById("deleteService")
+.onclick=()=>{
+
+alert(
+"Delete API Pending"
+);
+
+};
+
+/* ===========================
+   Page Load
 =========================== */
 
 window.onload=()=>{
 
-loadProviders();
-
-document.getElementById("api_url").value=
+document
+.getElementById("api_url").value=
 "https://hyperpanel.in/api/v2";
+
+loadProviders();
 
 };
 
