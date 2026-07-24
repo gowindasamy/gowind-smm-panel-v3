@@ -51,15 +51,15 @@ box-shadow:0 0 20px rgba(0,0,0,.35);
 
 }
 
-h1{
+#siteName{
 
 text-align:center;
 
 margin-bottom:25px;
 
-color:#38bdf8;
-
 font-size:30px;
+
+color:#38bdf8;
 
 }
 
@@ -71,9 +71,9 @@ margin-top:18px;
 
 margin-bottom:8px;
 
-font-weight:bold;
-
 font-size:15px;
+
+font-weight:bold;
 
 }
 
@@ -111,26 +111,27 @@ margin-top:20px;
 
 }
 
-.switch-row{
+.select-all{
 
 display:flex;
 
-justify-content:space-between;
-
 align-items:center;
+
+gap:10px;
 
 margin:20px 0;
 
 }
-  .switch{
+
+.switch{
 
 position:relative;
 
 display:inline-block;
 
-width:60px;
+width:52px;
 
-height:34px;
+height:28px;
 
 }
 
@@ -160,7 +161,7 @@ bottom:0;
 
 background:#64748b;
 
-transition:.4s;
+transition:.3s;
 
 border-radius:34px;
 
@@ -172,35 +173,34 @@ position:absolute;
 
 content:"";
 
-height:26px;
+height:22px;
 
-width:26px;
+width:22px;
 
-left:4px;
+left:3px;
 
-bottom:4px;
+bottom:3px;
 
-background:white;
-
-transition:.4s;
+background:#fff;
 
 border-radius:50%;
 
+transition:.3s;
+
 }
 
-input:checked + .slider{
+.switch input:checked + .slider{
 
 background:#22c55e;
 
 }
 
-input:checked + .slider:before{
+.switch input:checked + .slider:before{
 
-transform:translateX(26px);
+transform:translateX(24px);
 
 }
-
-.services{
+  .services{
 
 margin-top:15px;
 
@@ -222,6 +222,8 @@ display:flex;
 
 align-items:center;
 
+justify-content:space-between;
+
 padding:14px;
 
 border-bottom:1px solid #334155;
@@ -234,24 +236,17 @@ border-bottom:none;
 
 }
 
-.service-item input{
-
-width:20px;
-
-height:20px;
-
-margin-right:15px;
-
-}
-
 .service-name{
 
 flex:1;
 
 font-size:15px;
 
+margin-right:15px;
+
 }
-  .selected-count{
+
+.selected-count{
 
 margin-top:20px;
 
@@ -303,57 +298,85 @@ background:#16a34a;
 
 <div class="container">
 
-<h1>Multi Order</h1>
+<h1 id="siteName">
 
-<label>Link</label>
+Loading...
+
+</h1>
+
+<label>
+
+Link
+
+</label>
 
 <input
+
 type="text"
+
 id="link"
+
 placeholder="Paste Link">
 
-<label>Quantity</label>
+<label>
+
+Quantity
+
+</label>
 
 <input
+
 type="number"
+
 id="quantity"
+
 placeholder="Enter Quantity">
 
 <div class="search-box">
 
-<label>Search Service</label>
+<label>
+
+Search Service
+
+</label>
 
 <input
+
 type="text"
+
 id="search"
+
 placeholder="Search Service">
 
 </div>
 
-<div class="switch-row">
-
-<span>Select All</span>
-
-<label class="switch">
+<div class="select-all">
 
 <input
+
 type="checkbox"
+
 id="selectAll">
 
-<span class="slider"></span>
+<label for="selectAll">
+
+Select All
 
 </label>
 
 </div>
 
 <div
+
 class="services"
+
 id="services">
 
 </div>
-
 <div
+
 class="selected-count"
+
 id="selectedCount">
 
 Selected : 0 Services
@@ -361,7 +384,9 @@ Selected : 0 Services
 </div>
 
 <button
+
 class="place-order"
+
 id="placeOrder">
 
 Place All Orders
@@ -374,7 +399,11 @@ Place All Orders
 
 const API =
 "https://gowind-smm-panel-v3.onrender.com";
-  const servicesDiv =
+
+const siteName =
+document.getElementById("siteName");
+
+const servicesDiv =
 document.getElementById("services");
 
 const search =
@@ -391,6 +420,31 @@ document.getElementById("placeOrder");
 
 let allServices = [];
 
+async function loadSettings(){
+
+try{
+
+const res =
+await fetch(
+API + "/api/settings"
+);
+
+const data =
+await res.json();
+
+siteName.innerText =
+data.site_name ||
+"Multi Order";
+
+}catch{
+
+siteName.innerText =
+"Multi Order";
+
+}
+
+}
+
 async function loadServices(){
 
 const res =
@@ -404,30 +458,44 @@ await res.json();
 allServices =
 data.services || [];
 
-renderServices(allServices);
+renderServices(
+allServices
+);
 
 }
 
-function renderServices(list){
+loadSettings();
 
-servicesDiv.innerHTML = "";
+loadServices();
+  function renderServices(list){
+
+servicesDiv.innerHTML="";
 
 list.forEach(service=>{
 
-servicesDiv.innerHTML += `
+servicesDiv.innerHTML+=`
 
 <div class="service-item">
-
-<input
-type="checkbox"
-class="serviceCheck"
-value="${service.id}">
 
 <div class="service-name">
 
 ${service.name}
 
 </div>
+
+<label class="switch">
+
+<input
+
+type="checkbox"
+
+class="serviceCheck"
+
+value="${service.id}">
+
+<span class="slider"></span>
+
+</label>
 
 </div>
 
@@ -439,17 +507,20 @@ updateCount();
 
 }
 
-loadServices();
-  search.addEventListener("input",()=>{
+search.addEventListener("input",()=>{
 
-const value =
+const value=
+
 search.value.toLowerCase();
 
-const filtered =
+const filtered=
+
 allServices.filter(service=>
 
 service.name
+
 .toLowerCase()
+
 .includes(value)
 
 );
@@ -461,10 +532,13 @@ renderServices(filtered);
 selectAll.addEventListener("change",()=>{
 
 document
+
 .querySelectorAll(".serviceCheck")
+
 .forEach(box=>{
 
-box.checked =
+box.checked=
+
 selectAll.checked;
 
 });
@@ -472,11 +546,12 @@ selectAll.checked;
 updateCount();
 
 });
-
-document.addEventListener("change",e=>{
+  document.addEventListener("change",e=>{
 
 if(
+
 e.target.classList.contains("serviceCheck")
+
 ){
 
 updateCount();
@@ -487,24 +562,34 @@ updateCount();
 
 function updateCount(){
 
-const total =
+const total=
+
 document
+
 .querySelectorAll(
+
 ".serviceCheck:checked"
+
 ).length;
 
-selectedCount.innerText =
-"Selected : " +
-total +
+selectedCount.innerText=
+
+"Selected : "+
+
+total+
+
 " Services";
 
-  }
-  placeOrder.addEventListener("click",async()=>{
+}
 
-const link =
+placeOrder.addEventListener("click",async()=>{
+
+const link=
+
 document.getElementById("link").value.trim();
 
-const quantity =
+const quantity=
+
 document.getElementById("quantity").value;
 
 if(!link || !quantity){
@@ -515,9 +600,12 @@ return;
 
 }
 
-const user =
+const user=
+
 JSON.parse(
+
 localStorage.getItem("user")
+
 );
 
 if(!user){
@@ -528,9 +616,12 @@ return;
 
 }
 
-const selected =
+const selected=
+
 document.querySelectorAll(
+
 ".serviceCheck:checked"
+
 );
 
 if(selected.length===0){
@@ -539,20 +630,22 @@ alert("Select at least one service");
 
 return;
 
-}
+  }
+  for(const item of selected){
 
-for(const item of selected){
+const res=
 
 await fetch(
-API + "/api/orders",
+
+API+"/api/orders",
+
 {
 
 method:"POST",
 
 headers:{
 
-"Content-Type":
-"application/json"
+"Content-Type":"application/json"
 
 },
 
@@ -568,14 +661,39 @@ quantity:quantity
 
 })
 
-});
+}
+
+);
+
+const data=
+
+await res.json();
+
+if(!res.ok){
+
+alert(
+
+data.message||
+
+"Order Failed"
+
+);
+
+return;
 
 }
 
-alert("All Orders Placed Successfully");
+}
+
+alert(
+
+"All Orders Placed Successfully"
+
+);
 
 });
-  </script>
+
+</script>
 
 </body>
 
