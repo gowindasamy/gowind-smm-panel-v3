@@ -1,19 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta
-name="viewport"
-content="width=device-width,initial-scale=1.0">
-
-<title>Multi Add</title>
-
-<link
-rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<title>Multi Add Service</title>
 
 <style>
 
@@ -25,245 +16,76 @@ font-family:Arial,sans-serif;
 }
 
 body{
-
-background:#08111f;
-
-background-image:
-
-radial-gradient(circle at top left,
-rgba(147,51,234,.18),
-transparent 35%),
-
-radial-gradient(circle at top right,
-rgba(6,182,212,.15),
-transparent 35%),
-
-radial-gradient(circle at bottom right,
-rgba(37,99,235,.18),
-transparent 40%);
-
-color:#fff;
-
-min-height:100vh;
-
+background:#f5f5f5;
+padding:20px;
 }
 
 .container{
-
-width:95%;
-
 max-width:900px;
-
-margin:20px auto;
-
-}
-
-.card{
-
-background:rgba(255,255,255,.05);
-
-backdrop-filter:blur(18px);
-
-border:1px solid rgba(255,255,255,.08);
-
-border-radius:18px;
-
+margin:auto;
+background:#fff;
 padding:20px;
-
-margin-bottom:20px;
-
+border-radius:10px;
+box-shadow:0 2px 10px rgba(0,0,0,.1);
 }
 
 h2{
-
 text-align:center;
-
 margin-bottom:20px;
+}
 
-font-size:28px;
+.row{
+display:flex;
+gap:10px;
+margin-bottom:15px;
+}
 
-background:linear-gradient(
-90deg,
-#3b82f6,
-#06b6d4);
-
--webkit-background-clip:text;
-
--webkit-text-fill-color:transparent;
-
+.col{
+flex:1;
 }
 
 label{
-
 display:block;
-
-margin-top:15px;
-
-margin-bottom:8px;
-
+margin-bottom:5px;
 font-weight:bold;
-
 }
 
 input,
 select{
-
 width:100%;
-
-padding:14px;
-
-border:none;
-
-outline:none;
-
-border-radius:12px;
-
-background:rgba(255,255,255,.05);
-
-border:1px solid rgba(255,255,255,.08);
-
-color:#fff;
-
+padding:10px;
+border:1px solid #ccc;
+border-radius:6px;
 font-size:15px;
-
-}
-
-select option{
-
-background:#0f172a;
-
-color:#fff;
-
 }
 
 button{
-
-width:100%;
-
-padding:15px;
-
-margin-top:20px;
-
+padding:12px;
 border:none;
-
-border-radius:14px;
-
-font-size:16px;
-
-font-weight:bold;
-
+border-radius:6px;
 cursor:pointer;
+font-size:15px;
+}
 
-background:linear-gradient(
-90deg,
-#2563eb,
-#8b5cf6,
-#06b6d4);
-
+.save{
+background:#2196F3;
 color:#fff;
+}
 
+.provider{
+background:#4CAF50;
+color:#fff;
 }
 
 .mode{
-
 display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-padding:15px;
-
+gap:20px;
 margin-bottom:20px;
-
-background:rgba(255,255,255,.05);
-
-border-radius:15px;
-
-}
-
-.switch{
-
-position:relative;
-
-display:inline-block;
-
-width:60px;
-
-height:34px;
-
-}
-
-.switch input{
-
-display:none;
-
-}
-
-.slider{
-
-position:absolute;
-
-cursor:pointer;
-
-top:0;
-
-left:0;
-
-right:0;
-
-bottom:0;
-
-background:#d1d5db;
-
-transition:.4s;
-
-border-radius:34px;
-
-}
-
-.slider:before{
-
-position:absolute;
-
-content:"";
-
-height:26px;
-
-width:26px;
-
-left:4px;
-
-bottom:4px;
-
-background:white;
-
-transition:.4s;
-
-border-radius:50%;
-
-}
-
-input:checked + .slider{
-
-background:#c026d3;
-
-}
-
-input:checked + .slider:before{
-
-transform:translateX(26px);
-
-}
-
-#modeText{
-
-font-size:16px;
-
 font-weight:bold;
+}
 
-color:#22c55e;
-
+hr{
+margin:25px 0;
 }
 
 </style>
@@ -274,177 +96,180 @@ color:#22c55e;
 
 <div class="container">
 
-<div class="card">
-
-<h2>Multi Add</h2>
+<h2>Multi Add Provider & Service</h2>
 
 <div class="mode">
 
-<div>
-
-Mode :
-<span id="modeText">
-
-Auto Fill
-
-</span>
-
-</div>
-
-<label class="switch">
-
+<label>
 <input
-type="checkbox"
-id="mode"
+type="radio"
+name="mode"
+value="auto"
 checked>
-
-<span class="slider">
-
-</span>
-
+Auto Fill
 </label>
-
-</div>
 
 <label>
-
-Provider
-
+<input
+type="radio"
+name="mode"
+value="manual">
+Manual Fill
 </label>
+
+</div>
+
+<div class="row">
+
+<div class="col">
+
+<label>Provider</label>
 
 <select id="provider">
 
-<option>
-
-Loading...
-
+<option value="">
+Select Provider
 </option>
 
 </select>
 
-<label>
+</div>
 
-Provider Service ID
+<div class="col">
 
-</label>
+<label>Provider Service ID</label>
 
 <input
 type="number"
 id="provider_service_id"
-placeholder="Provider Service ID">
+value="5025">
 
-<label>
+</div>
 
-Service Name
+</div>
 
-</label>
+<div class="row">
+
+<div class="col">
+
+<label>Service Name</label>
 
 <input
 type="text"
 id="name"
-placeholder="Service Name">
+value=".view">
 
-<label>
+</div>
 
-Category
+<div class="col">
 
-</label>
+<label>Category</label>
 
 <input
 type="text"
 id="category"
-placeholder="Category">
-<label>
+value=".view">
 
-Rate (Per 1000)
+</div>
 
-</label>
+</div>
+
+<div class="row">
+
+<div class="col">
+
+<label>Rate</label>
 
 <input
 type="number"
 id="rate"
-placeholder="Rate">
+value="0">
 
-<label>
+</div>
 
-Minimum Quantity
+<div class="col">
 
-</label>
+<label>Minimum</label>
 
 <input
 type="number"
 id="min"
-placeholder="Minimum">
+value="500">
 
-<label>
+</div>
 
-Maximum Quantity
+<div class="col">
 
-</label>
+<label>Maximum</label>
 
 <input
 type="number"
 id="max"
-placeholder="Maximum">
-
-<button
-id="saveService">
-
-<i class="fa-solid fa-floppy-disk"></i>
-
-Save Service
-
-</button>
+value="1000">
 
 </div>
 
-<div class="card">
+</div>
+<hr>
 
-<h2>
+<h3>Add Provider</h3>
 
-Add Provider
+<div class="row">
 
-</h2>
+<div class="col">
 
-<label>
-
-Provider Name
-
-</label>
+<label>Provider Name</label>
 
 <input
 type="text"
 id="provider_name"
-placeholder="Provider Name">
+placeholder="HyperPanel">
 
-<label>
+</div>
 
-API URL
+<div class="col">
 
-</label>
+<label>API URL</label>
 
 <input
 type="text"
 id="api_url"
-placeholder="https://example.com/api/v2">
+value="https://hyperpanel.in/api/v2">
 
-<label>
+</div>
 
-API Key
+</div>
 
-</label>
+<div class="row">
+
+<div class="col">
+
+<label>API Key</label>
 
 <input
 type="text"
 id="api_key"
-placeholder="API Key">
+placeholder="Enter API Key">
+
+</div>
+
+</div>
+
+<div class="row">
 
 <button
-id="saveProvider">
-
-<i class="fa-solid fa-plus"></i>
+class="provider"
+id="addProvider">
 
 Add Provider
+
+</button>
+
+<button
+class="save"
+id="saveService">
+
+Save Service
 
 </button>
 
@@ -457,142 +282,134 @@ Add Provider
 const API =
 "https://gowind-smm-panel-v3.onrender.com";
 
-const mode =
-document.getElementById("mode");
+let mode = "auto";
 
-const modeText =
-document.getElementById("modeText");
+document
+.querySelectorAll(
+'input[name="mode"]'
+)
+.forEach(r=>{
 
-mode.addEventListener("change",()=>{
+r.onchange=()=>{
 
-if(mode.checked){
+mode=r.value;
 
-modeText.innerText =
-"Auto Fill";
-
-}else{
-
-modeText.innerText =
-"Manual Fill";
-
-}
+};
 
 });
 
 async function loadProviders(){
 
+try{
+
 const res =
-await fetch(API+"/api/providers");
+await fetch(
+API+"/api/providers"
+);
 
 const data =
 await res.json();
 
-const provider =
-document.getElementById("provider");
+const select =
+document.getElementById(
+"provider"
+);
 
-provider.innerHTML="";
+select.innerHTML =
+'<option value="">Select Provider</option>';
 
-data.providers.forEach(item=>{
+(data.providers||[])
+.forEach(p=>{
 
-provider.innerHTML += `
-
-<option value="${item.id}">
-
-${item.name}
-
-</option>
-
-`;
+select.innerHTML += `
+<option value="${p.id}">
+${p.name}
+</option>`;
 
 });
+
+}catch(err){
+
+console.log(err);
 
 }
 
-loadProviders();
-  /* ===========================
-   AUTO / MANUAL MODE
-=========================== */
+}
+  async function autoFill(){
 
-const fields = [
-"provider_service_id",
-"name",
-"category",
-"rate",
-"min",
-"max"
-];
-
-mode.addEventListener("change",()=>{
-
-modeText.innerText =
-mode.checked
-? "Auto Fill"
-: "Manual Fill";
-
-});
-
-/* ===========================
-   AUTO IMPORT
-=========================== */
-
-async function autoFill(){
-
-if(!mode.checked) return;
+if(mode!=="auto") return;
 
 const provider =
-document.getElementById("provider").value;
+document.getElementById(
+"provider"
+).value;
 
-const serviceId =
-document
-.getElementById("provider_service_id")
-.value;
+const service =
+document.getElementById(
+"provider_service_id"
+).value;
 
-if(!provider || !serviceId) return;
+if(!provider || !service) return;
 
 try{
 
-const res = await fetch(
-
+const res =
+await fetch(
 API+
-"/api/providers/"+
+"/api/providers/"
++
 provider+
 "/services"
-
 );
 
 const data =
 await res.json();
 
-const service =
-(data.services||[])
-.find(item=>
+const services =
+data.services || [];
 
-String(item.service)===String(serviceId)
+const item =
+services.find(s=>
+
+String(s.service)==
+String(service)
 
 );
 
-if(!service){
+if(!item){
 
-alert("Service Not Found");
+alert(
+"Service Not Found"
+);
 
 return;
 
 }
 
-document.getElementById("name").value =
-service.name || "";
+document
+.getElementById("name")
+.value =
+item.name || ".view";
 
-document.getElementById("category").value =
-service.category || "";
+document
+.getElementById("category")
+.value =
+item.category || ".view";
 
-document.getElementById("rate").value =
-service.rate || "";
+document
+.getElementById("rate")
+.value =
+item.rate || 0;
 
-document.getElementById("min").value =
-service.min || "";
+document
+.getElementById("min")
+.value =
+item.min || 500;
 
-document.getElementById("max").value =
-service.max || "";
+document
+.getElementById("max")
+.value =
+item.max || 1000;
 
 }catch(err){
 
@@ -603,54 +420,77 @@ console.log(err);
 }
 
 document
-.getElementById("provider_service_id")
-.addEventListener("change",autoFill);
-
-document
 .getElementById("provider")
-.addEventListener("change",autoFill);
-
-/* ===========================
-   ADD PROVIDER
-=========================== */
+.addEventListener(
+"change",
+autoFill
+);
 
 document
-.getElementById("saveProvider")
+.getElementById(
+"provider_service_id"
+)
+.addEventListener(
+"input",
+autoFill
+);
+
+document
+.getElementById(
+"addProvider"
+)
 .onclick = async()=>{
 
-const res = await fetch(
+try{
+
+const res =
+await fetch(
 API+"/api/providers",
 {
+
 method:"POST",
+
 headers:{
-"Content-Type":"application/json"
+"Content-Type":
+"application/json"
 },
+
 body:JSON.stringify({
 
 name:
-document
-.getElementById("provider_name")
-.value,
+document.getElementById(
+"provider_name"
+).value,
 
 api_url:
-document
-.getElementById("api_url")
-.value,
+document.getElementById(
+"api_url"
+).value,
 
 api_key:
-document
-.getElementById("api_key")
-.value
+document.getElementById(
+"api_key"
+).value
 
 })
+
 });
 
 const data =
 await res.json();
 
-alert(data.message||data.error);
+alert(
+data.message ||
+"Provider Added"
+);
 
 loadProviders();
+
+}catch(err){
+
+alert(err.message);
+
+}
 
 };
   /* ===========================
@@ -696,32 +536,27 @@ document.getElementById("min").value
 
 max:Number(
 document.getElementById("max").value
-)
 
 })
+
 });
 
-const data =
-await res.json();
+const data = await res.json();
 
 alert(
 data.message ||
-data.error
+data.error ||
+"Service Saved"
 );
 
 if(data.success){
 
-document.getElementById("provider_service_id").value="";
-
-document.getElementById("name").value="";
-
-document.getElementById("category").value="";
-
-document.getElementById("rate").value="";
-
-document.getElementById("min").value="";
-
-document.getElementById("max").value="";
+document.getElementById("provider_service_id").value="5025";
+document.getElementById("name").value=".view";
+document.getElementById("category").value=".view";
+document.getElementById("rate").value="0";
+document.getElementById("min").value="500";
+document.getElementById("max").value="1000";
 
 }
 
@@ -741,52 +576,27 @@ document
 .getElementById("name")
 .addEventListener("input",()=>{
 
-if(
-document
-.getElementById("category")
-.value.trim()===""
-){
+if(mode==="auto"){
 
-document
-.getElementById("category")
-.value=
-document
-.getElementById("name")
-.value;
-
-}
-
-});
-
-document
-.getElementById("category")
-.addEventListener("input",()=>{
-
-if(
-document
-.getElementById("name")
-.value.trim()===""
-){
-
-document
-.getElementById("name")
-.value=
-document
-.getElementById("category")
-.value;
+document.getElementById("category").value=
+document.getElementById("name").value;
 
 }
 
 });
 
 /* ===========================
-   AUTO REFRESH
+   PAGE LOAD
 =========================== */
 
-setInterval(
-loadProviders,
-30000
-);
+window.onload=()=>{
+
+loadProviders();
+
+document.getElementById("api_url").value=
+"https://hyperpanel.in/api/v2";
+
+};
 
 </script>
 
