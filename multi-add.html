@@ -181,8 +181,7 @@ font-weight:600;
 color:#cbd5e1;
 
 }
-
-input,
+ input,
 select{
 
 width:100%;
@@ -281,8 +280,7 @@ margin-bottom:20px;
 flex-wrap:wrap;
 
 }
-
-.switch{
+ .switch{
 
 position:relative;
 
@@ -307,8 +305,11 @@ position:absolute;
 cursor:pointer;
 
 top:0;
+
 left:0;
+
 right:0;
+
 bottom:0;
 
 background:#374151;
@@ -412,6 +413,84 @@ Professional v5
 </div>
 
 <div class="content">
+ <div class="card">
+
+<div class="card-title">
+
+🔗 Add Provider
+
+</div>
+
+<div class="row">
+
+<div class="col">
+
+<label>
+
+Provider Name
+
+</label>
+
+<input
+type="text"
+id="provider_name"
+placeholder="HyperPanel">
+
+</div>
+
+<div class="col">
+
+<label>
+
+API URL
+
+</label>
+
+<input
+type="text"
+id="api_url"
+value="https://hyperpanel.in/api/v2">
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="col">
+
+<label>
+
+API Key
+
+</label>
+
+<input
+type="text"
+id="api_key"
+placeholder="Enter API Key">
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="col">
+
+<button
+class="btn primary"
+id="addProvider">
+
+💾 Save Provider
+
+</button>
+
+</div>
+
+</div>
+
+ </div>
  <div class="card">
 
 <div class="toggle-box">
@@ -578,87 +657,6 @@ type="number"
 id="max"
 placeholder="1000">
 
- <div class="card">
-
-<div class="card-title">
-
-🔗 Add Provider
-
-</div>
-
-<div class="row">
-
-<div class="col">
-
-<label>
-
-Provider Name
-
-</label>
-
-<input
-type="text"
-id="provider_name"
-placeholder="HyperPanel">
-
-</div>
-
-<div class="col">
-
-<label>
-
-API URL
-
-</label>
-
-<input
-type="text"
-id="api_url"
-value="https://hyperpanel.in/api/v2">
-
-</div>
-
-</div>
-
-<div class="row">
-
-<div class="col">
-
-<label>
-
-API Key
-
-</label>
-
-<input
-type="text"
-id="api_key"
-placeholder="Enter API Key">
-
-</div>
-
-</div>
-
-<div class="row">
-
-<div class="col">
-
-<button
-class="btn primary"
-id="addProvider">
-
-💾 Save Provider
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
 </div>
 
 <div class="col">
@@ -675,8 +673,8 @@ id="addService">
 
 </div>
 
-</div>
-<script>
+ </div>
+ <script>
 
 const API =
 "https://gowind-smm-panel-v3.onrender.com";
@@ -716,11 +714,12 @@ document.getElementById("min");
 
 const max=
 document.getElementById("max");
- /* ==========================================
+
+/* ==========================================
    AUTO FILL
 ========================================== */
 
-toggle.onchange = function(){
+toggle.onchange=function(){
 
 autoFill=this.checked;
 
@@ -770,7 +769,7 @@ max.value="";
 
 function syncFields(value){
 
-if(syncing) return;
+if(syncing)return;
 
 syncing=true;
 
@@ -788,7 +787,7 @@ serviceName.addEventListener(
 "input",
 function(){
 
-if(!autoFill) return;
+if(!autoFill)return;
 
 syncFields(this.value);
 
@@ -799,7 +798,7 @@ category.addEventListener(
 "input",
 function(){
 
-if(!autoFill) return;
+if(!autoFill)return;
 
 syncFields(this.value);
 
@@ -810,13 +809,13 @@ providerName.addEventListener(
 "input",
 function(){
 
-if(!autoFill) return;
+if(!autoFill)return;
 
 syncFields(this.value);
 
 }
 );
- /* ==========================================
+  /* ==========================================
    LOAD PROVIDERS
 ========================================== */
 
@@ -863,7 +862,7 @@ console.log(err);
 
 document
 .getElementById("addProvider")
-.onclick = async()=>{
+.onclick=async()=>{
 
 try{
 
@@ -911,18 +910,14 @@ const data=
 await res.json();
 
 alert(
-
-data.message ||
-
+data.message||
 "Provider Added Successfully"
-
 );
 
 providerName.value="";
 
 document
-.getElementById("api_key")
-.value="";
+.getElementById("api_key").value="";
 
 await loadProviders();
 
@@ -933,13 +928,13 @@ alert(err.message);
 }
 
 };
- /* ==========================================
+  /* ==========================================
    ADD SERVICE
 ========================================== */
 
 document
 .getElementById("addService")
-.onclick = async()=>{
+.onclick=async()=>{
 
 try{
 
@@ -998,11 +993,8 @@ const data=
 await res.json();
 
 alert(
-
-data.message ||
-
+data.message||
 "Service Added Successfully"
-
 );
 
 if(!autoFill){
@@ -1030,11 +1022,11 @@ alert(err.message);
 }
 
 };
- /* ==========================================
+  /* ==========================================
    PAGE LOAD
 ========================================== */
 
-window.onload = async()=>{
+window.onload=async()=>{
 
 toggle.checked=false;
 
@@ -1058,7 +1050,7 @@ await loadProviders();
 
 provider.onchange=function(){
 
-if(!autoFill) return;
+if(!autoFill)return;
 
 providerServiceId.value="5025";
 
@@ -1093,6 +1085,9 @@ max.value="";
 }
 
 /* ==========================================
+   END PART 9
+========================================== */
+  /* ==========================================
    HTML END
 ========================================== */
 
