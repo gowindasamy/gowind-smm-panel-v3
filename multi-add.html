@@ -777,44 +777,11 @@ serviceName.value=value;
 
 category.value=value;
 
-providerName.value=value;
+// Provider Name change ஆகாது
 
 syncing=false;
 
 }
-
-serviceName.addEventListener(
-"input",
-function(){
-
-if(!autoFill)return;
-
-syncFields(this.value);
-
-}
-);
-
-category.addEventListener(
-"input",
-function(){
-
-if(!autoFill)return;
-
-syncFields(this.value);
-
-}
-);
-
-providerName.addEventListener(
-"input",
-function(){
-
-if(!autoFill)return;
-
-syncFields(this.value);
-
-}
-);
   /* ==========================================
    LOAD PROVIDERS
 ========================================== */
