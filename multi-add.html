@@ -745,7 +745,7 @@ providerName.value="";
 
 modeText.innerHTML="Auto Fill OFF";
 
-providerServiceId.value=".view";
+providerServiceId.value="";
 
 serviceName.value="";
 
@@ -777,6 +777,8 @@ serviceName.value=value;
 
 category.value=value;
 
+providerName.value=value;
+
 syncing=false;
 
 }
@@ -793,6 +795,17 @@ syncFields(this.value);
 );
 
 category.addEventListener(
+"input",
+function(){
+
+if(!autoFill)return;
+
+syncFields(this.value);
+
+}
+);
+
+providerName.addEventListener(
 "input",
 function(){
 
@@ -1082,4 +1095,5 @@ max.value="";
 
 </body>
 
-</html>
+ </html>
+ 
