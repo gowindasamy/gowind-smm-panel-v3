@@ -10,7 +10,9 @@ name="viewport"
 content="width=device-width, initial-scale=1.0">
 
 <title>
-SMM Panel • Multi Add
+
+SMM Panel Admin
+
 </title>
 
 <link
@@ -61,17 +63,15 @@ margin:auto;
 
 background:#111827;
 
-border-radius:18px;
+border-radius:20px;
 
 overflow:hidden;
 
 box-shadow:
-
-0 0 35px
+0 0 30px
 rgba(0,0,0,.45);
 
 border:
-
 1px solid
 rgba(255,255,255,.08);
 
@@ -79,15 +79,14 @@ rgba(255,255,255,.08);
 
 .header{
 
-padding:25px;
-
 background:
-
 linear-gradient(
 90deg,
 #2563eb,
 #06b6d4
 );
+
+padding:25px;
 
 display:flex;
 
@@ -96,6 +95,8 @@ justify-content:space-between;
 align-items:center;
 
 flex-wrap:wrap;
+
+gap:15px;
 
 }
 
@@ -109,14 +110,16 @@ font-weight:700;
 
 .version{
 
-font-size:14px;
+padding:8px 18px;
+
+border-radius:30px;
 
 background:
 rgba(255,255,255,.18);
 
-padding:8px 15px;
+font-size:14px;
 
-border-radius:30px;
+font-weight:600;
 
 }
 
@@ -130,24 +133,23 @@ padding:25px;
 
 background:#1f2937;
 
-border-radius:15px;
-
-padding:20px;
-
-margin-bottom:25px;
-
 border:
-
 1px solid
 #374151;
+
+border-radius:15px;
+
+padding:22px;
+
+margin-bottom:25px;
 
 }
 
 .card-title{
 
-font-size:20px;
+font-size:22px;
 
-font-weight:600;
+font-weight:700;
 
 margin-bottom:20px;
 
@@ -192,7 +194,7 @@ select{
 
 width:100%;
 
-height:48px;
+height:50px;
 
 padding:12px;
 
@@ -202,14 +204,13 @@ background:#111827;
 
 color:#fff;
 
-font-size:15px;
-
 border:
-
 1px solid
 #374151;
 
 outline:none;
+
+font-size:15px;
 
 transition:.25s;
 
@@ -221,27 +222,33 @@ select:focus{
 border-color:#3b82f6;
 
 box-shadow:
-
 0 0 12px
 rgba(59,130,246,.35);
 
 }
 
-.btn{
-
-height:50px;
+button{
 
 border:none;
 
-border-radius:12px;
-
 cursor:pointer;
+
+transition:.25s;
+
+}
+ .btn{
+
+height:50px;
+
+padding:0 20px;
+
+border-radius:12px;
 
 font-size:15px;
 
 font-weight:600;
 
-transition:.25s;
+color:#fff;
 
 }
 
@@ -255,94 +262,144 @@ translateY(-2px);
 .primary{
 
 background:
-
 linear-gradient(
 90deg,
 #2563eb,
 #06b6d4
 );
 
-color:#fff;
-
 }
 
 .success{
 
 background:
-
 linear-gradient(
 90deg,
 #22c55e,
 #16a34a
 );
-
-color:#fff;
 
 }
 
 .warning{
 
 background:
-
 linear-gradient(
 90deg,
 #f59e0b,
 #d97706
 );
 
-color:#fff;
-
 }
 
 .danger{
 
 background:
-
 linear-gradient(
 90deg,
 #ef4444,
 #dc2626
 );
 
-color:#fff;
-
 }
 
-.toggle{
+.toggle-box{
 
 display:flex;
 
-justify-content:center;
+align-items:center;
 
-margin-bottom:20px;
+justify-content:space-between;
+
+gap:20px;
+
+flex-wrap:wrap;
+
+margin-bottom:25px;
 
 }
 
-.toggle button{
+.switch{
 
-width:230px;
+position:relative;
 
-height:50px;
+display:inline-block;
 
-border:none;
+width:62px;
 
-border-radius:30px;
+height:34px;
 
-font-size:16px;
+}
 
-font-weight:700;
+.switch input{
+
+display:none;
+
+}
+
+.slider{
+
+position:absolute;
 
 cursor:pointer;
 
-background:
+top:0;
 
-linear-gradient(
-90deg,
-#22c55e,
-#16a34a
-);
+left:0;
 
-color:#fff;
+right:0;
+
+bottom:0;
+
+background:#374151;
+
+transition:.3s;
+
+border-radius:34px;
+
+}
+
+.slider:before{
+
+position:absolute;
+
+content:"";
+
+height:26px;
+
+width:26px;
+
+left:4px;
+
+bottom:4px;
+
+background:white;
+
+transition:.3s;
+
+border-radius:50%;
+
+}
+
+input:checked+.slider{
+
+background:#22c55e;
+
+}
+
+input:checked+.slider:before{
+
+transform:translateX(28px);
+
+}
+
+.mode-text{
+
+font-size:15px;
+
+font-weight:600;
+
+color:#cbd5e1;
 
 }
 
@@ -353,8 +410,6 @@ color:#fff;
 justify-content:center;
 
 text-align:center;
-
-gap:12px;
 
 }
 
@@ -389,41 +444,58 @@ min-width:100%;
 <div class="header">
 
 <div class="logo">
- SMM Panel
+
+🚀 SMM Panel
+
 </div>
 
 <div class="version">
-Professional v2.0
+
+Professional v3.0
+
 </div>
 
 </div>
 
 <div class="content">
-  <div class="card">
+ <div class="card">
+
+<div class="toggle-box">
+
+<div class="card-title">
+
+📦 Add Service
+
+</div>
 
 <div
 style="
 display:flex;
-justify-content:space-between;
 align-items:center;
-flex-wrap:wrap;
-gap:15px;
-margin-bottom:20px;">
+gap:12px;
+">
 
-<div class="card-title">
+<label class="switch">
 
-📦 Service Manager
+<input
+type="checkbox"
+id="autoToggle"
+checked>
 
-</div>
+<span
+class="slider">
 
-<div class="toggle">
+</span>
 
-<button
-id="modeBtn">
+</label>
 
-🟢 Auto Fill
+<span
+id="modeText"
+class="mode-text">
 
-</button>
+Auto Fill ON
+
+</span>
 
 </div>
 
@@ -482,7 +554,7 @@ Service Name
 <input
 type="text"
 id="name"
-placeholder=".view">
+placeholder="Instagram Views">
 
 </div>
 
@@ -497,7 +569,7 @@ Category
 <input
 type="text"
 id="category"
-placeholder=".view">
+placeholder="Instagram">
 
 </div>
 
@@ -532,7 +604,7 @@ Minimum
 <input
 type="number"
 id="min"
-placeholder="500">
+placeholder="100">
 
 </div>
 
@@ -547,45 +619,21 @@ Maximum
 <input
 type="number"
 id="max"
-placeholder="1000">
+placeholder="100000">
 
 </div>
 
 </div>
-
 <div class="row">
 
 <div class="col">
 
 <button
-class="btn primary"
-id="saveService">
+class="btn success"
+id="addService"
+style="width:100%;">
 
-💾 Save Service
-
-</button>
-
-</div>
-
-<div class="col">
-
-<button
-class="btn warning"
-id="updateService">
-
-✏️ Update Service
-
-</button>
-
-</div>
-
-<div class="col">
-
-<button
-class="btn danger"
-id="deleteService">
-
-🗑 Delete Service
+➕ Add Service
 
 </button>
 
@@ -599,9 +647,10 @@ id="deleteService">
 
 <div class="card-title">
 
-🔗 Provider Manager
+🔗 Add Provider
 
 </div>
+
 <div class="row">
 
 <div class="col">
@@ -647,9 +696,9 @@ API Key
 </label>
 
 <input
-type="password"
+type="text"
 id="api_key"
-placeholder="Enter HyperPanel API Key">
+placeholder="Enter API Key">
 
 </div>
 
@@ -658,87 +707,17 @@ placeholder="Enter HyperPanel API Key">
 <div class="row">
 
 <div class="col">
-
-<button
-class="btn success"
-id="addProvider">
-
-➕ Add Provider
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<div
-style="
-display:flex;
-justify-content:space-between;
-align-items:center;
-flex-wrap:wrap;
-gap:15px;
-margin-bottom:20px;">
-
-<div class="card-title">
-
-📋 Service Search
-
-</div>
 
 <button
 class="btn primary"
-id="refreshServices"
-style="width:180px;">
+id="addProvider"
+style="width:100%;">
 
-🔄 Refresh
+💾 Save Provider
 
 </button>
 
 </div>
-
-<div class="row">
-
-<div class="col">
-
-<label>
-
-Search Service
-
-</label>
-
-<input
-type="text"
-id="searchService"
-placeholder="Search by ID, Name or Category...">
-
-</div>
-
-</div>
-
-<div
-id="serviceList"
-style="
-max-height:450px;
-overflow:auto;
-border-radius:12px;
-border:1px solid #374151;
-background:#111827;
-padding:10px;">
-
-<p
-style="
-text-align:center;
-color:#94a3b8;
-padding:30px;">
-
-No services loaded.
-
-</p>
 
 </div>
 
@@ -749,26 +728,40 @@ No services loaded.
 const API =
 "https://gowind-smm-panel-v3.onrender.com";
 
-let mode = "auto";
+let mode="auto";
 
-let allServices = [];
+let selectedService=null;
 
-let selectedService = null;
-  /* ===========================
-   AUTO / MANUAL MODE
+const toggle=
+document.getElementById(
+"autoToggle"
+);
+
+const modeText=
+document.getElementById(
+"modeText"
+);
+ /* ===========================
+   AUTO FILL ON / OFF
 =========================== */
 
-const modeBtn =
-document.getElementById("modeBtn");
+toggle.onchange=()=>{
 
-modeBtn.onclick=()=>{
+if(toggle.checked){
 
-if(mode==="auto"){
+mode="auto";
+
+modeText.innerHTML=
+"Auto Fill ON";
+
+autoFill();
+
+}else{
 
 mode="manual";
 
-modeBtn.innerHTML=
-"⚪ Manual Fill";
+modeText.innerHTML=
+"Auto Fill OFF";
 
 [
 "provider_service_id",
@@ -782,19 +775,6 @@ modeBtn.innerHTML=
 document.getElementById(id).value="";
 
 });
-
-}else{
-
-mode="auto";
-
-modeBtn.innerHTML=
-"🟢 Auto Fill";
-
-if(selectedService){
-
-fillForm(selectedService);
-
-}
 
 }
 
@@ -838,18 +818,18 @@ API+"/api/providers"
 const data=
 await res.json();
 
-const provider=
+const select=
 document.getElementById(
 "provider"
 );
 
-provider.innerHTML=
+select.innerHTML=
 '<option value="">Select Provider</option>';
 
 (data.providers||[])
 .forEach(p=>{
 
-provider.innerHTML+=`
+select.innerHTML+=`
 
 <option value="${p.id}">
 ${p.name}
@@ -866,220 +846,8 @@ console.error(err);
 }
 
 }
-
-/* ===========================
-   FILL FORM
-=========================== */
-
-function fillForm(service){
-
-selectedService=service;
-
-document.getElementById(
-"provider"
-).value=
-service.provider_id||"";
-
-document.getElementById(
-"provider_service_id"
-).value=
-service.provider_service_id||"";
-
-document.getElementById(
-"name"
-).value=
-service.name||"";
-
-document.getElementById(
-"category"
-).value=
-service.category||"";
-
-document.getElementById(
-"rate"
-).value=
-service.rate||0;
-
-document.getElementById(
-"min"
-).value=
-service.min||"";
-
-document.getElementById(
-"max"
-).value=
-service.max||"";
-
-}
-  /* ===========================
-   LOAD SERVICES
-=========================== */
-
-async function loadServices(){
-
-try{
-
-const res=
-await fetch(
-API+"/api/services"
-);
-
-const data=
-await res.json();
-
-allServices=
-data.services||[];
-
-renderServices(
-allServices
-);
-
-}catch(err){
-
-console.error(err);
-
-}
-
-}
-
-/* ===========================
-   RENDER SERVICES
-=========================== */
-
-function renderServices(list){
-
-const box=
-document.getElementById(
-"serviceList"
-);
-
-if(list.length===0){
-
-box.innerHTML=`
-
-<p style="
-text-align:center;
-padding:30px;
-color:#94a3b8;
-">
-
-No Services Found
-
-</p>
-
-`;
-
-return;
-
-}
-
-box.innerHTML="";
-
-list.forEach(service=>{
-
-box.innerHTML+=`
-
-<div
-class="service-item"
-onclick="fillForm(${JSON.stringify(service).replace(/"/g,'&quot;')})"
-style="
-background:#1f2937;
-border:1px solid #374151;
-border-radius:12px;
-padding:15px;
-margin-bottom:12px;
-cursor:pointer;
-transition:.25s;
-">
-
-<b>
-
-${service.provider_service_id}
-
-</b>
-
-<br>
-
-${service.name}
-
-<br>
-
-<small
-style="color:#94a3b8;">
-
-${service.category}
-
-</small>
-
-</div>
-
-`;
-
-});
-
-}
-
-/* ===========================
-   SEARCH SERVICE
-=========================== */
-
-document
-.getElementById(
-"searchService"
-)
-.addEventListener(
-"input",
-e=>{
-
-const key=
-e.target.value
-.toLowerCase()
-.trim();
-
-const filtered=
-allServices.filter(s=>
-
-String(
-s.provider_service_id
-)
-.includes(key)
-
-||
-
-(s.name||"")
-.toLowerCase()
-.includes(key)
-
-||
-
-(s.category||"")
-.toLowerCase()
-.includes(key)
-
-);
-
-renderServices(
-filtered
-);
-
-}
-);
-
-/* ===========================
-   REFRESH SERVICES
-=========================== */
-
-document
-.getElementById(
-"refreshServices"
-)
-.onclick=()=>{
-
-loadServices();
-
-};
-  /* ===========================
-   AUTO FILL FROM PROVIDER
+ /* ===========================
+   AUTO FILL
 =========================== */
 
 async function autoFill(){
@@ -1155,20 +923,101 @@ document
 document
 .getElementById("provider_service_id")
 .oninput=autoFill;
+ /* ===========================
+   ADD SERVICE
+=========================== */
 
-/* ===========================
+document
+.getElementById("addService")
+.onclick = async()=>{
+
+try{
+
+const res = await fetch(
+API + "/api/services",
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+provider_id:Number(
+document.getElementById("provider").value
+),
+
+provider_service_id:Number(
+document.getElementById("provider_service_id").value
+),
+
+name:
+document.getElementById("name").value.trim(),
+
+category:
+document.getElementById("category").value.trim(),
+
+rate:Number(
+document.getElementById("rate").value
+),
+
+min:Number(
+document.getElementById("min").value
+),
+
+max:Number(
+document.getElementById("max").value
+)
+
+})
+
+});
+
+const data = await res.json();
+
+alert(
+data.message ||
+"Service Added Successfully"
+);
+
+if(mode==="manual"){
+
+[
+"provider_service_id",
+"name",
+"category",
+"rate",
+"min",
+"max"
+].forEach(id=>{
+
+document.getElementById(id).value="";
+
+});
+
+}
+
+}catch(err){
+
+alert(err.message);
+
+}
+
+};
+ /* ===========================
    ADD PROVIDER
 =========================== */
 
 document
 .getElementById("addProvider")
-.onclick=async()=>{
+.onclick = async()=>{
 
 try{
 
-const res=
-await fetch(
-API+"/api/providers",
+const res = await fetch(
+API + "/api/providers",
 {
 
 method:"POST",
@@ -1192,11 +1041,10 @@ document.getElementById("api_key").value.trim()
 
 });
 
-const data=
-await res.json();
+const data = await res.json();
 
 alert(
-data.message||
+data.message ||
 "Provider Added Successfully"
 );
 
@@ -1214,249 +1062,15 @@ alert(err.message);
 };
 
 /* ===========================
-   SAVE SERVICE
-=========================== */
-
-document
-.getElementById("saveService")
-.onclick=async()=>{
-
-try{
-
-const res=
-await fetch(
-API+"/api/services",
-{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-
-provider_id:Number(
-document.getElementById("provider").value
-),
-
-provider_service_id:Number(
-document.getElementById("provider_service_id").value
-),
-
-name:
-document.getElementById("name").value.trim(),
-
-category:
-document.getElementById("category").value.trim(),
-
-rate:Number(
-document.getElementById("rate").value
-),
-
-min:Number(
-document.getElementById("min").value
-),
-
-max:Number(
-document.getElementById("max").value
-)
-
-})
-
-});
-
-const data=
-await res.json();
-
-alert(
-data.message||
-"Service Saved Successfully"
-);
-
-loadServices();
-
-}catch(err){
-
-alert(err.message);
-
-}
-
-};
-  /* ===========================
-   UPDATE SERVICE
-=========================== */
-
-document
-.getElementById("updateService")
-.onclick=async()=>{
-
-if(!selectedService){
-
-alert("Select a service first");
-
-return;
-
-}
-
-try{
-
-const res=
-await fetch(
-
-API+
-"/api/services/"+
-selectedService.id,
-
-{
-
-method:"PUT",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-
-provider_id:Number(
-document.getElementById("provider").value
-),
-
-provider_service_id:Number(
-document.getElementById("provider_service_id").value
-),
-
-name:
-document.getElementById("name").value.trim(),
-
-category:
-document.getElementById("category").value.trim(),
-
-rate:Number(
-document.getElementById("rate").value
-),
-
-min:Number(
-document.getElementById("min").value
-),
-
-max:Number(
-document.getElementById("max").value
-),
-
-status:true
-
-})
-
-});
-
-const data=
-await res.json();
-
-alert(
-data.message||
-"Service Updated Successfully"
-);
-
-loadServices();
-
-}catch(err){
-
-alert(err.message);
-
-}
-
-};
-
-/* ===========================
-   DELETE SERVICE
-=========================== */
-
-document
-.getElementById("deleteService")
-.onclick=async()=>{
-
-if(!selectedService){
-
-alert("Select a service first");
-
-return;
-
-}
-
-if(
-!confirm(
-"Delete this service?"
-)
-){
-
-return;
-
-}
-
-try{
-
-const res=
-await fetch(
-
-API+
-"/api/services/"+
-selectedService.id,
-
-{
-
-method:"DELETE"
-
-}
-
-);
-
-const data=
-await res.json();
-
-alert(
-data.message||
-"Service Deleted Successfully"
-);
-
-selectedService=null;
-
-[
-"provider_service_id",
-"name",
-"category",
-"rate",
-"min",
-"max"
-].forEach(id=>{
-
-document.getElementById(id).value="";
-
-});
-
-loadServices();
-
-}catch(err){
-
-alert(err.message);
-
-}
-
-};
-
-/* ===========================
    PAGE LOAD
 =========================== */
 
 window.onload=()=>{
 
-document
-.getElementById("api_url").value=
+document.getElementById("api_url").value=
 "https://hyperpanel.in/api/v2";
 
 loadProviders();
-
-loadServices();
 
 };
 
