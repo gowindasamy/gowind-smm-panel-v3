@@ -740,8 +740,19 @@ document.getElementById("serviceNumber");
 const res = await fetch(API + "/api/settings");
 const data = await res.json();
 
+async function loadSettings(){
+
+const res = await fetch(API + "/api/settings");
+const data = await res.json();
+
+if(data.success){
+
 document.getElementById("siteName").textContent =
-data.site_name;
+data.settings.site_name;
+
+}
+
+}
 
   }
 /* ==========================================
