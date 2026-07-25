@@ -11,7 +11,7 @@ content="width=device-width, initial-scale=1.0">
 
 <title>
 
-SMM Panel Admin
+Multi Add Service
 
 </title>
 
@@ -79,13 +79,6 @@ rgba(255,255,255,.08);
 
 .header{
 
-background:
-linear-gradient(
-90deg,
-#2563eb,
-#06b6d4
-);
-
 padding:25px;
 
 display:flex;
@@ -94,15 +87,18 @@ justify-content:space-between;
 
 align-items:center;
 
-flex-wrap:wrap;
-
-gap:15px;
+background:
+linear-gradient(
+90deg,
+#2563eb,
+#06b6d4
+);
 
 }
 
 .logo{
 
-font-size:30px;
+font-size:28px;
 
 font-weight:700;
 
@@ -110,12 +106,12 @@ font-weight:700;
 
 .version{
 
-padding:8px 18px;
+padding:8px 16px;
 
 border-radius:30px;
 
 background:
-rgba(255,255,255,.18);
+rgba(255,255,255,.2);
 
 font-size:14px;
 
@@ -133,13 +129,13 @@ padding:25px;
 
 background:#1f2937;
 
+border-radius:16px;
+
+padding:22px;
+
 border:
 1px solid
 #374151;
-
-border-radius:15px;
-
-padding:22px;
 
 margin-bottom:25px;
 
@@ -202,15 +198,15 @@ border-radius:10px;
 
 background:#111827;
 
-color:#fff;
-
 border:
 1px solid
 #374151;
 
-outline:none;
+color:#fff;
 
 font-size:15px;
+
+outline:none;
 
 transition:.25s;
 
@@ -226,8 +222,7 @@ box-shadow:
 rgba(59,130,246,.35);
 
 }
-
-button{
+ button{
 
 border:none;
 
@@ -236,11 +231,12 @@ cursor:pointer;
 transition:.25s;
 
 }
- .btn{
+
+.btn{
+
+width:100%;
 
 height:50px;
-
-padding:0 20px;
 
 border-radius:12px;
 
@@ -254,8 +250,7 @@ color:#fff;
 
 .btn:hover{
 
-transform:
-translateY(-2px);
+transform:translateY(-2px);
 
 }
 
@@ -307,15 +302,15 @@ linear-gradient(
 
 display:flex;
 
-align-items:center;
-
 justify-content:space-between;
+
+align-items:center;
 
 gap:20px;
 
-flex-wrap:wrap;
+margin-bottom:20px;
 
-margin-bottom:25px;
+flex-wrap:wrap;
 
 }
 
@@ -325,7 +320,7 @@ position:relative;
 
 display:inline-block;
 
-width:62px;
+width:60px;
 
 height:34px;
 
@@ -353,31 +348,31 @@ bottom:0;
 
 background:#374151;
 
-transition:.3s;
-
 border-radius:34px;
+
+transition:.3s;
 
 }
 
 .slider:before{
 
-position:absolute;
-
 content:"";
 
-height:26px;
+position:absolute;
 
 width:26px;
+
+height:26px;
 
 left:4px;
 
 bottom:4px;
 
-background:white;
-
-transition:.3s;
+background:#fff;
 
 border-radius:50%;
+
+transition:.3s;
 
 }
 
@@ -389,7 +384,7 @@ background:#22c55e;
 
 input:checked+.slider:before{
 
-transform:translateX(28px);
+transform:translateX(26px);
 
 }
 
@@ -402,20 +397,13 @@ font-weight:600;
 color:#cbd5e1;
 
 }
-
-@media(max-width:768px){
+ @media(max-width:768px){
 
 .header{
 
-justify-content:center;
+flex-direction:column;
 
 text-align:center;
-
-}
-
-.logo{
-
-font-size:24px;
 
 }
 
@@ -445,20 +433,21 @@ min-width:100%;
 
 <div class="logo">
 
-🚀 SMM Panel
+🚀 Multi Add
 
 </div>
 
 <div class="version">
 
-Professional v3.0
+Professional v3
 
 </div>
 
 </div>
 
 <div class="content">
- <div class="card">
+
+<div class="card">
 
 <div class="toggle-box">
 
@@ -479,8 +468,7 @@ gap:12px;
 
 <input
 type="checkbox"
-id="autoToggle"
-checked>
+id="autoToggle">
 
 <span
 class="slider">
@@ -493,7 +481,7 @@ class="slider">
 id="modeText"
 class="mode-text">
 
-Auto Fill ON
+Auto Fill OFF
 
 </span>
 
@@ -535,13 +523,12 @@ Provider Service ID
 <input
 type="number"
 id="provider_service_id"
-placeholder="5025">
+placeholder="Service ID">
 
 </div>
 
-</div>
-
-<div class="row">
+ </div>
+ <div class="row">
 
 <div class="col">
 
@@ -589,7 +576,7 @@ Rate
 type="number"
 step="0.0001"
 id="rate"
-placeholder="0">
+placeholder="0.00">
 
 </div>
 
@@ -624,14 +611,14 @@ placeholder="100000">
 </div>
 
 </div>
+
 <div class="row">
 
 <div class="col">
 
 <button
 class="btn success"
-id="addService"
-style="width:100%;">
+id="addService">
 
 ➕ Add Service
 
@@ -650,7 +637,6 @@ style="width:100%;">
 🔗 Add Provider
 
 </div>
-
 <div class="row">
 
 <div class="col">
@@ -710,8 +696,7 @@ placeholder="Enter API Key">
 
 <button
 class="btn primary"
-id="addProvider"
-style="width:100%;">
+id="addProvider">
 
 💾 Save Provider
 
@@ -728,39 +713,45 @@ style="width:100%;">
 const API =
 "https://gowind-smm-panel-v3.onrender.com";
 
-let mode="auto";
+let autoFill = false;
 
-let selectedService=null;
+let syncing = false;
 
-const toggle=
+const toggle =
 document.getElementById(
 "autoToggle"
 );
 
-const modeText=
+const modeText =
 document.getElementById(
 "modeText"
 );
+
+const serviceName =
+document.getElementById(
+"name"
+);
+
+const category =
+document.getElementById(
+"category"
+);
  /* ===========================
-   AUTO FILL ON / OFF
+   AUTO FILL TOGGLE
 =========================== */
 
-toggle.onchange=()=>{
+toggle.onchange = function(){
 
-if(toggle.checked){
+autoFill = this.checked;
 
-mode="auto";
+if(autoFill){
 
-modeText.innerHTML=
+modeText.innerHTML =
 "Auto Fill ON";
-
-autoFill();
 
 }else{
 
-mode="manual";
-
-modeText.innerHTML=
+modeText.innerHTML =
 "Auto Fill OFF";
 
 [
@@ -781,26 +772,36 @@ document.getElementById(id).value="";
 };
 
 /* ===========================
-   LIVE CATEGORY UPDATE
+   SERVICE ↔ CATEGORY SYNC
 =========================== */
 
-document
-.getElementById("name")
-.addEventListener(
+serviceName.addEventListener(
 "input",
-e=>{
+function(){
 
-if(mode==="manual"){
+if(!autoFill || syncing) return;
 
-document
-.getElementById("category")
-.value=
-e.target.value;
+syncing = true;
 
-}
+category.value = this.value;
 
-}
-);
+syncing = false;
+
+});
+
+category.addEventListener(
+"input",
+function(){
+
+if(!autoFill || syncing) return;
+
+syncing = true;
+
+serviceName.value = this.value;
+
+syncing = false;
+
+});
 
 /* ===========================
    LOAD PROVIDERS
@@ -810,119 +811,40 @@ async function loadProviders(){
 
 try{
 
-const res=
+const res =
 await fetch(
 API+"/api/providers"
 );
 
-const data=
+const data =
 await res.json();
 
-const select=
+const select =
 document.getElementById(
 "provider"
 );
 
-select.innerHTML=
+select.innerHTML =
 '<option value="">Select Provider</option>';
 
 (data.providers||[])
 .forEach(p=>{
 
-select.innerHTML+=`
+select.innerHTML +=
 
-<option value="${p.id}">
+`<option value="${p.id}">
 ${p.name}
-</option>
-
-`;
+</option>`;
 
 });
 
 }catch(err){
 
-console.error(err);
+console.log(err);
 
 }
 
-}
- /* ===========================
-   AUTO FILL
-=========================== */
-
-async function autoFill(){
-
-if(mode!=="auto") return;
-
-const provider=
-document.getElementById("provider").value;
-
-const serviceId=
-document.getElementById("provider_service_id").value;
-
-if(!provider || !serviceId) return;
-
-try{
-
-const res=
-await fetch(
-
-API+
-"/api/providers/"+
-provider+
-"/services"
-
-);
-
-const data=
-await res.json();
-
-const item=
-(data.services||[])
-.find(x=>
-
-String(x.service)===
-
-String(serviceId)
-
-);
-
-if(!item){
-
-return;
-
-}
-
-document.getElementById("name").value=
-item.name||"";
-
-document.getElementById("category").value=
-item.category||"";
-
-document.getElementById("rate").value=
-item.rate||0;
-
-document.getElementById("min").value=
-item.min||"";
-
-document.getElementById("max").value=
-item.max||"";
-
-}catch(err){
-
-console.error(err);
-
-}
-
-}
-
-document
-.getElementById("provider")
-.onchange=autoFill;
-
-document
-.getElementById("provider_service_id")
-.oninput=autoFill;
+ }
  /* ===========================
    ADD SERVICE
 =========================== */
@@ -933,8 +855,9 @@ document
 
 try{
 
-const res = await fetch(
-API + "/api/services",
+const res =
+await fetch(
+API+"/api/services",
 {
 
 method:"POST",
@@ -969,20 +892,22 @@ document.getElementById("min").value
 
 max:Number(
 document.getElementById("max").value
+
 )
 
 })
 
 });
 
-const data = await res.json();
+const data =
+await res.json();
 
 alert(
 data.message ||
 "Service Added Successfully"
 );
 
-if(mode==="manual"){
+if(!autoFill){
 
 [
 "provider_service_id",
@@ -1016,8 +941,9 @@ document
 
 try{
 
-const res = await fetch(
-API + "/api/providers",
+const res =
+await fetch(
+API+"/api/providers",
 {
 
 method:"POST",
@@ -1041,7 +967,8 @@ document.getElementById("api_key").value.trim()
 
 });
 
-const data = await res.json();
+const data =
+await res.json();
 
 alert(
 data.message ||
@@ -1065,9 +992,16 @@ alert(err.message);
    PAGE LOAD
 =========================== */
 
-window.onload=()=>{
+window.onload = ()=>{
 
-document.getElementById("api_url").value=
+toggle.checked = false;
+
+autoFill = false;
+
+modeText.innerHTML =
+"Auto Fill OFF";
+
+document.getElementById("api_url").value =
 "https://hyperpanel.in/api/v2";
 
 loadProviders();
