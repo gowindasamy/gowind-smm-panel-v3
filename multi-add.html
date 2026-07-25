@@ -780,7 +780,19 @@ serviceName.value=text+".view";
 category.value=text+".view";
 
 providerName.value=text+".view";
+const providerCode = text.split(" ")[0].toLowerCase();
 
+for (const option of provider.options) {
+
+    if (option.text.toLowerCase() === providerCode) {
+
+        provider.value = option.value;
+
+        break;
+
+    }
+
+}
 syncing=false;
 
 }
