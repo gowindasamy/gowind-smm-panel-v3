@@ -68,12 +68,10 @@ border-radius:20px;
 overflow:hidden;
 
 box-shadow:
-0 0 30px
-rgba(0,0,0,.45);
+0 0 30px rgba(0,0,0,.45);
 
 border:
-1px solid
-rgba(255,255,255,.08);
+1px solid rgba(255,255,255,.08);
 
 }
 
@@ -134,8 +132,7 @@ border-radius:16px;
 padding:22px;
 
 border:
-1px solid
-#374151;
+1px solid #374151;
 
 margin-bottom:25px;
 
@@ -199,8 +196,7 @@ border-radius:10px;
 background:#111827;
 
 border:
-1px solid
-#374151;
+1px solid #374151;
 
 color:#fff;
 
@@ -218,8 +214,7 @@ select:focus{
 border-color:#3b82f6;
 
 box-shadow:
-0 0 12px
-rgba(59,130,246,.35);
+0 0 12px rgba(59,130,246,.35);
 
 }
 
@@ -249,12 +244,6 @@ color:#fff;
 
 }
 
-.btn:hover{
-
-transform:translateY(-2px);
-
-}
-
 .primary{
 
 background:
@@ -273,28 +262,6 @@ linear-gradient(
 90deg,
 #22c55e,
 #16a34a
-);
-
-}
-
-.warning{
-
-background:
-linear-gradient(
-90deg,
-#f59e0b,
-#d97706
-);
-
-}
-
-.danger{
-
-background:
-linear-gradient(
-90deg,
-#ef4444,
-#dc2626
 );
 
 }
@@ -340,11 +307,8 @@ position:absolute;
 cursor:pointer;
 
 top:0;
-
 left:0;
-
 right:0;
-
 bottom:0;
 
 background:#374151;
@@ -441,7 +405,7 @@ min-width:100%;
 
 <div class="version">
 
-Professional v4
+Professional v5
 
 </div>
 
@@ -524,7 +488,7 @@ Provider Service ID
 <input
 type="number"
 id="provider_service_id"
-placeholder="Service ID">
+placeholder="5025">
 
 </div>
 
@@ -570,21 +534,6 @@ placeholder="Instagram">
 
 <label>
 
-Provider Name
-
-</label>
-
-<input
-type="text"
-id="provider_name_service"
-placeholder="Provider Name">
-
-</div>
-
-<div class="col">
-
-<label>
-
 Rate
 
 </label>
@@ -596,10 +545,6 @@ id="rate"
 placeholder="0.00">
 
 </div>
-
-</div>
-
-<div class="row">
 
 <div class="col">
 
@@ -616,6 +561,10 @@ placeholder="500">
 
 </div>
 
+</div>
+
+<div class="row">
+
 <div class="col">
 
 <label>
@@ -627,13 +576,9 @@ Maximum
 <input
 type="number"
 id="max"
-placeholder="100000">
+placeholder="1000">
 
 </div>
-
-</div>
-
-<div class="row">
 
 <div class="col">
 
@@ -760,8 +705,8 @@ document.getElementById("name");
 const category=
 document.getElementById("category");
 
-const providerNameService=
-document.getElementById("provider_name_service");
+const providerName=
+document.getElementById("provider_name");
 
 const rate=
 document.getElementById("rate");
@@ -775,15 +720,13 @@ document.getElementById("max");
    AUTO FILL
 ========================================== */
 
-toggle.onchange = async function(){
+toggle.onchange = function(){
 
 autoFill=this.checked;
 
 if(autoFill){
 
 modeText.innerHTML="Auto Fill ON";
-
-/* Default Values */
 
 providerServiceId.value="5025";
 
@@ -793,49 +736,11 @@ min.value="500";
 
 max.value="1000";
 
-/* Service ⇆ Category ⇆ Provider Name Sync */
+serviceName.value="";
 
-serviceName.oninput=function(){
+category.value="";
 
-if(!autoFill||syncing)return;
-
-syncing=true;
-
-category.value=this.value;
-
-providerNameService.value=this.value;
-
-syncing=false;
-
-};
-
-category.oninput=function(){
-
-if(!autoFill||syncing)return;
-
-syncing=true;
-
-serviceName.value=this.value;
-
-providerNameService.value=this.value;
-
-syncing=false;
-
-};
-
-providerNameService.oninput=function(){
-
-if(!autoFill||syncing)return;
-
-syncing=true;
-
-serviceName.value=this.value;
-
-category.value=this.value;
-
-syncing=false;
-
-};
+providerName.value="";
 
 }else{
 
@@ -847,7 +752,7 @@ serviceName.value="";
 
 category.value="";
 
-providerNameService.value="";
+providerName.value="";
 
 rate.value="";
 
@@ -860,6 +765,58 @@ max.value="";
 };
 
 /* ==========================================
+   AUTO SYNC
+========================================== */
+
+function syncFields(value){
+
+if(syncing) return;
+
+syncing=true;
+
+serviceName.value=value;
+
+category.value=value;
+
+providerName.value=value;
+
+syncing=false;
+
+}
+
+serviceName.addEventListener(
+"input",
+function(){
+
+if(!autoFill) return;
+
+syncFields(this.value);
+
+}
+);
+
+category.addEventListener(
+"input",
+function(){
+
+if(!autoFill) return;
+
+syncFields(this.value);
+
+}
+);
+
+providerName.addEventListener(
+"input",
+function(){
+
+if(!autoFill) return;
+
+syncFields(this.value);
+
+}
+);
+ /* ==========================================
    LOAD PROVIDERS
 ========================================== */
 
@@ -897,8 +854,86 @@ ${p.name}
 console.log(err);
 
 }
+
 }
+
 /* ==========================================
+   ADD PROVIDER
+========================================== */
+
+document
+.getElementById("addProvider")
+.onclick = async()=>{
+
+try{
+
+const body={
+
+name:
+providerName.value.trim(),
+
+api_url:
+document
+.getElementById("api_url")
+.value
+.trim(),
+
+api_key:
+document
+.getElementById("api_key")
+.value
+.trim()
+
+};
+
+const res=
+await fetch(
+API+"/api/providers",
+{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":
+"application/json"
+
+},
+
+body:
+JSON.stringify(body)
+
+}
+
+);
+
+const data=
+await res.json();
+
+alert(
+
+data.message ||
+
+"Provider Added Successfully"
+
+);
+
+providerName.value="";
+
+document
+.getElementById("api_key")
+.value="";
+
+await loadProviders();
+
+}catch(err){
+
+alert(err.message);
+
+}
+
+};
+ /* ==========================================
    ADD SERVICE
 ========================================== */
 
@@ -972,13 +1007,13 @@ data.message ||
 
 if(!autoFill){
 
+provider.value="";
+
 providerServiceId.value="";
 
 serviceName.value="";
 
 category.value="";
-
-providerNameService.value="";
 
 rate.value="";
 
@@ -987,86 +1022,6 @@ min.value="";
 max.value="";
 
 }
-
-}catch(err){
-
-alert(err.message);
-
-}
-
-};
-
-/* ==========================================
-   ADD PROVIDER
-========================================== */
-
-document
-.getElementById("addProvider")
-.onclick = async()=>{
-
-try{
-
-const res=
-await fetch(
-API+"/api/providers",
-{
-
-method:"POST",
-
-headers:{
-
-"Content-Type":
-"application/json"
-
-},
-
-body:
-JSON.stringify({
-
-name:
-document
-.getElementById("provider_name")
-.value
-.trim(),
-
-api_url:
-document
-.getElementById("api_url")
-.value
-.trim(),
-
-api_key:
-document
-.getElementById("api_key")
-.value
-.trim()
-
-})
-
-}
-
-);
-
-const data=
-await res.json();
-
-alert(
-
-data.message ||
-
-"Provider Added Successfully"
-
-);
-
-document
-.getElementById("provider_name")
-.value="";
-
-document
-.getElementById("api_key")
-.value="";
-
-loadProviders();
 
 }catch(err){
 
@@ -1116,60 +1071,29 @@ max.value="1000";
 };
 
 /* ==========================================
-   AUTO SYNC
+   OPTIONAL RESET
 ========================================== */
 
-function syncFields(value){
+function clearServiceForm(){
 
-if(syncing) return;
+provider.value="";
 
-syncing=true;
+providerServiceId.value="";
 
-serviceName.value=value;
+serviceName.value="";
 
-category.value=value;
+category.value="";
 
-providerNameService.value=value;
+rate.value="";
 
-syncing=false;
+min.value="";
 
-}
-
-serviceName.addEventListener(
-"input",
-function(){
-
-if(!autoFill) return;
-
-syncFields(this.value);
+max.value="";
 
 }
-);
-
-category.addEventListener(
-"input",
-function(){
-
-if(!autoFill) return;
-
-syncFields(this.value);
-
-}
-);
-
-providerNameService.addEventListener(
-"input",
-function(){
-
-if(!autoFill) return;
-
-syncFields(this.value);
-
-}
-);
 
 /* ==========================================
-   END
+   HTML END
 ========================================== */
 
 </script>
