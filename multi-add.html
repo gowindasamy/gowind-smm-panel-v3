@@ -735,11 +735,11 @@ min.value="500";
 
 max.value="1000";
 
-serviceName.value="";
+serviceName.value=".view";
 
-category.value="";
+category.value=".view";
 
-providerName.value="";
+providerName.value=".view";
 
 }else{
 
@@ -773,11 +773,13 @@ if(syncing)return;
 
 syncing=true;
 
-serviceName.value=value;
+const text=value.replace(/\.view$/,"");
 
-category.value=value;
+serviceName.value=text+".view";
 
-providerName.value=value;
+category.value=text+".view";
+
+providerName.value=text+".view";
 
 syncing=false;
 
