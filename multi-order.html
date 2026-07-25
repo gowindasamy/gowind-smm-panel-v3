@@ -241,6 +241,17 @@ Place All Orders
 </button>
 
 <script>
+  const user = JSON.parse(localStorage.getItem("user"));
+
+if (!user) {
+    alert("Please Login");
+    window.location.href = "login.html";
+}
+
+if (user.role !== "admin") {
+    alert("Access Denied");
+    window.location.href = "index.html";
+}
   const API =
 "https://gowind-smm-panel-v3.onrender.com";
 
