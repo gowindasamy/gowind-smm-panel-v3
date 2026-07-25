@@ -222,7 +222,8 @@ box-shadow:
 rgba(59,130,246,.35);
 
 }
- button{
+
+button{
 
 border:none;
 
@@ -397,7 +398,8 @@ font-weight:600;
 color:#cbd5e1;
 
 }
- @media(max-width:768px){
+
+@media(max-width:768px){
 
 .header{
 
@@ -439,15 +441,14 @@ min-width:100%;
 
 <div class="version">
 
-Professional v3
+Professional v4
 
 </div>
 
 </div>
 
 <div class="content">
-
-<div class="card">
+ <div class="card">
 
 <div class="toggle-box">
 
@@ -527,8 +528,9 @@ placeholder="Service ID">
 
 </div>
 
- </div>
- <div class="row">
+</div>
+
+<div class="row">
 
 <div class="col">
 
@@ -568,6 +570,21 @@ placeholder="Instagram">
 
 <label>
 
+Provider Name
+
+</label>
+
+<input
+type="text"
+id="provider_name_service"
+placeholder="Provider Name">
+
+</div>
+
+<div class="col">
+
+<label>
+
 Rate
 
 </label>
@@ -580,6 +597,10 @@ placeholder="0.00">
 
 </div>
 
+</div>
+
+<div class="row">
+
 <div class="col">
 
 <label>
@@ -591,7 +612,7 @@ Minimum
 <input
 type="number"
 id="min"
-placeholder="100">
+placeholder="500">
 
 </div>
 
@@ -628,15 +649,15 @@ id="addService">
 
 </div>
 
-</div>
-
-<div class="card">
+ </div>
+ <div class="card">
 
 <div class="card-title">
 
 🔗 Add Provider
 
 </div>
+
 <div class="row">
 
 <div class="col">
@@ -708,133 +729,166 @@ id="addProvider">
 
 </div>
 
+</div>
+
 <script>
 
 const API =
 "https://gowind-smm-panel-v3.onrender.com";
 
-let autoFill = false;
+let autoFill=false;
 
-let syncing = false;
+let syncing=false;
 
-const toggle =
-document.getElementById(
-"autoToggle"
-);
+let services=[];
 
-const modeText =
-document.getElementById(
-"modeText"
-);
+const toggle=
+document.getElementById("autoToggle");
 
-const serviceName =
-document.getElementById(
-"name"
-);
+const modeText=
+document.getElementById("modeText");
 
-const category =
-document.getElementById(
-"category"
-);
- /* ===========================
-   AUTO FILL TOGGLE
-=========================== */
+const provider=
+document.getElementById("provider");
 
-toggle.onchange = function(){
+const providerServiceId=
+document.getElementById("provider_service_id");
 
-autoFill = this.checked;
+const serviceName=
+document.getElementById("name");
+
+const category=
+document.getElementById("category");
+
+const providerNameService=
+document.getElementById("provider_name_service");
+
+const rate=
+document.getElementById("rate");
+
+const min=
+document.getElementById("min");
+
+const max=
+document.getElementById("max");
+ /* ==========================================
+   AUTO FILL
+========================================== */
+
+toggle.onchange = async function(){
+
+autoFill=this.checked;
 
 if(autoFill){
 
-modeText.innerHTML =
-"Auto Fill ON";
+modeText.innerHTML="Auto Fill ON";
+
+/* Default Values */
+
+providerServiceId.value="5025";
+
+rate.value="0";
+
+min.value="500";
+
+max.value="1000";
+
+/* Service ⇆ Category ⇆ Provider Name Sync */
+
+serviceName.oninput=function(){
+
+if(!autoFill||syncing)return;
+
+syncing=true;
+
+category.value=this.value;
+
+providerNameService.value=this.value;
+
+syncing=false;
+
+};
+
+category.oninput=function(){
+
+if(!autoFill||syncing)return;
+
+syncing=true;
+
+serviceName.value=this.value;
+
+providerNameService.value=this.value;
+
+syncing=false;
+
+};
+
+providerNameService.oninput=function(){
+
+if(!autoFill||syncing)return;
+
+syncing=true;
+
+serviceName.value=this.value;
+
+category.value=this.value;
+
+syncing=false;
+
+};
 
 }else{
 
-modeText.innerHTML =
-"Auto Fill OFF";
+modeText.innerHTML="Auto Fill OFF";
 
-[
-"provider_service_id",
-"name",
-"category",
-"rate",
-"min",
-"max"
-].forEach(id=>{
+providerServiceId.value="";
 
-document.getElementById(id).value="";
+serviceName.value="";
 
-});
+category.value="";
+
+providerNameService.value="";
+
+rate.value="";
+
+min.value="";
+
+max.value="";
 
 }
 
 };
 
-/* ===========================
-   SERVICE ↔ CATEGORY SYNC
-=========================== */
-
-serviceName.addEventListener(
-"input",
-function(){
-
-if(!autoFill || syncing) return;
-
-syncing = true;
-
-category.value = this.value;
-
-syncing = false;
-
-});
-
-category.addEventListener(
-"input",
-function(){
-
-if(!autoFill || syncing) return;
-
-syncing = true;
-
-serviceName.value = this.value;
-
-syncing = false;
-
-});
-
-/* ===========================
+/* ==========================================
    LOAD PROVIDERS
-=========================== */
+========================================== */
 
 async function loadProviders(){
 
 try{
 
-const res =
+const res=
 await fetch(
 API+"/api/providers"
 );
 
-const data =
+const data=
 await res.json();
 
-const select =
-document.getElementById(
-"provider"
-);
-
-select.innerHTML =
+provider.innerHTML=
 '<option value="">Select Provider</option>';
 
-(data.providers||[])
-.forEach(p=>{
+(data.providers||[]).forEach(p=>{
 
-select.innerHTML +=
+provider.innerHTML+=`
 
-`<option value="${p.id}">
+<option value="${p.id}">
+
 ${p.name}
-</option>`;
+
+</option>
+
+`;
 
 });
 
@@ -843,11 +897,10 @@ ${p.name}
 console.log(err);
 
 }
-
- }
- /* ===========================
+}
+/* ==========================================
    ADD SERVICE
-=========================== */
+========================================== */
 
 document
 .getElementById("addService")
@@ -855,7 +908,37 @@ document
 
 try{
 
-const res =
+const body={
+
+provider_id:Number(
+provider.value
+),
+
+provider_service_id:Number(
+providerServiceId.value
+),
+
+name:
+serviceName.value.trim(),
+
+category:
+category.value.trim(),
+
+rate:Number(
+rate.value
+),
+
+min:Number(
+min.value
+),
+
+max:Number(
+max.value
+)
+
+};
+
+const res=
 await fetch(
 API+"/api/services",
 {
@@ -863,64 +946,45 @@ API+"/api/services",
 method:"POST",
 
 headers:{
-"Content-Type":"application/json"
+
+"Content-Type":
+"application/json"
+
 },
 
-body:JSON.stringify({
+body:
+JSON.stringify(body)
 
-provider_id:Number(
-document.getElementById("provider").value
-),
+}
 
-provider_service_id:Number(
-document.getElementById("provider_service_id").value
-),
+);
 
-name:
-document.getElementById("name").value.trim(),
-
-category:
-document.getElementById("category").value.trim(),
-
-rate:Number(
-document.getElementById("rate").value
-),
-
-min:Number(
-document.getElementById("min").value
-),
-
-max:Number(
-document.getElementById("max").value
-
-)
-
-})
-
-});
-
-const data =
+const data=
 await res.json();
 
 alert(
+
 data.message ||
+
 "Service Added Successfully"
+
 );
 
 if(!autoFill){
 
-[
-"provider_service_id",
-"name",
-"category",
-"rate",
-"min",
-"max"
-].forEach(id=>{
+providerServiceId.value="";
 
-document.getElementById(id).value="";
+serviceName.value="";
 
-});
+category.value="";
+
+providerNameService.value="";
+
+rate.value="";
+
+min.value="";
+
+max.value="";
 
 }
 
@@ -931,9 +995,10 @@ alert(err.message);
 }
 
 };
- /* ===========================
+
+/* ==========================================
    ADD PROVIDER
-=========================== */
+========================================== */
 
 document
 .getElementById("addProvider")
@@ -941,7 +1006,7 @@ document
 
 try{
 
-const res =
+const res=
 await fetch(
 API+"/api/providers",
 {
@@ -949,34 +1014,57 @@ API+"/api/providers",
 method:"POST",
 
 headers:{
-"Content-Type":"application/json"
+
+"Content-Type":
+"application/json"
+
 },
 
-body:JSON.stringify({
+body:
+JSON.stringify({
 
 name:
-document.getElementById("provider_name").value.trim(),
+document
+.getElementById("provider_name")
+.value
+.trim(),
 
 api_url:
-document.getElementById("api_url").value.trim(),
+document
+.getElementById("api_url")
+.value
+.trim(),
 
 api_key:
-document.getElementById("api_key").value.trim()
+document
+.getElementById("api_key")
+.value
+.trim()
 
 })
 
-});
+}
 
-const data =
+);
+
+const data=
 await res.json();
 
 alert(
+
 data.message ||
+
 "Provider Added Successfully"
+
 );
 
-document.getElementById("provider_name").value="";
-document.getElementById("api_key").value="";
+document
+.getElementById("provider_name")
+.value="";
+
+document
+.getElementById("api_key")
+.value="";
 
 loadProviders();
 
@@ -987,26 +1075,102 @@ alert(err.message);
 }
 
 };
-
-/* ===========================
+ /* ==========================================
    PAGE LOAD
-=========================== */
+========================================== */
 
-window.onload = ()=>{
+window.onload = async()=>{
 
-toggle.checked = false;
+toggle.checked=false;
 
-autoFill = false;
+autoFill=false;
 
-modeText.innerHTML =
+modeText.innerHTML=
 "Auto Fill OFF";
 
-document.getElementById("api_url").value =
+document
+.getElementById("api_url")
+.value=
 "https://hyperpanel.in/api/v2";
 
-loadProviders();
+await loadProviders();
 
 };
+
+/* ==========================================
+   PROVIDER CHANGE
+========================================== */
+
+provider.onchange=function(){
+
+if(!autoFill) return;
+
+providerServiceId.value="5025";
+
+rate.value="0";
+
+min.value="500";
+
+max.value="1000";
+
+};
+
+/* ==========================================
+   AUTO SYNC
+========================================== */
+
+function syncFields(value){
+
+if(syncing) return;
+
+syncing=true;
+
+serviceName.value=value;
+
+category.value=value;
+
+providerNameService.value=value;
+
+syncing=false;
+
+}
+
+serviceName.addEventListener(
+"input",
+function(){
+
+if(!autoFill) return;
+
+syncFields(this.value);
+
+}
+);
+
+category.addEventListener(
+"input",
+function(){
+
+if(!autoFill) return;
+
+syncFields(this.value);
+
+}
+);
+
+providerNameService.addEventListener(
+"input",
+function(){
+
+if(!autoFill) return;
+
+syncFields(this.value);
+
+}
+);
+
+/* ==========================================
+   END
+========================================== */
 
 </script>
 
