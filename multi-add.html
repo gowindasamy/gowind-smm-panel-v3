@@ -398,8 +398,8 @@ min-width:100%;
 
 <div class="header">
 
-<div class="logo">
-Multi Add
+<div class="logo" id="siteName">
+Loading...
 </div>
 
 <div class="version">
@@ -732,7 +732,18 @@ const max=
 document.getElementById("max");
   const serviceNumber =
 document.getElementById("serviceNumber");
+/* ==========================================
+   LOAD SETTINGS
+========================================== */
+  async function loadSettings(){
 
+const res = await fetch(API + "/api/settings");
+const data = await res.json();
+
+document.getElementById("siteName").textContent =
+data.site_name;
+
+  }
 /* ==========================================
    AUTO FILL
 ========================================== */
@@ -1068,7 +1079,7 @@ document
 .getElementById("api_url")
 .value=
 "https://hyperpanel.in/api/v2";
-
+await loadSettings();
 await loadProviders();
 
 };
