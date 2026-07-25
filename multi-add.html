@@ -735,12 +735,10 @@ document.getElementById("serviceNumber");
 /* ==========================================
    LOAD SETTINGS
 ========================================== */
-  async function loadSettings(){
-
-const res = await fetch(API + "/api/settings");
-const data = await res.json();
 
 async function loadSettings(){
+
+try{
 
 const res = await fetch(API + "/api/settings");
 const data = await res.json();
@@ -752,9 +750,13 @@ data.settings.site_name;
 
 }
 
+}catch(err){
+
+console.log(err);
+
 }
 
-  }
+}
 /* ==========================================
    AUTO FILL
 ========================================== */
