@@ -745,7 +745,7 @@ providerName.value="";
 
 modeText.innerHTML="Auto Fill OFF";
 
-providerServiceId.value="";
+providerServiceId.value=".view";
 
 serviceName.value="";
 
@@ -777,11 +777,31 @@ serviceName.value=value;
 
 category.value=value;
 
-// Provider Name change ஆகாது
-
 syncing=false;
 
 }
+
+serviceName.addEventListener(
+"input",
+function(){
+
+if(!autoFill)return;
+
+syncFields(this.value);
+
+}
+);
+
+category.addEventListener(
+"input",
+function(){
+
+if(!autoFill)return;
+
+syncFields(this.value);
+
+}
+);
   /* ==========================================
    LOAD PROVIDERS
 ========================================== */
