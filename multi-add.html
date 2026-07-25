@@ -420,7 +420,20 @@ Professional v5
 🔗 Add Provider
 
 </div>
+<div class="row">
 
+<div class="col">
+
+<label>Number</label>
+
+<input
+type="number"
+id="serviceNumber"
+placeholder="26">
+
+</div>
+
+</div>
 <div class="row">
 
 <div class="col">
@@ -714,6 +727,8 @@ document.getElementById("min");
 
 const max=
 document.getElementById("max");
+  const serviceNumber =
+document.getElementById("serviceNumber");
 
 /* ==========================================
    AUTO FILL
@@ -818,16 +833,6 @@ syncFields(this.value);
 }
 );
 
-providerName.addEventListener(
-"input",
-function(){
-
-if(!autoFill)return;
-
-syncFields(this.value);
-
-}
-);
   /* ==========================================
    LOAD PROVIDERS
 ========================================== */
@@ -840,7 +845,8 @@ const res=
 await fetch(
 API+"/api/providers"
 );
-
+const serviceNumber =
+document.getElementById("serviceNumber");
 const data=
 await res.json();
 
@@ -868,7 +874,16 @@ console.log(err);
 }
 
 }
+serviceNumber.addEventListener(
+"input",
+function(){
 
+if(!autoFill)return;
+
+syncFields(this.value);
+
+}
+);
 /* ==========================================
    ADD PROVIDER
 ========================================== */
