@@ -392,7 +392,7 @@ return;
 }
 
 data.requests.forEach(function(item){
-
+console.log(API + item.screenshot);
 let statusClass="pending";
 
 if(item.status==="Approved"){
@@ -468,8 +468,11 @@ ${new Date(item.created_at).toLocaleString()}
 </div>
 
 <img
-src="${API}${item.screenshot}"
-target="_blank">
+src="${(API + item.screenshot).trim()}"
+alt="Payment Screenshot"
+loading="lazy"
+referrerpolicy="no-referrer"
+onclick="window.open(this.src,'_blank')">
 
 <div class="status ${statusClass}">
 ${item.status}
