@@ -393,14 +393,21 @@ return;
 
 data.requests.forEach(function(item){
 
-    console.log(item.screenshot);
-    alert("[" + item.screenshot + "]");
-
-});
+let statusClass="pending";
 
 if(item.status==="Approved"){
-statusClass="approved";
+    statusClass="approved";
 }
+
+if(item.status==="Rejected"){
+    statusClass="rejected";
+}
+
+cards.innerHTML += `
+...
+`;
+
+});
 
 if(item.status==="Rejected"){
 statusClass="rejected";
