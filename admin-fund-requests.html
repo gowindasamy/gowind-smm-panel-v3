@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Admin Fund Requests</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+
+background:
+radial-gradient(circle at top left,#7c3aed33,transparent 35%),
+radial-gradient(circle at top right,#06b6d433,transparent 35%),
+radial-gradient(circle at bottom,#2563eb33,transparent 40%),
+#0b1120;
+
+color:#fff;
+
+min-height:100vh;
+
+overflow-x:hidden;
+
+}
+
+body::before{
+
+content:"";
+
+position:fixed;
+
+width:260px;
+height:260px;
+
+background:#7c3aed;
+
+filter:blur(140px);
+
+top:-80px;
+left:-80px;
+
+opacity:.35;
+
+z-index:-1;
+
+}
+
+body::after{
+
+content:"";
+
+position:fixed;
+
+width:320px;
+height:320px;
+
+background:#06b6d4;
+
+filter:blur(160px);
+
+bottom:-100px;
+right:-100px;
+
+opacity:.25;
+
+z-index:-1;
+
+}
+
+.container{
+
+width:95%;
+max-width:1100px;
+
+margin:30px auto;
+
+padding:25px;
+
+background:rgba(255,255,255,.05);
+
+border:1px solid rgba(255,255,255,.08);
+
+backdrop-filter:blur(18px);
+
+border-radius:20px;
+
+box-shadow:
+0 0 35px rgba(124,58,237,.25);
+
+}
+
+.header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:25px;
+
+flex-wrap:wrap;
+
+gap:15px;
+
+}
+
+.header h1{
+
+font-size:30px;
+
+background:linear-gradient(
+90deg,
+#3b82f6,
+#06b6d4,
+#7c3aed
+);
+
+-webkit-background-clip:text;
+
+-webkit-text-fill-color:transparent;
+
+}
+
+.refreshBtn{
+
+padding:12px 22px;
+
+border:none;
+
+border-radius:12px;
+
+cursor:pointer;
+
+font-weight:bold;
+
+color:#fff;
+
+background:linear-gradient(
+90deg,
+#2563eb,
+#7c3aed
+);
+
+}
+
+.refreshBtn:hover{
+
+opacity:.9;
+
+}
+
+.cards{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+
+gap:20px;
+
+}
+
+.card{
+
+background:#16213a;
+
+border:1px solid #334155;
+
+border-radius:18px;
+
+padding:20px;
+
+transition:.3s;
+
+}
+
+.card:hover{
+
+transform:translateY(-4px);
+
+box-shadow:
+0 0 25px rgba(59,130,246,.25);
+
+}
+
+.row{
+
+margin:10px 0;
+
+font-size:15px;
+
+}
+
+.label{
+
+font-weight:bold;
+
+color:#60a5fa;
+
+}
+
+img{
+
+width:100%;
+
+margin-top:15px;
+
+border-radius:12px;
+
+border:1px solid #334155;
+
+}
+
+.status{
+
+display:inline-block;
+
+padding:6px 12px;
+
+border-radius:20px;
+
+font-size:13px;
+
+font-weight:bold;
+
+margin-top:10px;
+
+}
+
+.pending{
+
+background:#f59e0b;
+
+color:#fff;
+
+}
+
+.approved{
+
+background:#22c55e;
+
+color:#fff;
+
+}
+
+.rejected{
+
+background:#ef4444;
+
+color:#fff;
+
+}
+
+.actions{
+
+display:flex;
+
+gap:10px;
+
+margin-top:18px;
+
+}
+
+.actions button{
+
+flex:1;
+
+padding:12px;
+
+border:none;
+
+border-radius:10px;
+
+cursor:pointer;
+
+font-weight:bold;
+
+color:#fff;
+
+}
+
+.approveBtn{
+
+background:#16a34a;
+
+}
+
+.rejectBtn{
+
+background:#dc2626;
+
+}
+
+.empty{
+
+text-align:center;
+
+padding:40px;
+
+font-size:20px;
+
+color:#94a3b8;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+
+<h1>💰 Admin Fund Requests</h1>
+
+<button
+class="refreshBtn"
+onclick="loadRequests()">
+
+🔄 Refresh
+
+</button>
+
+</div>
+
+<div
+class="cards"
+id="cards">
+
+<div class="empty">
+
+Loading...
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const API =
+"https://gowind-smm-panel-v3.onrender.com";
+  /* ===========================
+   LOAD REQUESTS
+=========================== */
+
+async function loadRequests(){
+
+try{
+
+const response=await fetch(
+
+API+"/api/admin/fund-requests"
+
+);
+
+const data=await response.json();
+
+const cards=document.getElementById("cards");
+
+cards.innerHTML="";
+
+if(!data.success){
+
+cards.innerHTML=
+"<div class='empty'>Failed to load requests</div>";
+
+return;
+
+}
+
+if(data.total===0){
+
+cards.innerHTML=
+"<div class='empty'>No Pending Requests</div>";
+
+return;
+
+}
+
+data.requests.forEach(function(item){
+
+let statusClass="pending";
+
+if(item.status==="Approved"){
+statusClass="approved";
+}
+
+if(item.status==="Rejected"){
+statusClass="rejected";
+}
+
+cards.innerHTML+=`
+
+<div class="card">
+
+<div class="row">
+
+<span class="label">
+Request ID :
+</span>
+
+${item.id}
+
+</div>
+
+<div class="row">
+
+<span class="label">
+Username :
+</span>
+
+${item.username}
+
+</div>
+
+<div class="row">
+
+<span class="label">
+User ID :
+</span>
+
+${item.user_id}
+
+</div>
+
+<div class="row">
+
+<span class="label">
+Amount :
+</span>
+
+₹${item.amount}
+
+</div>
+
+<div class="row">
+
+<span class="label">
+UTR :
+</span>
+
+${item.utr}
+
+</div>
+
+<div class="row">
+
+<span class="label">
+Date :
+</span>
+
+${new Date(item.created_at).toLocaleString()}
+
+</div>
+
+<img
+src="${API}${item.screenshot}"
+target="_blank">
+
+<div class="status ${statusClass}">
+${item.status}
+</div>
+
+<div class="actions">
+
+<button
+class="approveBtn"
+onclick="updateRequest(${item.id},'Approved')">
+
+✅ Approve
+
+</button>
+
+<button
+class="rejectBtn"
+onclick="updateRequest(${item.id},'Rejected')">
+
+❌ Reject
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}catch(err){
+
+console.log(err);
+
+document.getElementById("cards").innerHTML=
+"<div class='empty'>Server Error</div>";
+
+}
+
+}
+  /* ===========================
+   APPROVE / REJECT
+=========================== */
+
+async function updateRequest(id,status){
+
+let note="";
+
+if(status==="Rejected"){
+
+note=prompt("Reject Reason") || "";
+
+}
+
+try{
+
+const response=await fetch(
+
+API+"/api/fund-request/"+id,
+
+{
+
+method:"PUT",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+status:status,
+admin_note:note
+
+})
+
+}
+
+);
+
+const data=await response.json();
+
+if(data.success){
+
+alert("Request "+status);
+
+loadRequests();
+
+}else{
+
+alert(
+
+data.message ||
+data.error ||
+"Update Failed"
+
+);
+
+}
+
+}catch(err){
+
+alert(err.message);
+
+}
+
+}
+
+/* ===========================
+   AUTO LOAD
+=========================== */
+
+window.onload=function(){
+
+loadRequests();
+
+};
+
+/* ===========================
+   AUTO REFRESH
+=========================== */
+
+setInterval(function(){
+
+loadRequests();
+
+},10000);
+  /* ===========================
+   REFRESH BUTTON
+=========================== */
+
+function refreshRequests(){
+
+loadRequests();
+
+}
+
+/* ===========================
+   IMAGE PREVIEW
+=========================== */
+
+document.addEventListener("click",function(e){
+
+if(e.target.tagName==="IMG"){
+
+window.open(e.target.src,"_blank");
+
+}
+
+});
+
+/* ===========================
+   ESC KEY RELOAD
+=========================== */
+
+document.addEventListener("keydown",function(e){
+
+if(e.key==="Escape"){
+
+loadRequests();
+
+}
+
+});
+
+console.log("Admin Fund Requests Ready");
+
+</script>
+
+</body>
+
+</html>
