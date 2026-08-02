@@ -4,7 +4,7 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <title>Admin Fund Requests</title>
 
@@ -18,142 +18,75 @@ font-family:Arial,sans-serif;
 }
 
 body{
-background:
-radial-gradient(circle at top left,#7c3aed33,transparent 35%),
-radial-gradient(circle at top right,#06b6d433,transparent 35%),
-radial-gradient(circle at bottom,#2563eb33,transparent 40%),
-#0b1120;
+background:#0b1120;
 color:#fff;
-min-height:100vh;
-overflow-x:hidden;
-}
-
-body::before{
-content:"";
-position:fixed;
-width:260px;
-height:260px;
-background:#7c3aed;
-filter:blur(140px);
-top:-80px;
-left:-80px;
-opacity:.35;
-z-index:-1;
-}
-
-body::after{
-content:"";
-position:fixed;
-width:320px;
-height:320px;
-background:#06b6d4;
-filter:blur(160px);
-bottom:-100px;
-right:-100px;
-opacity:.25;
-z-index:-1;
 }
 
 .container{
 width:95%;
-max-width:1100px;
-margin:30px auto;
-padding:25px;
-background:rgba(255,255,255,.05);
-border:1px solid rgba(255,255,255,.08);
-backdrop-filter:blur(18px);
-border-radius:20px;
-box-shadow:0 0 35px rgba(124,58,237,.25);
+max-width:900px;
+margin:25px auto;
 }
 
 .header{
 display:flex;
 justify-content:space-between;
 align-items:center;
-flex-wrap:wrap;
-gap:15px;
-margin-bottom:25px;
+margin-bottom:20px;
 }
 
 .header h1{
-font-size:32px;
-background:linear-gradient(90deg,#3b82f6,#06b6d4,#7c3aed);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
+font-size:28px;
 }
 
 .refreshBtn{
-padding:12px 22px;
+padding:12px 18px;
 border:none;
-border-radius:12px;
-cursor:pointer;
-font-weight:bold;
+border-radius:10px;
+background:#2563eb;
 color:#fff;
-background:linear-gradient(90deg,#2563eb,#7c3aed);
+font-weight:bold;
+cursor:pointer;
 }
 
 .cards{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(330px,1fr));
-gap:20px;
+gap:18px;
 }
 
 .card{
 background:#16213a;
+padding:18px;
+border-radius:16px;
 border:1px solid #334155;
-border-radius:18px;
-padding:20px;
-transition:.3s;
-}
-
-.card:hover{
-transform:translateY(-5px);
-box-shadow:0 0 25px rgba(59,130,246,.3);
 }
 
 .row{
-margin:10px 0;
-font-size:15px;
+margin:8px 0;
 }
 
 .label{
-font-weight:bold;
 color:#60a5fa;
-}
-
-.screenshot{
-width:100%;
-margin-top:15px;
-border-radius:12px;
-border:1px solid #334155;
-cursor:pointer;
+font-weight:bold;
 }
 
 .status{
 display:inline-block;
-padding:6px 14px;
+padding:6px 12px;
 border-radius:20px;
+margin-top:10px;
 font-size:13px;
 font-weight:bold;
-margin-top:12px;
 }
 
 .pending{
 background:#f59e0b;
 }
 
-.approved{
-background:#22c55e;
-}
-
-.rejected{
-background:#ef4444;
-}
-
 .actions{
 display:flex;
 gap:10px;
-margin-top:18px;
+margin-top:15px;
 }
 
 .actions button{
@@ -161,8 +94,8 @@ flex:1;
 padding:12px;
 border:none;
 border-radius:10px;
-cursor:pointer;
 font-weight:bold;
+cursor:pointer;
 color:#fff;
 }
 
@@ -177,7 +110,7 @@ background:#dc2626;
 .empty{
 text-align:center;
 padding:40px;
-font-size:22px;
+font-size:18px;
 color:#94a3b8;
 }
 
@@ -193,8 +126,9 @@ color:#94a3b8;
 
 <h1>💰 Admin Fund Requests</h1>
 
-<button class="refreshBtn" onclick="loadRequests()">
-🔄 Refresh
+<button class="refreshBtn"
+onclick="loadRequests()">
+Refresh
 </button>
 
 </div>
@@ -208,111 +142,144 @@ Loading...
 </div>
 
 </div>
-
 <script>
 
 const API = "https://gowind-smm-panel-v3.onrender.com";
-  async function loadRequests() {
 
-    try {
+/* ===========================
+   LOAD REQUESTS
+=========================== */
 
-        const response = await fetch(API + "/api/admin/fund-requests");
-        const data = await response.json();
+async function loadRequests(){
 
-        const cards = document.getElementById("cards");
-        cards.innerHTML = "";
+try{
 
-        if (!data.success) {
-            cards.innerHTML = "<div class='empty'>Failed to load requests</div>";
-            return;
-        }
+const response = await fetch(
+API + "/api/admin/fund-requests"
+);
 
-        if (data.requests.length === 0) {
-            cards.innerHTML = "<div class='empty'>No Fund Requests</div>";
-            return;
-        }
+const data = await response.json();
 
-        data.requests.forEach(item => {
+const cards = document.getElementById("cards");
 
-            let statusClass = "pending";
+cards.innerHTML = "";
 
-            if (item.status === "Approved") statusClass = "approved";
-            if (item.status === "Rejected") statusClass = "rejected";
+if(!data.success){
 
-            const imageUrl = API + item.screenshot;
+cards.innerHTML =
+"<div class='empty'>Failed to load requests</div>";
 
-            cards.innerHTML += `
-            <div class="card">
+return;
 
-                <div class="row">
-                    <span class="label">Request ID :</span>
-                    ${item.id}
-                </div>
+}
 
-                <div class="row">
-                    <span class="label">Username :</span>
-                    ${item.username}
-                </div>
+const pendingRequests = data.requests.filter(function(item){
 
-                <div class="row">
-                    <span class="label">User ID :</span>
-                    ${item.user_id}
-                </div>
+return item.status === "Pending";
 
-                <div class="row">
-                    <span class="label">Amount :</span>
-                    ₹${item.amount}
-                </div>
+});
 
-                <div class="row">
-                    <span class="label">UTR :</span>
-                    ${item.utr}
-                </div>
+if(pendingRequests.length === 0){
 
-                <div class="row">
-                    <span class="label">Date :</span>
-                    ${new Date(item.created_at).toLocaleString()}
-                </div>
+cards.innerHTML =
+"<div class='empty'>No Pending Fund Requests</div>";
 
-                <img
-                    class="screenshot"
-                    src="${imageUrl}"
-                    alt="Screenshot"
-                    style="width:100%;border-radius:10px;margin-top:10px;cursor:pointer"
-                    onclick="window.open('${imageUrl}','_blank')"
-                    onerror="this.outerHTML='<div style=&quot;color:red;padding:10px&quot;>❌ Screenshot not found</div>'">
+return;
 
-                <div class="status ${statusClass}">
-                    ${item.status}
-                </div>
+}
 
-                <div class="actions">
+pendingRequests.forEach(function(item){
 
-                    <button class="approveBtn"
-                        onclick="updateRequest(${item.id},'Approved')">
-                        ✅ Approve
-                    </button>
+cards.innerHTML += `
 
-                    <button class="rejectBtn"
-                        onclick="updateRequest(${item.id},'Rejected')">
-                        ❌ Reject
-                    </button>
+<div class="card" id="card-${item.id}">
 
-                </div>
+<div class="row">
 
-            </div>
-            `;
+<span class="label">Request ID :</span>
 
-        });
+${item.id}
 
-    } catch (err) {
+</div>
 
-        console.log(err);
+<div class="row">
 
-        document.getElementById("cards").innerHTML =
-            "<div class='empty'>Server Error</div>";
+<span class="label">Username :</span>
 
-    }
+${item.username}
+
+</div>
+
+<div class="row">
+
+<span class="label">User ID :</span>
+
+${item.user_id}
+
+</div>
+
+<div class="row">
+
+<span class="label">Amount :</span>
+
+₹${item.amount}
+
+</div>
+
+<div class="row">
+
+<span class="label">UTR :</span>
+
+${item.utr}
+
+</div>
+
+<div class="row">
+
+<span class="label">Date :</span>
+
+${new Date(item.created_at).toLocaleString()}
+
+</div>
+
+<div class="status pending">
+
+Pending
+
+</div>
+
+<div class="actions">
+
+<button
+class="approveBtn"
+onclick="updateRequest(${item.id},'Approved')">
+
+✅ Approve
+
+</button>
+
+<button
+class="rejectBtn"
+onclick="updateRequest(${item.id},'Rejected')">
+
+❌ Reject
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}catch(err){
+
+document.getElementById("cards").innerHTML =
+"<div class='empty'>Server Error</div>";
+
+console.log(err);
 
 }
   /* ===========================
@@ -336,6 +303,7 @@ const response = await fetch(
 API + "/api/fund-request/" + id,
 
 {
+
 method:"PUT",
 
 headers:{
@@ -357,9 +325,24 @@ const data = await response.json();
 
 if(data.success){
 
-alert("✅ Request " + status);
+// Hide card immediately
+const card = document.getElementById("card-" + id);
 
-loadRequests();
+if(card){
+
+card.remove();
+
+}
+
+// If no cards left
+if(document.querySelectorAll(".card").length === 0){
+
+document.getElementById("cards").innerHTML =
+"<div class='empty'>No Pending Fund Requests</div>";
+
+}
+
+alert("Request " + status);
 
 }else{
 
@@ -398,16 +381,25 @@ setInterval(function(){
 loadRequests();
 
 },10000);
-
-/* ===========================
-   IMAGE CLICK
+  /* ===========================
+   REFRESH BUTTON
 =========================== */
 
-document.addEventListener("click",function(e){
+function refreshRequests(){
 
-if(e.target.classList.contains("screenshot")){
+loadRequests();
 
-window.open(e.target.src,"_blank");
+}
+
+/* ===========================
+   ESC KEY RELOAD
+=========================== */
+
+document.addEventListener("keydown",function(e){
+
+if(e.key==="Escape"){
+
+loadRequests();
 
 }
 
@@ -418,5 +410,4 @@ console.log("Admin Fund Requests Ready");
 </script>
 
 </body>
-
 </html>
