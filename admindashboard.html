@@ -559,6 +559,16 @@ onclick="location.href='transactions.html'">
 </div>
 
 </div>
+   <div class="card" onclick="location.href='admin-fund-requests.html'">
+
+<div class="card-title">
+<i class="fa-solid fa-money-bill-transfer"></i>
+<span>Fund Requests</span>
+</div>
+
+<div class="card-value" id="pendingFundCount">0</div>
+
+   </div>
 <div class="card"
 onclick="location.href='multi-add.html'">
 
@@ -713,6 +723,36 @@ async function loadWallet(){
     }
 
 }
+   /* ===========================
+   LOAD PENDING FUND REQUESTS
+=========================== */
+
+async function loadPendingFundCount(){
+
+    try{
+
+        const response = await fetch(
+            API + "/api/admin/fund-requests"
+        );
+
+        if(!response.ok) return;
+
+        const data = await response.json();
+
+        if(data.success){
+
+            document.getElementById("pendingFundCount").textContent =
+            data.total || 0;
+
+        }
+
+    }catch(error){
+
+        console.error(error);
+
+    }
+
+    }
 
 function logout(){
 
@@ -743,6 +783,8 @@ window.onload = function(){
     loadDashboard();
 
     loadWallet();
+
+    loadPendingFundCount();
 
 };
 
