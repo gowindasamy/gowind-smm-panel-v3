@@ -393,18 +393,35 @@ return;
 
 data.requests.forEach(function(item){
 
-let statusClass="pending";
+let statusClass = "pending";
 
-if(item.status==="Approved"){
-    statusClass="approved";
+if(item.status === "Approved"){
+    statusClass = "approved";
 }
 
-if(item.status==="Rejected"){
-    statusClass="rejected";
+if(item.status === "Rejected"){
+    statusClass = "rejected";
 }
 
 cards.innerHTML += `
+
+<div class="card">
+
 ...
+
+<img
+src="${API}${item.screenshot}?t=${Date.now()}"
+style="width:100%;border-radius:12px"
+onerror="this.outerHTML='<p style=color:red>Image Load Failed</p>'">
+
+<div class="status ${statusClass}">
+${item.status}
+</div>
+
+...
+
+</div>
+
 `;
 
 });
