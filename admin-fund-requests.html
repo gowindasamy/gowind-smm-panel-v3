@@ -287,12 +287,14 @@ ${item.utr}
 <span class="label">Date :</span>
 ${new Date(item.created_at).toLocaleString()}
 </div>
-
+const imageUrl = API + item.screenshot;
+alert(imageUrl);
 <img
 class="screenshot"
-src="${API}${item.screenshot}"
-onclick="window.open('${API}${item.screenshot}','_blank')"
-onerror="this.style.display='none'">
+src="${imageUrl}"
+alt="Screenshot"
+onerror="alert('Image failed: ' + this.src)"
+onclick="window.open(this.src,'_blank')">
 
 <div class="status ${statusClass}">
 ${item.status}
