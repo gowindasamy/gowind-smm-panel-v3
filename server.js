@@ -7,12 +7,62 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const db = require("./db");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
 const app = express();
+const uploadDir = path.join(__dirname, "uploads");
+
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, {
+        recursive: true
+    });
+}
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        const uniqueName =
+            Date.now() +
+            "-" +
+            Math.round(Math.random() * 1E9) +
+            path.extname(file.originalname);
+
+        cb(null, uniqueName);
+    }
+});
+
+const fileFilter = (req, file, cb) => {
+
+    const allowed = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/webp"
+    ];
+
+    if (allowed.includes(file.mimetype)) {
+        cb(null, true);
+    } else {
+        cb(new Error("Only image files are allowed"));
+    }
+};
+
+const upload = multer({
+    storage,
+    fileFilter,
+    limits: {
+        fileSize: 5 * 1024 * 1024
+    }
+});
 
 app.use(express.json());
 app.use(cors());
 app.use(helmet());
+app.use("/uploads", express.static(uploadDir));
 
 /* ===========================
    HOME
@@ -44,28 +94,28 @@ app.get("/health", (req, res) => {
 
 app.get("/db-test", async (req, res) => {
 
-    try{
+    try {
 
         const result = await db.query("SELECT NOW()");
 
         res.json({
-            success:true,
-            database:"Connected",
-            time:result.rows[0]
+            success: true,
+            database: "Connected",
+            time: result.rows[0]
         });
 
-    }catch(err){
+    } catch (err) {
 
-console.error(err);
+        console.error(err);
 
-res.status(500).json({
+        res.status(500).json({
 
-success:false,
-message:err.message
+            success: false,
+            message: err.message
 
-});
+        });
 
-}
+    }
 
 });
 
@@ -73,11 +123,11 @@ message:err.message
    DATABASE SETUP
 =========================== */
 
-app.get("/setup", async (req,res)=>{
+app.get("/setup", async (req, res) => {
 
-try{
+    try {
 
-await db.query(`
+        await db.query(`
 CREATE TABLE IF NOT EXISTS users(
 id SERIAL PRIMARY KEY,
 username VARCHAR(50) UNIQUE NOT NULL,
@@ -88,54 +138,59 @@ status BOOLEAN DEFAULT TRUE,
 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 `);
-await db.query(`
+        await db.query(`
 ALTER TABLE users
 ADD COLUMN IF NOT EXISTS show_password TEXT;
 `);
 
-/* ===========================
-   SETTINGS TABLE
-=========================== */
+        /* ===========================
+           SETTINGS TABLE
+        =========================== */
 
-await db.query(`
+        await db.query(`
 CREATE TABLE IF NOT EXISTS settings(
 id SERIAL PRIMARY KEY
 );
 `);
 
-await db.query(`
+        await db.query(`
 ALTER TABLE settings
 ADD COLUMN IF NOT EXISTS site_name TEXT;
 `);
 
-await db.query(`
+        await db.query(`
 ALTER TABLE settings
 ADD COLUMN IF NOT EXISTS logo_url TEXT;
 `);
 
-await db.query(`
+        await db.query(`
 ALTER TABLE settings
 ADD COLUMN IF NOT EXISTS maintenance BOOLEAN DEFAULT FALSE;
 `);
 
-await db.query(`
+        await db.query(`
 ALTER TABLE settings
 ADD COLUMN IF NOT EXISTS sync_interval INTEGER DEFAULT 60;
 `);
-
 await db.query(`
+ALTER TABLE settings
+ADD COLUMN IF NOT EXISTS upi_id TEXT;
+`);
+
+        await db.query(`
 INSERT INTO settings
-(site_name,logo_url,maintenance,sync_interval)
+(site_name,logo_url,maintenance,sync_interval,upi_id)
 SELECT
 'Gowind SMM Panel',
 '',
 FALSE,
-60
+60,
+''
 WHERE NOT EXISTS(
 SELECT 1 FROM settings
 );
 `);
-await db.query(`
+        await db.query(`
 CREATE TABLE IF NOT EXISTS providers(
 id SERIAL PRIMARY KEY,
 name VARCHAR(100),
@@ -145,11 +200,11 @@ status BOOLEAN DEFAULT TRUE,
 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 `);
-await db.query(`
+        await db.query(`
 ALTER TABLE orders
 ADD COLUMN IF NOT EXISTS provider_order_id BIGINT;
 `);
-await db.query(`
+        await db.query(`
 CREATE TABLE IF NOT EXISTS services(
 id SERIAL PRIMARY KEY,
 provider_id INT,
@@ -165,12 +220,12 @@ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 `);
 
-await db.query(`
+        await db.query(`
 CREATE UNIQUE INDEX IF NOT EXISTS services_provider_unique
 ON services(provider_id,provider_service_id);
 `);
 
-await db.query(`
+        await db.query(`
 CREATE TABLE IF NOT EXISTS orders(
 id SERIAL PRIMARY KEY,
 user_id INT,
@@ -184,17 +239,17 @@ status VARCHAR(30) DEFAULT 'Pending',
 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 `);
-await db.query(`
+        await db.query(`
 ALTER TABLE orders
 ADD COLUMN IF NOT EXISTS provider_id INT;
 `);
 
-await db.query(`
+        await db.query(`
 ALTER TABLE services
 ADD COLUMN IF NOT EXISTS provider_service_id INT,
 ADD COLUMN IF NOT EXISTS provider_rate DECIMAL(10,4);
 `);
-await db.query(`
+        await db.query(`
 CREATE TABLE IF NOT EXISTS transactions(
 id SERIAL PRIMARY KEY,
 user_id INT,
@@ -203,29 +258,319 @@ type VARCHAR(20),
 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 `);
-
 await db.query(`
-CREATE TABLE IF NOT EXISTS settings(
+CREATE TABLE IF NOT EXISTS fund_requests(
 id SERIAL PRIMARY KEY,
-site_name VARCHAR(100),
-currency VARCHAR(10),
-maintenance BOOLEAN DEFAULT FALSE
+user_id INT NOT NULL,
+amount DECIMAL(10,2) NOT NULL,
+utr VARCHAR(100) NOT NULL,
+screenshot TEXT NOT NULL,
+status VARCHAR(20) DEFAULT 'Pending',
+admin_note TEXT,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 `);
+       
+
+        res.json({
+            success: true,
+            message: "Database Ready"
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
+/* ===========================
+   FUND REQUEST
+=========================== */
+
+app.post(
+"/api/fund-request",
+upload.single("screenshot"),
+async (req, res) => {
+
+try{
+
+const {
+user_id,
+amount,
+utr
+} = req.body;
+
+if(!req.file){
+
+return res.status(400).json({
+success:false,
+message:"Screenshot Required"
+});
+
+}
+
+await db.query(
+
+`INSERT INTO fund_requests
+(
+user_id,
+amount,
+utr,
+screenshot
+)
+VALUES($1,$2,$3,$4)`,
+
+[
+user_id,
+amount,
+utr,
+"/uploads/" + req.file.filename
+]
+
+);
 
 res.json({
+
 success:true,
-message:"Database Ready"
+message:"Fund Request Submitted"
+
 });
 
 }catch(err){
 
+console.error(err);
+
 res.status(500).json({
+
 success:false,
 error:err.message
+
 });
 
 }
+
+});
+/* ===========================
+   ADMIN APPROVE / REJECT FUND
+=========================== */
+
+app.put("/api/fund-request/:id", async (req, res) => {
+
+    try {
+
+        const { status, admin_note } = req.body;
+
+        const request = await db.query(
+            "SELECT * FROM fund_requests WHERE id=$1",
+            [req.params.id]
+        );
+
+        if (request.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Request not found"
+            });
+        }
+
+        const fund = request.rows[0];
+
+        await db.query(
+            `UPDATE fund_requests
+             SET status=$1,
+                 admin_note=$2,
+                 updated_at=CURRENT_TIMESTAMP
+             WHERE id=$3`,
+            [
+                status,
+                admin_note || "",
+                req.params.id
+            ]
+        );
+
+        if (status === "Approved") {
+
+            await db.query(
+                "UPDATE users SET wallet=wallet+$1 WHERE id=$2",
+                [
+                    fund.amount,
+                    fund.user_id
+                ]
+            );
+
+            await db.query(
+                `INSERT INTO transactions
+                (user_id,amount,type)
+                VALUES($1,$2,$3)`,
+                [
+                    fund.user_id,
+                    fund.amount,
+                    "Credit"
+                ]
+            );
+
+        }
+
+        res.json({
+            success: true,
+            message: "Fund request updated"
+        });
+
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
+/* ===========================
+   GET SETTINGS
+=========================== */
+
+app.get("/api/settings", async (req, res) => {
+
+    try {
+
+        const result = await db.query(`
+            SELECT
+                site_name,
+                logo_url,
+                maintenance,
+                sync_interval,
+                upi_id
+            FROM settings
+            LIMIT 1
+        `);
+
+        if (result.rows.length === 0) {
+
+            return res.json({
+                success: false,
+                message: "Settings not found"
+            });
+
+        }
+
+        res.json({
+            success: true,
+            settings: result.rows[0]
+        });
+
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
+/* ===========================
+   UPDATE SETTINGS
+=========================== */
+
+app.post("/api/settings", async (req, res) => {
+
+    try {
+
+        const {
+            site_name,
+            logo_url,
+            maintenance,
+            sync_interval,
+            upi_id
+        } = req.body;
+
+        await db.query(
+            `UPDATE settings
+             SET
+                site_name=$1,
+                logo_url=$2,
+                maintenance=$3,
+                sync_interval=$4,
+                upi_id=$5`,
+            [
+                site_name,
+                logo_url,
+                maintenance,
+                sync_interval,
+                upi_id
+            ]
+        );
+
+        res.json({
+            success: true,
+            message: "Settings Updated"
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
+/* ===========================
+   GET FUND REQUESTS
+=========================== */
+
+app.get("/api/fund-request/:userId", async (req, res) => {
+
+    try {
+
+        const result = await db.query(
+
+            `SELECT
+                id,
+                amount,
+                utr,
+                screenshot,
+                status,
+                admin_note,
+                created_at
+             FROM fund_requests
+             WHERE user_id = $1
+             ORDER BY id DESC`,
+
+            [req.params.userId]
+
+        );
+
+        res.json({
+
+            success: true,
+            requests: result.rows
+
+        });
+
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+
+            success: false,
+            error: err.message
+
+        });
+
+    }
 
 });
 
@@ -233,95 +578,98 @@ error:err.message
    LOGIN
 =========================== */
 
-app.post("/api/login",async(req,res)=>{
+app.post("/api/login", async (req, res) => {
 
-try{
+    try {
 
-const {username,password}=req.body;
+        const {
+            username,
+            password
+        } = req.body;
 
-const result=await db.query(
-"SELECT * FROM users WHERE username=$1",
-[username]
-);
+        const result = await db.query(
+            "SELECT * FROM users WHERE username=$1",
+            [username]
+        );
 
-if(result.rows.length===0){
+        if (result.rows.length === 0) {
 
-return res.status(401).json({
-success:false,
-message:"Invalid Username"
-});
+            return res.status(401).json({
+                success: false,
+                message: "Invalid Username"
+            });
 
-}
+        }
 
-const user=result.rows[0];
-/* ===========================
-   MAINTENANCE CHECK
-=========================== */
+        const user = result.rows[0];
 
-const setting = await db.query(
-"SELECT maintenance FROM settings LIMIT 1"
-);
+        /* ===========================
+           MAINTENANCE CHECK
+        =========================== */
 
-if(
-setting.rows.length > 0 &&
-setting.rows[0].maintenance === true &&
-user.role !== "admin"
-){
+        const setting = await db.query(
+            "SELECT maintenance FROM settings LIMIT 1"
+        );
 
-return res.status(503).json({
+        if (
+            setting.rows.length > 0 &&
+            setting.rows[0].maintenance === true &&
+            user.role !== "admin"
+        ) {
 
-success:false,
+            return res.status(503).json({
 
-message:"🚧 Panel is under maintenance"
+                success: false,
 
-});
+                message: "🚧 Panel is under maintenance"
 
-}
-const match=await bcrypt.compare(
-password,
-user.password
-);
+            });
 
-if(!match){
+        }
+        const match = await bcrypt.compare(
+            password,
+            user.password
+        );
 
-return res.status(401).json({
-success:false,
-message:"Invalid Password"
-});
+        if (!match) {
 
-}
+            return res.status(401).json({
+                success: false,
+                message: "Invalid Password"
+            });
 
-const token=jwt.sign({
+        }
 
-id:user.id,
-username:user.username,
-role:user.role
+        const token = jwt.sign({
 
-},
-process.env.JWT_SECRET,
-{
-expiresIn:"1d"
-});
+                id: user.id,
+                username: user.username,
+                role: user.role
 
-res.json({
+            },
+            process.env.JWT_SECRET, {
+                expiresIn: "1d"
+            });
 
-success:true,
-message:"Login Successful",
-token,
-user
+        res.json({
 
-});
+            success: true,
+            message: "Login Successful",
+            token,
+            user
 
-}catch(err){
+        });
 
-res.status(500).json({
+    } catch (err) {
 
-success:false,
-error:err.message
+        res.status(500).json({
 
-});
+            success: false,
+            error: err.message
 
-}
+        });
+
+    }
 
 });
 
@@ -333,7 +681,11 @@ app.post("/api/register", async (req, res) => {
 
     try {
 
-        const { username, password, role } = req.body;
+        const {
+            username,
+            password,
+            role
+        } = req.body;
 
         const check = await db.query(
             "SELECT * FROM users WHERE username=$1",
@@ -359,11 +711,11 @@ VALUES($1,$2,$3,$4)
             RETURNING id,username,role`,
 
             [
-username,
-hash,
-password,
-role || "user"
-]
+                username,
+                hash,
+                password,
+                role || "user"
+            ]
 
         );
 
@@ -423,14 +775,14 @@ max
 )
 VALUES($1,$2,$3,$4,$5,$6,$7)`,
             [
-    provider_id,
-    provider_service_id,
-    name,
-    category,
-    rate,
-    min,
-    max
-]
+                provider_id,
+                provider_service_id,
+                name,
+                category,
+                rate,
+                min,
+                max
+            ]
         );
 
         res.json({
@@ -656,7 +1008,10 @@ app.post("/api/wallet/add", async (req, res) => {
 
     try {
 
-        const { user_id, amount } = req.body;
+        const {
+            user_id,
+            amount
+        } = req.body;
 
         await db.query(
             "UPDATE users SET wallet=wallet+$1 WHERE id=$2",
@@ -729,7 +1084,12 @@ app.post("/api/orders", async (req, res) => {
 
     try {
 
-        const { user_id, service_id, link, quantity } = req.body;
+        const {
+            user_id,
+            service_id,
+            link,
+            quantity
+        } = req.body;
 
         // Service
         const serviceResult = await db.query(
@@ -798,8 +1158,7 @@ app.post("/api/orders", async (req, res) => {
 
             {
                 headers: {
-                    "Content-Type":
-                    "application/x-www-form-urlencoded"
+                    "Content-Type": "application/x-www-form-urlencoded"
                 }
             }
 
@@ -816,7 +1175,7 @@ app.post("/api/orders", async (req, res) => {
 
         const providerOrderId =
             providerResponse.data.order;
-       await db.query(`
+        await db.query(`
 ALTER TABLE orders
 ADD COLUMN IF NOT EXISTS provider_rate DECIMAL(10,2);
 `);
@@ -857,38 +1216,38 @@ ADD COLUMN IF NOT EXISTS provider_rate DECIMAL(10,2);
 VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
 
             [
-    user_id,
-    provider.id,
-    providerOrderId,
-    service.id,
-    link,
-    quantity,
-    charge,
-    service.provider_rate,
-    "Pending"
-]
+                user_id,
+                provider.id,
+                providerOrderId,
+                service.id,
+                link,
+                quantity,
+                charge,
+                service.provider_rate,
+                "Pending"
+            ]
 
         );
 
         res.json({
 
-    success: true,
-    provider_order_id: providerOrderId,
-    charge
+            success: true,
+            provider_order_id: providerOrderId,
+            charge
 
-});
+        });
 
-} catch (err) {
+    } catch (err) {
 
-    console.error(err);
+        console.error(err);
 
-    res.status(500).json({
-        success: false,
-        error: err.message,
-        stack: err.stack
-    });
+        res.status(500).json({
+            success: false,
+            error: err.message,
+            stack: err.stack
+        });
 
-}
+    }
 
 });
 /* ===========================
@@ -956,40 +1315,40 @@ ORDER BY o.id DESC
    ADD PROVIDER
 =========================== */
 
-app.post("/api/providers",async(req,res)=>{
+app.post("/api/providers", async (req, res) => {
 
-    try{
+    try {
 
-        const{
+        const {
             name,
             api_url,
             api_key
-        }=req.body;
+        } = req.body;
 
         await db.query(
 
-        `INSERT INTO providers
+            `INSERT INTO providers
         (name,api_url,api_key)
         VALUES($1,$2,$3)`,
 
-        [
-            name,
-            api_url,
-            api_key
-        ]
+            [
+                name,
+                api_url,
+                api_key
+            ]
 
         );
 
         res.json({
-            success:true,
-            message:"Provider Added Successfully"
+            success: true,
+            message: "Provider Added Successfully"
         });
 
-    }catch(err){
+    } catch (err) {
 
         res.status(500).json({
-            success:false,
-            error:err.message
+            success: false,
+            error: err.message
         });
 
     }
@@ -1000,28 +1359,28 @@ app.post("/api/providers",async(req,res)=>{
    GET PROVIDERS
 =========================== */
 
-app.get("/api/providers",async(req,res)=>{
+app.get("/api/providers", async (req, res) => {
 
-    try{
+    try {
 
-        const result=await db.query(
-        "SELECT * FROM providers ORDER BY id ASC"
+        const result = await db.query(
+            "SELECT * FROM providers ORDER BY id ASC"
         );
 
         res.json({
 
-            success:true,
-            total:result.rows.length,
-            providers:result.rows
+            success: true,
+            total: result.rows.length,
+            providers: result.rows
 
         });
 
-    }catch(err){
+    } catch (err) {
 
         res.status(500).json({
 
-            success:false,
-            error:err.message
+            success: false,
+            error: err.message
 
         });
 
@@ -1036,7 +1395,9 @@ app.post("/api/providers/import", async (req, res) => {
 
     try {
 
-        const { provider_id } = req.body;
+        const {
+            provider_id
+        } = req.body;
 
         const providerResult = await db.query(
             "SELECT * FROM providers WHERE id=$1",
@@ -1057,11 +1418,9 @@ app.post("/api/providers/import", async (req, res) => {
             new URLSearchParams({
                 key: provider.api_key,
                 action: "services"
-            }),
-            {
+            }), {
                 headers: {
-                    "Content-Type":
-                    "application/x-www-form-urlencoded"
+                    "Content-Type": "application/x-www-form-urlencoded"
                 }
             }
         );
@@ -1088,16 +1447,16 @@ max
 VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)
 ON CONFLICT DO NOTHING`,
                 [
-provider.id,
-Number(service.service),
-Number(service.service),
-service.name,
-service.category,
-Number(service.rate) + 2,   // Panel Rate
-Number(service.rate),       // Provider Rate
-Number(service.min),
-Number(service.max)
-]
+                    provider.id,
+                    Number(service.service),
+                    Number(service.service),
+                    service.name,
+                    service.category,
+                    Number(service.rate) + 2, // Panel Rate
+                    Number(service.rate), // Provider Rate
+                    Number(service.min),
+                    Number(service.max)
+                ]
             );
 
             imported++;
@@ -1147,11 +1506,9 @@ app.get("/api/providers/:id/balance", async (req, res) => {
             new URLSearchParams({
                 key: provider.api_key,
                 action: "balance"
-            }),
-            {
+            }), {
                 headers: {
-                    "Content-Type":
-                    "application/x-www-form-urlencoded"
+                    "Content-Type": "application/x-www-form-urlencoded"
                 }
             }
         );
@@ -1177,7 +1534,10 @@ app.post("/api/providers/status", async (req, res) => {
 
     try {
 
-        const { provider_id, order } = req.body;
+        const {
+            provider_id,
+            order
+        } = req.body;
 
         const result = await db.query(
             "SELECT * FROM providers WHERE id=$1",
@@ -1199,11 +1559,9 @@ app.post("/api/providers/status", async (req, res) => {
                 key: provider.api_key,
                 action: "status",
                 order
-            }),
-            {
+            }), {
                 headers: {
-                    "Content-Type":
-                    "application/x-www-form-urlencoded"
+                    "Content-Type": "application/x-www-form-urlencoded"
                 }
             }
         );
@@ -1229,7 +1587,10 @@ app.post("/api/providers/cancel", async (req, res) => {
 
     try {
 
-        const { provider_id, order } = req.body;
+        const {
+            provider_id,
+            order
+        } = req.body;
 
         const result = await db.query(
             "SELECT * FROM providers WHERE id=$1",
@@ -1251,11 +1612,9 @@ app.post("/api/providers/cancel", async (req, res) => {
                 key: provider.api_key,
                 action: "cancel",
                 order
-            }),
-            {
+            }), {
                 headers: {
-                    "Content-Type":
-                    "application/x-www-form-urlencoded"
+                    "Content-Type": "application/x-www-form-urlencoded"
                 }
             }
         );
@@ -1304,11 +1663,9 @@ app.get("/api/providers/sync", async (req, res) => {
                     key: order.api_key,
                     action: "status",
                     order: order.provider_order_id
-                }),
-                {
+                }), {
                     headers: {
-                        "Content-Type":
-                        "application/x-www-form-urlencoded"
+                        "Content-Type": "application/x-www-form-urlencoded"
                     }
                 }
             );
@@ -1536,98 +1893,36 @@ app.delete("/api/users/:id", async (req, res) => {
 
 });
 
-/* ===========================
-   SAVE SETTINGS
-=========================== */
 
-app.post("/api/settings", async (req, res) => {
-
-    try {
-
-        const { site_name, maintenance } = req.body;
-
-        const check = await db.query(
-            "SELECT id FROM settings LIMIT 1"
-        );
-
-        if(check.rows.length === 0){
-
-            await db.query(
-
-                `INSERT INTO settings
-                (site_name,maintenance)
-                VALUES($1,$2)`,
-
-                [
-                    site_name,
-                    maintenance
-                ]
-
-            );
-
-        }else{
-
-            await db.query(
-
-                `UPDATE settings
-                 SET site_name=$1,
-                     maintenance=$2
-                 WHERE id=$3`,
-
-                [
-                    site_name,
-                    maintenance,
-                    check.rows[0].id
-                ]
-
-            );
-
-        }
-
-        res.json({
-            success:true,
-            message:"Settings Saved Successfully"
-        });
-
-    } catch(err){
-
-        res.status(500).json({
-            success:false,
-            error:err.message
-        });
-
-    }
-
-});
 /* ===========================
    DELETE ALL SERVICES
 =========================== */
 
-app.delete("/api/services", async(req,res)=>{
+app.delete("/api/services", async (req, res) => {
 
-try{
+    try {
 
-await db.query("DELETE FROM services");
+        await db.query("DELETE FROM services");
 
-res.json({
+        res.json({
 
-success:true,
+            success: true,
 
-message:"All Services Deleted Successfully"
+            message: "All Services Deleted Successfully"
 
-});
+        });
 
-}catch(err){
+    } catch (err) {
 
-res.status(500).json({
+        res.status(500).json({
 
-success:false,
+            success: false,
 
-error:err.message
+            error: err.message
 
-});
+        });
 
-}
+    }
 
 });
 app.get("/api/orders-columns", async (req, res) => {
@@ -1650,7 +1945,10 @@ app.post("/api/users/set-balance", async (req, res) => {
 
     try {
 
-        const { user_id, balance } = req.body;
+        const {
+            user_id,
+            balance
+        } = req.body;
 
         // Current Wallet
         const current = await db.query(
@@ -1658,29 +1956,29 @@ app.post("/api/users/set-balance", async (req, res) => {
             [user_id]
         );
 
-        if(current.rows.length===0){
+        if (current.rows.length === 0) {
 
             return res.status(404).json({
-                success:false,
-                message:"User not found"
+                success: false,
+                message: "User not found"
             });
 
         }
 
         const oldBalance =
-        Number(current.rows[0].wallet);
+            Number(current.rows[0].wallet);
 
         // Update Wallet
         await db.query(
             "UPDATE users SET wallet=$1 WHERE id=$2",
-            [balance,user_id]
+            [balance, user_id]
         );
 
         // Difference
         const difference =
-        Number(balance)-oldBalance;
+            Number(balance) - oldBalance;
 
-        if(difference!==0){
+        if (difference !== 0) {
 
             await db.query(
 
@@ -1691,9 +1989,9 @@ app.post("/api/users/set-balance", async (req, res) => {
                 [
                     user_id,
                     Math.abs(difference),
-                    difference>0
-                    ? "Credit"
-                    : "Debit"
+                    difference > 0 ?
+                    "Credit" :
+                    "Debit"
                 ]
 
             );
@@ -1702,17 +2000,17 @@ app.post("/api/users/set-balance", async (req, res) => {
 
         res.json({
 
-            success:true,
-            message:"Balance Updated Successfully"
+            success: true,
+            message: "Balance Updated Successfully"
 
         });
 
-    } catch(err){
+    } catch (err) {
 
         res.status(500).json({
 
-            success:false,
-            error:err.message
+            success: false,
+            error: err.message
 
         });
 
@@ -1727,7 +2025,10 @@ app.post("/api/users/change-password", async (req, res) => {
 
     try {
 
-        const { user_id, password } = req.body;
+        const {
+            user_id,
+            password
+        } = req.body;
 
         const hash = await bcrypt.hash(password, 10);
 
@@ -1766,111 +2067,8 @@ app.post("/api/users/change-password", async (req, res) => {
     }
 
 });
-/* ===========================
-   GET SETTINGS
-=========================== */
 
-app.get("/api/settings", async (req, res) => {
 
-    try {
-
-        const result = await db.query(
-
-            `SELECT
-                site_name,
-                logo_url,
-                maintenance,
-                sync_interval
-             FROM settings
-             LIMIT 1`
-
-        );
-
-        if (result.rows.length === 0) {
-
-            return res.json({
-
-                success: false,
-                message: "Settings not found"
-
-            });
-
-        }
-
-        res.json({
-
-            success: true,
-
-            settings: result.rows[0]
-
-        });
-
-    } catch (err) {
-
-        res.status(500).json({
-
-            success: false,
-
-            error: err.message
-
-        });
-
-    }
-
-});
-/* ===========================
-   SAVE SETTINGS
-=========================== */
-
-app.post("/api/settings", async (req, res) => {
-
-    try {
-
-        const {
-            site_name,
-            logo_url,
-            maintenance,
-            sync_interval
-        } = req.body;
-
-        await db.query(
-
-            `UPDATE settings
-             SET
-                site_name = $1,
-                logo_url = $2,
-                maintenance = $3,
-                sync_interval = $4
-             WHERE id = 1`,
-
-            [
-                site_name,
-                logo_url,
-                maintenance,
-                sync_interval
-            ]
-
-        );
-
-        res.json({
-
-            success: true,
-            message: "Settings Saved Successfully"
-
-        });
-
-    } catch (err) {
-
-        res.status(500).json({
-
-            success: false,
-            error: err.message
-
-        });
-
-    }
-
-});
 /* ===========================
    DELETE ORDER
 =========================== */
@@ -1905,7 +2103,7 @@ app.delete("/api/orders/:id", async (req, res) => {
 
 app.get("/api/profile/:id", async (req, res) => {
 
-    try{
+    try {
 
         const userId = req.params.id;
 
@@ -1925,12 +2123,12 @@ app.get("/api/profile/:id", async (req, res) => {
 
         );
 
-        if(profile.rows.length === 0){
+        if (profile.rows.length === 0) {
 
             return res.status(404).json({
 
-                success:false,
-                message:"User not found"
+                success: false,
+                message: "User not found"
 
             });
 
@@ -1964,25 +2162,25 @@ app.get("/api/profile/:id", async (req, res) => {
 
         res.json({
 
-            success:true,
+            success: true,
 
-            profile:{
+            profile: {
 
                 ...profile.rows[0],
 
-                total_orders:Number(
+                total_orders: Number(
                     orders.rows[0].total
                 ),
 
-                pending_orders:Number(
+                pending_orders: Number(
                     orders.rows[0].pending
                 ),
 
-                completed_orders:Number(
+                completed_orders: Number(
                     orders.rows[0].completed
                 ),
 
-                cancelled_orders:Number(
+                cancelled_orders: Number(
                     orders.rows[0].cancelled
                 )
 
@@ -1990,12 +2188,12 @@ app.get("/api/profile/:id", async (req, res) => {
 
         });
 
-    }catch(err){
+    } catch (err) {
 
         res.status(500).json({
 
-            success:false,
-            error:err.message
+            success: false,
+            error: err.message
 
         });
 
@@ -2030,7 +2228,7 @@ WHERE o.user_id = $1
 
 ORDER BY o.id DESC
 
-        `,[req.params.id]);
+        `, [req.params.id]);
 
         res.json({
             success: true,
@@ -2046,8 +2244,50 @@ ORDER BY o.id DESC
 
     }
 
-}); 
+});
+/* ===========================
+   ADMIN GET ALL FUND REQUESTS
+=========================== */
 
+app.get("/api/admin/fund-requests", async (req, res) => {
+
+    try {
+
+        const result = await db.query(`
+            SELECT
+                f.id,
+                u.username,
+                f.user_id,
+                f.amount,
+                f.utr,
+                f.screenshot,
+                f.status,
+                f.admin_note,
+                f.created_at
+            FROM fund_requests f
+            JOIN users u
+            ON f.user_id = u.id
+            ORDER BY f.id DESC
+        `);
+
+        res.json({
+            success: true,
+            total: result.rows.length,
+            requests: result.rows
+        });
+
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+
+    }
+
+});
 /* ===========================
    SERVER START
 =========================== */
