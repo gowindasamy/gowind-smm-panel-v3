@@ -212,130 +212,109 @@ Loading...
 <script>
 
 const API = "https://gowind-smm-panel-v3.onrender.com";
-  async function loadRequests(){
+  async function loadRequests() {
 
-try{
+    try {
 
-const response = await fetch(API + "/api/admin/fund-requests");
+        const response = await fetch(API + "/api/admin/fund-requests");
+        const data = await response.json();
 
-const data = await response.json();
+        const cards = document.getElementById("cards");
+        cards.innerHTML = "";
 
-const cards = document.getElementById("cards");
+        if (!data.success) {
+            cards.innerHTML = "<div class='empty'>Failed to load requests</div>";
+            return;
+        }
 
-cards.innerHTML = "";
+        if (data.requests.length === 0) {
+            cards.innerHTML = "<div class='empty'>No Fund Requests</div>";
+            return;
+        }
 
-if(!data.success){
+        data.requests.forEach(item => {
 
-cards.innerHTML =
-"<div class='empty'>Failed to load requests</div>";
+            let statusClass = "pending";
 
-return;
+            if (item.status === "Approved") statusClass = "approved";
+            if (item.status === "Rejected") statusClass = "rejected";
 
-}
+            const imageUrl = API + item.screenshot;
 
-if(data.total === 0){
+            cards.innerHTML += `
+            <div class="card">
 
-cards.innerHTML =
-"<div class='empty'>No Fund Requests</div>";
+                <div class="row">
+                    <span class="label">Request ID :</span>
+                    ${item.id}
+                </div>
 
-return;
+                <div class="row">
+                    <span class="label">Username :</span>
+                    ${item.username}
+                </div>
 
-}
+                <div class="row">
+                    <span class="label">User ID :</span>
+                    ${item.user_id}
+                </div>
 
-data.requests.forEach(function(item){
+                <div class="row">
+                    <span class="label">Amount :</span>
+                    ₹${item.amount}
+                </div>
 
-let statusClass = "pending";
+                <div class="row">
+                    <span class="label">UTR :</span>
+                    ${item.utr}
+                </div>
 
-if(item.status === "Approved"){
-statusClass = "approved";
-}
+                <div class="row">
+                    <span class="label">Date :</span>
+                    ${new Date(item.created_at).toLocaleString()}
+                </div>
 
-if(item.status === "Rejected"){
-statusClass = "rejected";
-}
+                <img
+                    class="screenshot"
+                    src="${imageUrl}"
+                    alt="Screenshot"
+                    style="width:100%;border-radius:10px;margin-top:10px;cursor:pointer"
+                    onclick="window.open('${imageUrl}','_blank')"
+                    onerror="this.outerHTML='<div style=&quot;color:red;padding:10px&quot;>❌ Screenshot not found</div>'">
 
-cards.innerHTML += `
+                <div class="status ${statusClass}">
+                    ${item.status}
+                </div>
 
-<div class="card">
+                <div class="actions">
 
-<div class="row">
-<span class="label">Request ID :</span>
-${item.id}
-</div>
+                    <button class="approveBtn"
+                        onclick="updateRequest(${item.id},'Approved')">
+                        ✅ Approve
+                    </button>
 
-<div class="row">
-<span class="label">Username :</span>
-${item.username}
-</div>
+                    <button class="rejectBtn"
+                        onclick="updateRequest(${item.id},'Rejected')">
+                        ❌ Reject
+                    </button>
 
-<div class="row">
-<span class="label">User ID :</span>
-${item.user_id}
-</div>
+                </div>
 
-<div class="row">
-<span class="label">Amount :</span>
-₹${item.amount}
-</div>
+            </div>
+            `;
 
-<div class="row">
-<span class="label">UTR :</span>
-${item.utr}
-</div>
+        });
 
-<div class="row">
-<span class="label">Date :</span>
-${new Date(item.created_at).toLocaleString()}
-</div>
-const imageUrl = API + item.screenshot;
-alert(imageUrl);
-<img
-class="screenshot"
-src="${imageUrl}"
-alt="Screenshot"
-onerror="alert('Image failed: ' + this.src)"
-onclick="window.open(this.src,'_blank')">
+    } catch (err) {
 
-<div class="status ${statusClass}">
-${item.status}
-</div>
+        console.log(err);
 
-<div class="actions">
+        document.getElementById("cards").innerHTML =
+            "<div class='empty'>Server Error</div>";
 
-<button
-class="approveBtn"
-onclick="updateRequest(${item.id},'Approved')">
-
-✅ Approve
-
-</button>
-
-<button
-class="rejectBtn"
-onclick="updateRequest(${item.id},'Rejected')">
-
-❌ Reject
-
-</button>
-
-</div>
-
-</div>
-
-`;
-
-});
-
-}catch(err){
-
-document.getElementById("cards").innerHTML =
-"<div class='empty'>Server Error</div>";
-
-console.log(err);
+    }
 
 }
-
-  }
   /* ===========================
    APPROVE / REJECT
 =========================== */
