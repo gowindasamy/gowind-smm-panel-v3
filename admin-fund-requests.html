@@ -468,11 +468,11 @@ ${new Date(item.created_at).toLocaleString()}
 </div>
 
 <img
-src="${(API + item.screenshot).trim()}"
+src="${API}${item.screenshot}?t=${Date.now()}"
 alt="Payment Screenshot"
-loading="lazy"
-referrerpolicy="no-referrer"
-onclick="window.open(this.src,'_blank')">
+style="display:block;width:100%;height:auto;border-radius:12px;border:1px solid #334155;object-fit:contain;background:#fff;"
+onload="console.log('Loaded:', this.src)"
+onerror="console.log('Failed:', this.src)">
 
 <div class="status ${statusClass}">
 ${item.status}
