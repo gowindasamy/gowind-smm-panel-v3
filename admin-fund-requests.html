@@ -392,8 +392,11 @@ return;
 }
 
 data.requests.forEach(function(item){
-console.log(API + item.screenshot);
-let statusClass="pending";
+
+    console.log(item.screenshot);
+    alert("[" + item.screenshot + "]");
+
+});
 
 if(item.status==="Approved"){
 statusClass="approved";
